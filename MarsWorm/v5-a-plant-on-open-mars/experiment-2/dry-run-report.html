@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dry run: Experiment 2: how many nights can a plant dry out?</title>
+<style>
+  /* Light is the base. Every colour is a token so both themes stay a set. */
+  :root{
+    --bg:#FBFAF7; --surface:#FFFFFF; --sunken:#F4F1EA;
+    --ink:#1B1A17; --ink-2:#4A4740; --ink-3:#7C776C;
+    --rule:#E2DDD1; --rule-2:#CFC8B8;
+    --g1:#E5DBCA; --g2:#F3D6A2; --g3:#A9D9C0; --g4:#BBD6EE; --g5:#CAC4EC;
+    --e1:#A8977A; --e2:#C98A1E; --e3:#218A61; --e4:#4E85B8; --e5:#6F63C4;
+    --good:#1C6B4A; --warn:#B5651D; --bad:#A33A2A; --flat:#7C776C;
+    --shadow:0 1px 2px rgba(27,26,23,.06),0 4px 14px rgba(27,26,23,.05);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#14161A; --surface:#1B1E24; --sunken:#22262E;
+      --ink:#F2EFE8; --ink-2:#BFBAAF; --ink-3:#8B867B;
+      --rule:#2E333C; --rule-2:#3D434E;
+      --g1:#6E6555; --g2:#8C6C36; --g3:#3B6E58; --g4:#455F7C; --g5:#585177;
+      --e1:#B3A489; --e2:#E0A448; --e3:#5FBE94; --e4:#7FADD9; --e5:#9A8FE0;
+      --good:#3E9E71; --warn:#E9A23C; --bad:#E0705C; --flat:#8B867B;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#14161A; --surface:#1B1E24; --sunken:#22262E;
+    --ink:#F2EFE8; --ink-2:#BFBAAF; --ink-3:#8B867B;
+    --rule:#2E333C; --rule-2:#3D434E;
+    --g1:#6E6555; --g2:#8C6C36; --g3:#3B6E58; --g4:#455F7C; --g5:#585177;
+    --e1:#B3A489; --e2:#E0A448; --e3:#5FBE94; --e4:#7FADD9; --e5:#9A8FE0;
+    --good:#3E9E71; --warn:#E9A23C; --bad:#E0705C; --flat:#8B867B;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* The page fills the screen and so does the text. Nothing is capped to a
+     column width -- a sentence runs the width of the window and wraps only
+     when it actually reaches the edge. */
+  .wrap{width:100%;margin:0;padding:36px clamp(20px,4vw,64px) 88px}
+  header{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  .eyebrow{
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);font-weight:650;margin:0 0 8px
+  }
+  h1{font-size:clamp(30px,4vw,50px);line-height:1.1;margin:0 0 12px;
+     letter-spacing:-.02em}
+  .sub{color:var(--ink-2);margin:0;font-size:17.5px}
+  .stamp{color:var(--ink-3);font-size:13px;margin-top:14px}
+  h2{font-size:25px;margin:52px 0 6px;letter-spacing:-.01em}
+  h2 + .lede{color:var(--ink-2);margin:0 0 20px}
+  h3{font-size:17px;margin:26px 0 8px}
+  p{margin:0 0 12px}
+  a{color:inherit;text-underline-offset:2px}
+  /* ---- verdict cards ---------------------------------------------- */
+  .cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin:18px 0 0}
+  .card{
+    background:var(--surface);border:1px solid var(--rule);border-radius:12px;
+    padding:18px 20px;box-shadow:var(--shadow);border-top:4px solid var(--flat)
+  }
+  .card.yes{border-top-color:var(--good)} .card.no{border-top-color:var(--bad)}
+  .card.partial{border-top-color:var(--warn)}
+  .card.na{border-top-color:var(--rule-2)}
+  .card.na .call{color:var(--ink-3)}
+  .card h3{margin:0 0 4px;font-size:15px;color:var(--ink-3);
+           letter-spacing:.06em;text-transform:uppercase}
+  .card .call{font-size:20px;font-weight:680;margin:2px 0 8px;letter-spacing:-.01em}
+  .card.yes .call{color:var(--good)} .card.no .call{color:var(--bad)}
+  .card.partial .call{color:var(--warn)}
+  .card p{margin:0;font-size:14.5px;color:var(--ink-2)}
+  .card p b{color:var(--ink)}
+  /* the dust -> soil ruler, with this run's mark on it */
+  .ruler{margin:2px 0 12px}
+  .ruler .track{position:relative;height:9px;border-radius:99px;
+                background:var(--g1);border:1px solid var(--rule-2)}
+  .ruler .fill{position:absolute;inset:0 auto 0 0;border-radius:99px;
+               background:var(--g3)}
+  .ruler .pin{position:absolute;top:50%;width:3px;height:19px;border-radius:2px;
+              background:var(--ink);transform:translate(-50%,-50%)}
+  .ruler .ends{display:flex;justify-content:space-between;margin-top:7px;
+               font-size:11.5px;line-height:1.35;color:var(--ink-3)}
+  .ruler .ends span:last-child{text-align:right}
+  /* ---- figures ----------------------------------------------------- */
+  figure{margin:22px 0 0;background:var(--surface);border:1px solid var(--rule);
+         border-radius:12px;padding:20px 20px 14px;box-shadow:var(--shadow)}
+  figure .cap{font-size:14px;color:var(--ink-2);margin:12px 0 0}
+  figure .what{font-size:13.5px;color:var(--ink-3);margin:0 0 10px}
+  .chart-scroll{overflow-x:auto}
+  svg{display:block;max-width:100%;height:auto}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 0 14px;
+          font-size:13.5px;color:var(--ink-2)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .swatch{width:13px;height:13px;border-radius:4px;border:2px solid var(--rule-2);
+          display:inline-block;flex:none}
+  .grid2{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(440px,1fr))}
+  /* ---- tables ------------------------------------------------------ */
+  .tw{overflow-x:auto;margin:16px 0 0;border:1px solid var(--rule);
+      border-radius:12px;background:var(--surface);box-shadow:var(--shadow)}
+  .tw + .cap{margin:16px 0 0;font-size:14px;color:var(--ink-2)}
+  .tw:last-child{margin-bottom:8px}
+  table{border-collapse:collapse;width:100%;font-size:14.5px}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--rule)}
+  thead th{background:var(--sunken);font-size:12px;letter-spacing:.07em;
+           text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+  tbody tr:last-child td{border-bottom:none}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;
+       font-weight:640;letter-spacing:.02em;white-space:nowrap}
+  .tag.yes{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good)}
+  .tag.no{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+  .tag.partial{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+  .tag.flat,.tag.na{background:var(--sunken);color:var(--ink-3)}
+  .dot{width:9px;height:9px;border-radius:3px;display:inline-block;margin-right:7px;
+       border:2px solid var(--rule-2);vertical-align:-1px}
+  /* ---- the full-data grid ------------------------------------------
+     Nine columns will not fit any screen, so: the headers wrap instead of
+     forcing the columns wide, the numbers get tight columns, and the group
+     name stays pinned to the left while the rest scrolls under it. */
+  table.grid{font-size:13.5px}
+  table.grid th,table.grid td{padding:8px 10px}
+  table.grid thead th{white-space:normal;vertical-align:bottom;
+                      max-width:104px;line-height:1.3}
+  table.grid tbody td{white-space:nowrap}
+  table.grid th:first-child,table.grid td:first-child{
+    position:sticky;left:0;z-index:2;white-space:nowrap;
+    box-shadow:1px 0 0 var(--rule-2)}
+  table.grid thead th:first-child{background:var(--sunken);z-index:3}
+  table.grid tbody td:first-child{background:var(--surface)}
+  table.grid tbody td:first-child.best{
+    background:color-mix(in srgb,var(--g3) 42%,var(--surface))}
+  table.grid tr.ref td:first-child{background:var(--sunken)}
+  table.grid td.best{background:color-mix(in srgb,var(--g3) 42%,transparent);
+                     font-weight:680;color:var(--ink)}
+  /* rounded ends, so the band reads as one stripe */
+  table.grid tbody td:first-child.best{border-radius:7px 0 0 7px}
+  table.grid tbody td.best:last-child{border-radius:0 7px 7px 0}
+  table.grid tr.ref td{color:var(--ink-3)}
+  table.grid tr.ref{background:var(--sunken)}
+  /* ---- notes ------------------------------------------------------- */
+  .note{background:var(--sunken);border-left:3px solid var(--rule-2);
+        border-radius:0 8px 8px 0;padding:16px 20px;margin:18px 0 0;
+        font-size:15px;color:var(--ink-2)}
+  .note p:last-child{margin-bottom:0}
+  .note b{color:var(--ink)}
+  .note.warn{border-left-color:var(--warn)}
+  code{font:13.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;
+       background:var(--sunken);padding:1px 6px;border-radius:5px}
+  /* the page just stopped before; this says it meant to */
+  .end{display:flex;align-items:center;gap:16px;margin:64px 0 0;
+       color:var(--ink-3)}
+  .end::before,.end::after{content:"";flex:1;height:1px;background:var(--rule)}
+  .end span{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+            font-weight:600;white-space:nowrap}
+  @media (prefers-reduced-motion:no-preference){
+    .card,figure{transition:box-shadow .18s ease}
+  }
+  /* ---- the two chrome buttons -------------------------------------- */
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+    background:var(--surface);color:var(--ink-2);
+    border:1px solid var(--rule-2);border-radius:99px;
+    padding:9px 14px;font:inherit;font-size:13.5px;font-weight:600;
+    box-shadow:var(--shadow);line-height:1;
+  }
+  .chip:hover{color:var(--ink);border-color:var(--ink-3)}
+  .chip:focus-visible{outline:2px solid var(--ink-3);outline-offset:2px}
+  .chip svg{width:16px;height:16px;fill:currentColor;flex:none}
+  #themeBtn{position:fixed;top:18px;right:18px;z-index:40;padding:10px}
+  #fullscreenBtn{position:fixed;bottom:18px;right:18px;z-index:40}
+  #fullscreenBtn[data-fullscreen] .fs-label{display:none}
+  @media print{.chip{display:none}}
+</style>
+<!-- Google Analytics 4, on every page of the site.
+
+     Injected into the <head> of every built page by add_analytics() in
+     build_site.py, rather than pasted into the three hand-written pages and
+     the pandoc header. The version folders are finished HTML that is copied
+     across untouched, so a component the page has to include would miss
+     them; a pass over the finished site/ is the only place that reaches all
+     of them. The measurement ID is filled in from GA_ID.
+
+     What GA4 counts by itself, once Enhanced measurement is on in the
+     property: page views, outbound clicks, file downloads, site search and
+     one scroll event at ninety per cent. None of that is repeated here. Its
+     video tracking only understands embedded YouTube, and the films on this
+     site are plain <video> elements served from the site itself, so the
+     watching is counted below. -->
+<script>
+(function () {
+  if (typeof gtag !== 'function') return;
+
+  function send(name, params) {
+    params = params || {};
+    params.page_path = location.pathname;
+    gtag('event', name, params);
+  }
+
+  /* This tag sits in the head, so when it runs the page below it does not
+     exist yet. Anything that has to find an element waits for the page; the
+     listeners on the document itself do not. */
+  function whenReady(fn) {
+    if (document.readyState === 'loading')
+      document.addEventListener('DOMContentLoaded', fn);
+    else fn();
+  }
+
+  /* What a report needs to name the thing that was watched or read. The
+     file name rather than the path, because the same film is reachable at
+     more than one URL and a report that splits it across them is no use. */
+  function assetName(el) {
+    var src = el.currentSrc || el.src || '';
+    if (!src) {
+      var s = el.querySelector && el.querySelector('source');
+      src = s ? s.getAttribute('src') : '';
+    }
+    return (src.split('/').pop() || 'unknown').replace(/\?.*$/, '');
+  }
+
+  /* The films and the audio. A play is easy to get and says little on its
+     own, since somebody who starts a film and leaves counts the same as
+     somebody who watches it through. So each player also reports the
+     quarters it passes, once each, and reaching the end. */
+  var MARKS = [25, 50, 75];
+  whenReady(function () {
+    document.querySelectorAll('video, audio').forEach(function (m) {
+      var kind = m.tagName.toLowerCase();
+      var seen = {};
+
+      m.addEventListener('play', function () {
+        send('media_play', {asset: assetName(m), media_type: kind});
+      });
+
+      m.addEventListener('timeupdate', function () {
+        if (!m.duration || !isFinite(m.duration)) return;
+        var pct = (m.currentTime / m.duration) * 100;
+        MARKS.forEach(function (mark) {
+          if (pct >= mark && !seen[mark]) {
+            seen[mark] = true;
+            send('media_progress', {
+              asset: assetName(m), media_type: kind, percent: mark});
+          }
+        });
+      });
+
+      m.addEventListener('ended', function () {
+        send('media_complete', {asset: assetName(m), media_type: kind});
+      });
+    });
+  });
+
+  /* How far down a page anybody got. GA4's own scroll event fires once, at
+     ninety per cent, which cannot tell a page nobody finished from one
+     nobody started. Reported under its own name so the two do not mix. */
+  var depths = [25, 50, 75, 100], reached = {};
+  function scrolled() {
+    var doc = document.documentElement;
+    var height = doc.scrollHeight - window.innerHeight;
+    if (height <= 0) return;
+    var pct = ((window.scrollY || doc.scrollTop) / height) * 100;
+    depths.forEach(function (d) {
+      if (pct >= d && !reached[d]) {
+        reached[d] = true;
+        send('scroll_depth', {percent: d});
+      }
+    });
+  }
+  window.addEventListener('scroll', scrolled, {passive: true});
+  whenReady(scrolled);
+
+  /* The controls the site draws itself: the full-screen button on every
+     page, and the speed and caption buttons under each film. Nothing
+     outside the site knows these were pressed. */
+  document.addEventListener('fullscreenchange', function () {
+    send(document.fullscreenElement ? 'fullscreen_enter' : 'fullscreen_exit');
+  });
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.speed button');
+    if (!b) return;
+    if (b.classList.contains('cc')) send('captions_toggle');
+    else send('playback_speed', {speed: (b.textContent || '').trim()});
+  });
+
+})();
+</script>
+</head>
+<body>
+<button id="themeBtn" class="chip" type="button" aria-label="Switch theme"></button>
+<button id="fullscreenBtn" class="chip" type="button" title="Full screen"></button>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">MarsWorm · V5 A plant on open Mars · Exp 2</p>
+    <h1>Dry run: Experiment 2: how many nights can a plant dry out?</h1>
+    <p class="sub"><b>Nothing here is a result.</b> These numbers were invented by a script so the report could be checked before anybody runs the experiment.</p>
+    <p class="stamp">Written by the analysis, not by hand &middot; 2026-09-21 &middot; from /Users/shrek/work/MarsWorm/v5-a-plant-on-open-mars/experiments/2-the-nightly-drying/data</p>
+  </header>
+
+  <h2>What we found out</h2>
+  <p class="lede">Each question below was answered by the same rule, written down <em>before</em> anyone looked at the numbers, so a disappointing answer counts exactly as much as a good one.</p>
+  <div class="cards"><div class="card na"><h3>Did the daily trays fall behind the trays that never dried?</h3><p class="call">Not measured</p><p>There is not enough written down to compare these.</p></div><div class="card na"><h3>Did the weekly trays fall behind too?</h3><p class="call">Not measured</p><p>There is not enough written down to compare these.</p></div><div class="card na"><h3>Did the monthly trays fall behind?</h3><p class="call">Not measured</p><p>There is not enough written down to compare these.</p></div><div class="card na"><h3>Did the daily trays end up worse than the weekly ones?</h3><p class="call">Not measured</p><p>There is not enough written down to compare these.</p></div></div>
+  <h2>Recovery against cycles, not against days</h2>
+  <p class="lede">The chart is drawn against cycles on purpose. If the four lines fall on top of each other here, the damage is counted in cycles and a Martian night has a price. If they only line up when drawn against days, time is what wears the plant out and the drying is free.</p>
+  
+  <h2>How each answer was worked out</h2>
+  <p class="lede">Which two groups each question put head to head. Every one was decided before the experiment started.</p>
+  <figure><div class="chart-scroll"><table class="grid"><thead><tr><th>Question</th><th>Which two groups</th><th>Why those two</th></tr></thead><tbody><tr><td>Did the daily trays fall behind the trays that never dried?</td><td><b>D</b> against <b>A</b></td><td>The damp control against the trays Mars would actually demand. If these match, drying out costs the plant nothing and job 2 is free. This is the whole experiment in one comparison.</td></tr><tr><td>Did the weekly trays fall behind too?</td><td><b>D</b> against <b>B</b></td><td>The damp control against one cycle a week. Weekly trays get about fifty cycles in a year. If they sag while the monthly trays do not, the damage is piling up with cycles.</td></tr><tr><td>Did the monthly trays fall behind?</td><td><b>D</b> against <b>C</b></td><td>The damp control against one cycle a month. Twelve cycles in a year is close to what a real resurrection plant does in the wild, so these trays should be nearly as good as the control.</td></tr><tr><td>Did the daily trays end up worse than the weekly ones?</td><td><b>B</b> against <b>A</b></td><td>Weekly against daily. Both dried, one of them seven times as often. A clear gap here is the ladder doing its job.</td></tr></tbody></table></div></figure>
+  <h2>Every rate, every tray</h2>
+  <figure><div class="chart-scroll"><table class="grid"><thead><tr><th>Rate</th><th>What was done to the trays</th><th>Trays</th><th>Cycles by the end</th><th>Final Fv/Fm</th><th>Average</th></tr></thead><tbody><tr><td><b>A</b></td><td>dried and rewetted daily</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr><tr><td><b>B</b></td><td>dried and rewetted weekly</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr><tr><td><b>C</b></td><td>dried and rewetted monthly</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr><tr><td><b>D</b></td><td>never dried, kept damp all year</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr></tbody></table></div></figure>
+  <h2>How many cycles before recovery halved</h2>
+  <p class="lede">This is the number that decides version 5. A Martian year is about 670 days, so a plant that halves inside a few hundred cycles cannot last a season outside.</p>
+  <figure><div class="chart-scroll"><table class="grid"><thead><tr><th>Rate</th><th>Species</th><th>Trays that halved</th><th>Cycles it took</th></tr></thead><tbody></tbody></table></div></figure>
+  <h2>Was the data any good?</h2>
+  <p class="lede">These checks run before any answer is worked out. A report that cannot tell you what is missing should not be trusted about what is there.</p>
+  <div class="note warn"><b>Some checks failed, and the report says so rather than hiding it.</b><br><br>4 of the four rates have fewer than three trays with a final reading, so those rates cannot be compared.<br>288 fluorometer readings are blank. A blank is not a zero, so those trays are short of readings.</div>
+
+  <div class="end"><span>end of report</span></div>
+</div>
+
+<script>
+// ---- light / dark switch ----
+(function () {
+  const btn = document.getElementById("themeBtn");
+  const SUN = '<svg viewBox="0 0 24 24"><path d="M12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-13a1 1 0 0 1-1-1V1a1 1 0 0 1 2 0v2a1 1 0 0 1-1 1zm0 20a1 1 0 0 1-1-1v-2a1 1 0 0 1 2 0v2a1 1 0 0 1-1 1zM4 13H2a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2zm18 0h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2zM5.6 6.99 4.2 5.58A1 1 0 0 1 5.61 4.17L7.02 5.58A1 1 0 1 1 5.6 6.99zm12.8 12.8-1.41-1.41a1 1 0 0 1 1.41-1.41l1.41 1.41a1 1 0 0 1-1.41 1.41zM6.99 18.4 5.58 19.8a1 1 0 0 1-1.41-1.41l1.41-1.41A1 1 0 1 1 6.99 18.4zM19.8 5.58 18.4 6.99a1 1 0 0 1-1.41-1.41L18.4 4.17a1 1 0 0 1 1.41 1.41z"/></svg>';
+  const MOON = '<svg viewBox="0 0 24 24"><path d="M12.3 22C6.6 22 2 17.4 2 11.7 2 6.9 5.3 2.8 9.9 1.7a1 1 0 0 1 1.1 1.5 7.6 7.6 0 0 0 9.7 10.6 1 1 0 0 1 1.3 1.3A10.3 10.3 0 0 1 12.3 22z"/></svg>';
+
+  // The page is light-first, so an unset theme means "whatever the OS says",
+  // and the OS default here is light.
+  const prefersDark = window.matchMedia
+    ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+
+  function current() {
+    const set = document.documentElement.getAttribute("data-theme");
+    if (set) return set;
+    return prefersDark && prefersDark.matches ? "dark" : "light";
+  }
+  function paint() {
+    const dark = current() === "dark";
+    btn.innerHTML = dark ? SUN : MOON;      // show what you will GET
+    btn.title = dark ? "Switch to light" : "Switch to dark";
+    btn.setAttribute("aria-label", btn.title);
+  }
+  btn.addEventListener("click", () => {
+    const next = current() === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("marsworm-theme", next); } catch (e) {}
+    paint();
+  });
+  try {
+    const saved = localStorage.getItem("marsworm-theme");
+    if (saved) document.documentElement.setAttribute("data-theme", saved);
+  } catch (e) {}
+  if (prefersDark) prefersDark.addEventListener("change", paint);
+  paint();
+})();
+
+// ---- fullscreen toggle, YouTube-style ----
+(function () {
+  const btn = document.getElementById("fullscreenBtn");
+  const ENTER = '<svg viewBox="0 0 24 24"><path d="M3 3h6v2H5v4H3V3zm12 0h6v6h-2V5h-4V3zM3 15h2v4h4v2H3v-6zm16 4h-4v2h6v-6h-2v4z"/></svg>';
+  const EXIT  = '<svg viewBox="0 0 24 24"><path d="M5 16H3v5h5v-2H5v-3zm-2-8h2V5h3V3H3v5zm14 11h-3v2h5v-5h-2v3zM14 3v2h3v3h2V3h-5z"/></svg>';
+
+  function isFullscreen() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement ||
+              document.mozFullScreenElement || document.msFullscreenElement);
+  }
+  async function enter() {
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen ||
+                el.mozRequestFullScreen || el.msRequestFullscreen;
+    if (req) await req.call(el);
+    // NOTE: no navigator.keyboard.lock() here, deliberately. The Mission Map
+    // locks Escape because it has popups that need to swallow the first press.
+    // This page has none, so locking Escape would only break the one thing
+    // everybody expects it to do -- leave fullscreen.
+  }
+  function exit() {
+    if (isFullscreen()) {
+      const ex = document.exitFullscreen || document.webkitExitFullscreen ||
+                 document.mozCancelFullScreen || document.msExitFullscreen;
+      if (ex) ex.call(document);
+    }
+  }
+  function paint() {
+    if (isFullscreen()) {
+      btn.innerHTML = EXIT;
+      btn.title = "Exit full screen";
+      btn.setAttribute("data-fullscreen", "true");
+    } else {
+      btn.innerHTML = ENTER + '<span class="fs-label">Full screen</span>';
+      btn.title = "Full screen";
+      btn.removeAttribute("data-fullscreen");
+    }
+  }
+  btn.addEventListener("click", () => {
+    isFullscreen() ? exit() : enter();
+    btn.blur();          // otherwise the ring lingers and reads as "active"
+  });
+  ["fullscreenchange", "webkitfullscreenchange", "mozfullscreenchange",
+   "MSFullscreenChange"].forEach(ev => document.addEventListener(ev, paint));
+  paint();
+})();
+</script>
+<!-- saanvi-showcase: shared block, injected by apply_global.py -->
+<!-- The block every page on the site carries, injected by apply_global.py.
+     Edit it here, run the build, and all 800-odd pages change together.
+
+     Three jobs: count the visit, offer fullscreen, and offer the way home.
+     Each project was built separately over four years and none of them knows
+     about the others, so none of this can rely on their markup. It adds its
+     own elements, and takes over from theirs where they had their own.
+
+     ../../../index.html is replaced per page with the relative path back to the front
+     page, because these pages sit at every depth from /index.html to
+     /MarsWorm/v1-bioengineered-organism/experiments/index.html. A relative
+     path works on the live site and equally on a page opened off the disk; a
+     link to "/" would mean the root of the hard drive. -->
+
+<style data-sp>
+/* Named with a prefix nothing else here uses, so no project's stylesheet can
+   reach these by accident and nothing here can reach a project's. */
+.sp-home {
+  /* The top left corner. Every one of these sites centres whatever it keeps
+     up there, so the corner is empty on all of them. */
+  position: fixed; top: 14px; left: 14px; z-index: 2147483000;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 16px 9px 13px;
+  border-radius: 999px;
+  background: rgba(253, 252, 251, 0.92);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid #e2ddd9;
+  box-shadow: 0 2px 10px rgba(80, 50, 35, 0.10);
+  /* Her own hand, the one she signs the portrait with on the front page and
+     on every MarsWorm page. A grey sans chip in the corner looked like
+     something the browser had added; this looks like it belongs to her. */
+  font: 700 16px/1 "Bradley Hand", "Noteworthy", "Segoe Script", cursive;
+  color: #8a3317; text-decoration: none;
+  transition: box-shadow .15s, border-color .15s, transform .15s;
+}
+.sp-home:hover {
+  border-color: #b3401f; transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(80, 50, 35, 0.16);
+}
+.sp-home svg {
+  width: 14px; height: 14px; flex: none; margin-top: -1px;
+  fill: none; stroke: currentColor; stroke-width: 2.2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* Tighter on a phone, where 14px of margin is a lot of the screen. */
+/* On a phone these bars stop centring and put their own logo hard left,
+   which is where this was sitting: it covered MarsWorm's wordmark and
+   SPARK's. Down to the bottom corner, where nothing else goes. The
+   fullscreen button is not drawn on a touch device, so that corner is free. */
+@media (max-width: 760px) {
+  .sp-home {
+    top: auto; bottom: 12px; left: 12px;
+    padding: 7px 13px 8px 11px; font-size: 15px;
+  }
+}
+@media print { .sp-home, .sp-fs { display: none; } }
+
+.sp-fs {
+  position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 2147483000;
+  width: 2.4rem; height: 2.4rem; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #fdfcfb; color: #6b6b6b;
+  border: 1px solid #e2ddd9; border-radius: 0.5rem;
+  cursor: pointer; opacity: 0.55;
+  transition: opacity .15s, color .15s, border-color .15s;
+}
+.sp-fs svg {
+  width: 1rem; height: 1rem; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.sp-fs:hover { opacity: 1; color: #b3401f; border-color: #b3401f; }
+.sp-fs:focus-visible { opacity: 1; outline: 2px solid #b3401f; outline-offset: 2px; }
+</style>
+
+<!-- One property for the whole site. apply_global.py strips the per-project
+     tags MarsWorm and NitRobe carried, so nothing is counted twice. -->
+<script data-sp async src="https://www.googletagmanager.com/gtag/js?id=G-FJ4CWSDFEW"></script>
+<script data-sp>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FJ4CWSDFEW');
+</script>
+
+<script data-sp>
+(function () {
+  'use strict';
+
+  /* A swapped-in page brings its own copy of this block. Only the first one
+     wires anything to the window or the document; the rest would stack a
+     second click handler and a second button on every swap. */
+  if (window.__saanviGlobal) return;
+  window.__saanviGlobal = true;
+
+  /* The stylesheet moves to the head, where a body swap cannot take it. */
+  var css = document.querySelector('style[data-sp]');
+  if (css) document.head.appendChild(css);
+
+  /* ---- the way home ----------------------------------------------------
+     Every page gets it, including the front page's own children. The front
+     page itself is skipped at injection time, because a link home from home
+     is furniture with nothing behind it. */
+
+  /* The front page is injected with an empty path, because a link home from
+     home is furniture with nothing behind it. */
+  var where = '../../../index.html';
+  /* The front page, as an address: the injected path from here, or, on the
+     front page itself, this page. Worked out once, at load, so that a page
+     swapped in later under fullscreen can be told whether it is home. */
+  var FRONT = new URL(where || 'index.html', location.href);
+  function isFront(url) {
+    return url.pathname === FRONT.pathname ||
+           url.pathname === FRONT.pathname.replace(/index\.html$/, '');
+  }
+  /* The pill is always made, and only shown away from home. It used to be
+     made only on pages that had a path home, so fullscreen entered on the
+     front page carried no pill into any project. */
+  var home = document.createElement('a');
+  home.className = 'sp-home';
+  home.href = FRONT.href;
+  home.innerHTML =
+    '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+    '<path d="M3 10.6 12 3.4l9 7.2"/><path d="M5.6 9.6V20h12.8V9.6"/>' +
+    '<path d="M10 20v-5h4v5"/></svg><span>Saanvi</span>';
+  home.setAttribute('aria-label', "All of Saanvi's projects");
+  home.title = "All of Saanvi's projects";
+  if (!isFront(new URL(location.href))) document.body.appendChild(home);
+
+  /* ---- fullscreen ------------------------------------------------------
+     One button for the whole site. Seven of these projects shipped their own
+     and two shipped none, so this takes any it finds away and puts one back.
+     Theirs are built by their own scripts, which may run after this, so the
+     sweep repeats a moment later rather than only once. */
+
+  /* Seven of these projects shipped a fullscreen button of their own and one
+     shipped two names for it. Every spelling found so far is listed; a
+     button of ours is never matched, because all of ours are .sp-fs. */
+  var THEIRS = '.fs, .fs-label, #fs-label, .fullscreen-btn, #fullscreen-btn,'
+             + ' [aria-label*="fullscreen" i]:not(.sp-fs),'
+             + ' [title*="full screen" i]:not(.sp-fs)';
+
+  function sweep() {
+    var theirs = document.querySelectorAll(THEIRS);
+    for (var i = 0; i < theirs.length; i++) {
+      if (theirs[i].className !== 'sp-fs') theirs[i].remove();
+    }
+  }
+  sweep();
+  setTimeout(sweep, 400);
+  addEventListener('load', sweep);
+
+  var root = document.documentElement;
+  if (!(root.requestFullscreen || root.webkitRequestFullscreen)) return;
+  /* A phone has no fullscreen for a page, and on a tablet the button sits
+     under a thumb. */
+  if ('ontouchstart' in window) return;
+
+  var EXPAND = '<path d="M3 8V3h5M17 3h5v5M22 17v5h-5M8 22H3v-5"/>';
+  var SHRINK = '<path d="M8 3v5H3M22 8h-5V3M17 22v-5h5M3 17h5v5"/>';
+
+  var btn = document.createElement('button');
+  btn.className = 'sp-fs';
+  btn.type = 'button';
+  document.body.appendChild(btn);
+
+  function on() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function paint() {
+    var label = on() ? 'Leave fullscreen' : 'View fullscreen';
+    btn.setAttribute('aria-label', label);
+    btn.title = label + '  (F)';
+    btn.innerHTML = '<svg viewBox="0 0 25 25" aria-hidden="true">' +
+                    (on() ? SHRINK : EXPAND) + '</svg>';
+  }
+  function toggle() {
+    if (on()) {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+    }
+  }
+
+  btn.addEventListener('click', toggle);
+  document.addEventListener('fullscreenchange', paint);
+  document.addEventListener('webkitfullscreenchange', paint);
+
+  /* The shortcut a video player uses, but never while something is being
+     typed into, and never on top of a browser shortcut. */
+  /* In the capture phase, and stopped dead once handled. Several of these
+     projects bind F to their own fullscreen, and two handlers toggling the
+     same thing cancel each other out: the key would do nothing at all. */
+  addEventListener('keydown', function (e) {
+    if (e.key !== 'f' && e.key !== 'F') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.isContentEditable ||
+              /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    toggle();
+  }, true);
+
+  paint();
+
+  /* ---- staying in fullscreen across a link -----------------------------
+     Fullscreen belongs to a document. Follow an ordinary link and it ends,
+     and the new page cannot ask to go back in: a browser only grants
+     fullscreen off a click, and a fresh document has no click behind it. So
+     SPARK's menu dropped you out of fullscreen on every page.
+
+     While fullscreen is on, and only then, a click on a link to another page
+     of this site fetches it and swaps it in rather than navigating. The
+     document never changes, so fullscreen never ends. Outside fullscreen
+     none of this runs and every link is an ordinary link, which is what
+     keeps these plain static pages for anyone reading them normally, and
+     what makes a failure here harmless. */
+
+  /* The scripts already on this document, by address. A swapped-in page
+     that asks for one of them again is not made to download it twice: the
+     gene finder's model is half a megabyte. */
+  var fetched = {};
+  for (var f = 0; f < document.scripts.length; f++) {
+    if (document.scripts[f].src) fetched[document.scripts[f].src] = true;
+  }
+
+  function runScripts(where) {
+    /* A script inserted as parsed markup does not execute. Re-creating each
+       one does, which is what keeps a project's own behaviour alive after a
+       swap: SPARK's play buttons, NitRobe's gene finder.
+
+       In order, and one at a time. A script made here is async by default,
+       so three external files would race each other and the inline script
+       after them would run first, against a model that had not arrived yet:
+       that is how the finder came to say its files did not load. An inline
+       script is wrapped in a function, so walking back onto a page does not
+       redeclare its variables; what a page means to share between its
+       scripts it hangs on window, which still works. */
+    var olds = where.querySelectorAll('script'), list = [];
+    for (var i = 0; i < olds.length; i++) {
+      var o = olds[i];
+      list.push([o.src, o.text]);
+      o.remove();
+    }
+    return list.reduce(function (chain, item) {
+      return chain.then(function () {
+        return new Promise(function (done) {
+          var src = item[0], s = document.createElement('script');
+          if (src) {
+            if (fetched[src]) return done();
+            fetched[src] = true;
+            s.src = src;
+            s.async = false;
+            s.onload = s.onerror = function () { done(); };
+          } else {
+            s.text = '(function(){' + item[1] + '\n})();';
+          }
+          where.appendChild(s);
+          if (!src) done();
+        });
+      });
+    }, Promise.resolve());
+  }
+
+  function swap(url, push) {
+    fetch(url.href).then(function (r) {
+      if (!r.ok) throw 0;
+      return r.text();
+    }).then(function (text) {
+      var doc = new DOMParser().parseFromString(text, 'text/html');
+      if (!doc.body) throw 0;
+      /* The address changes first: every relative href and src in the
+         incoming markup resolves against it, and these pages sit at
+         different depths. */
+      if (push) history.pushState({}, '', url.href);
+
+      /* The incoming page's stylesheets. Within one project these are the
+         same files and nothing happens; crossing from one project to another
+         they are different, and the old ones have to go or two designs fight
+         over the same page. */
+      var head = document.head;
+      var mine = head.querySelectorAll(
+        'link[rel="stylesheet"]:not([data-sp]), style:not([data-sp])');
+      for (var i = 0; i < mine.length; i++) mine[i].remove();
+      var theirs = doc.head.querySelectorAll('link[rel="stylesheet"], style');
+      for (var k = 0; k < theirs.length; k++) head.appendChild(theirs[k]);
+
+      document.title = doc.title;
+
+      /* The incoming page carries its own copy of this block. Out it comes,
+         and the live pill and button are put back afterwards, so there is
+         one of each however far you wander. */
+      var copies = doc.body.querySelectorAll('[data-sp], .sp-home, .sp-fs');
+      for (var c = 0; c < copies.length; c++) copies[c].remove();
+
+      document.body.replaceWith(document.adoptNode(doc.body));
+      if (!isFront(url)) document.body.appendChild(home);
+      if (btn) document.body.appendChild(btn);
+      return runScripts(document.body).then(function () {
+        var el = url.hash && document.getElementById(
+          decodeURIComponent(url.hash.slice(1)));
+        if (el) el.scrollIntoView(true); else scrollTo(0, 0);
+      });
+    }).catch(function () {
+      location.href = url.href;            // give up quietly, navigate
+    });
+  }
+
+  /* In the capture phase, so this runs before any router the page brought
+     with it. MarsWorm and NitRobe ship their own, written for their own
+     pages: fine inside those sites, and fatal leaving them, because their
+     fallback on a page they do not understand is to navigate, which ends
+     fullscreen. When this handles a click it stops the event dead so theirs
+     never sees it. Which means this one does all the work on the live site,
+     and a page swapped in here has to work as well as it does under its own
+     router: the finder's model has to load, in order, before the finder. */
+  addEventListener('click', function (e) {
+    if (!on() || e.defaultPrevented) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
+    var a = e.target.closest && e.target.closest('a');
+    if (!a || a.target || a.hasAttribute('download')) return;
+    var url = new URL(a.href, location.href);
+    if (url.origin !== location.origin) return;
+    /* Only pages. A PDF or a film is a download or a viewer, and neither is
+       something to paste into this one. */
+    if (!/\.html$/.test(url.pathname)) return;
+    if (url.pathname === location.pathname) {
+      /* The page you are already on. With a #section it is an anchor, and
+         the browser just scrolls, which keeps fullscreen. Without one it is
+         a reload, and a reload ends fullscreen: clicking Contact Me twice
+         dropped you out. There is nothing to load, so nothing happens. */
+      if (!url.hash) {
+        e.preventDefault(); e.stopImmediatePropagation(); scrollTo(0, 0);
+      }
+      return;
+    }
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    swap(url, true);
+  }, true);
+
+  addEventListener('popstate', function () {
+    if (on()) swap(new URL(location.href), false);
+  });
+})();
+</script>
+
+<!-- /saanvi-showcase -->
+</body>
+</html>

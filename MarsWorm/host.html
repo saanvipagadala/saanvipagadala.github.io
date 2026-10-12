@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MarsWorm</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://saanvipagadala.github.io/MarsWorm/v1-bioengineered-organism/host.html">
+<meta http-equiv="refresh" content="0; url=https://saanvipagadala.github.io/MarsWorm/v1-bioengineered-organism/host.html">
+<script>location.replace('https://saanvipagadala.github.io/MarsWorm/v1-bioengineered-organism/host.html' + location.hash);</script>
+<!-- Google Analytics 4, on every page of the site.
+
+     Injected into the <head> of every built page by add_analytics() in
+     build_site.py, rather than pasted into the three hand-written pages and
+     the pandoc header. The version folders are finished HTML that is copied
+     across untouched, so a component the page has to include would miss
+     them; a pass over the finished site/ is the only place that reaches all
+     of them. The measurement ID is filled in from GA_ID.
+
+     What GA4 counts by itself, once Enhanced measurement is on in the
+     property: page views, outbound clicks, file downloads, site search and
+     one scroll event at ninety per cent. None of that is repeated here. Its
+     video tracking only understands embedded YouTube, and the films on this
+     site are plain <video> elements served from the site itself, so the
+     watching is counted below. -->
+<script>
+(function () {
+  if (typeof gtag !== 'function') return;
+
+  function send(name, params) {
+    params = params || {};
+    params.page_path = location.pathname;
+    gtag('event', name, params);
+  }
+
+  /* This tag sits in the head, so when it runs the page below it does not
+     exist yet. Anything that has to find an element waits for the page; the
+     listeners on the document itself do not. */
+  function whenReady(fn) {
+    if (document.readyState === 'loading')
+      document.addEventListener('DOMContentLoaded', fn);
+    else fn();
+  }
+
+  /* What a report needs to name the thing that was watched or read. The
+     file name rather than the path, because the same film is reachable at
+     more than one URL and a report that splits it across them is no use. */
+  function assetName(el) {
+    var src = el.currentSrc || el.src || '';
+    if (!src) {
+      var s = el.querySelector && el.querySelector('source');
+      src = s ? s.getAttribute('src') : '';
+    }
+    return (src.split('/').pop() || 'unknown').replace(/\?.*$/, '');
+  }
+
+  /* The films and the audio. A play is easy to get and says little on its
+     own, since somebody who starts a film and leaves counts the same as
+     somebody who watches it through. So each player also reports the
+     quarters it passes, once each, and reaching the end. */
+  var MARKS = [25, 50, 75];
+  whenReady(function () {
+    document.querySelectorAll('video, audio').forEach(function (m) {
+      var kind = m.tagName.toLowerCase();
+      var seen = {};
+
+      m.addEventListener('play', function () {
+        send('media_play', {asset: assetName(m), media_type: kind});
+      });
+
+      m.addEventListener('timeupdate', function () {
+        if (!m.duration || !isFinite(m.duration)) return;
+        var pct = (m.currentTime / m.duration) * 100;
+        MARKS.forEach(function (mark) {
+          if (pct >= mark && !seen[mark]) {
+            seen[mark] = true;
+            send('media_progress', {
+              asset: assetName(m), media_type: kind, percent: mark});
+          }
+        });
+      });
+
+      m.addEventListener('ended', function () {
+        send('media_complete', {asset: assetName(m), media_type: kind});
+      });
+    });
+  });
+
+  /* How far down a page anybody got. GA4's own scroll event fires once, at
+     ninety per cent, which cannot tell a page nobody finished from one
+     nobody started. Reported under its own name so the two do not mix. */
+  var depths = [25, 50, 75, 100], reached = {};
+  function scrolled() {
+    var doc = document.documentElement;
+    var height = doc.scrollHeight - window.innerHeight;
+    if (height <= 0) return;
+    var pct = ((window.scrollY || doc.scrollTop) / height) * 100;
+    depths.forEach(function (d) {
+      if (pct >= d && !reached[d]) {
+        reached[d] = true;
+        send('scroll_depth', {percent: d});
+      }
+    });
+  }
+  window.addEventListener('scroll', scrolled, {passive: true});
+  whenReady(scrolled);
+
+  /* The controls the site draws itself: the full-screen button on every
+     page, and the speed and caption buttons under each film. Nothing
+     outside the site knows these were pressed. */
+  document.addEventListener('fullscreenchange', function () {
+    send(document.fullscreenElement ? 'fullscreen_enter' : 'fullscreen_exit');
+  });
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.speed button');
+    if (!b) return;
+    if (b.classList.contains('cc')) send('captions_toggle');
+    else send('playback_speed', {speed: (b.textContent || '').trim()});
+  });
+
+})();
+</script>
+</head>
+<body>
+<p>This page has moved to <a href="https://saanvipagadala.github.io/MarsWorm/v1-bioengineered-organism/host.html">https://saanvipagadala.github.io/MarsWorm/v1-bioengineered-organism/host.html</a>.</p>
+<!-- saanvi-showcase: shared block, injected by apply_global.py -->
+<!-- The block every page on the site carries, injected by apply_global.py.
+     Edit it here, run the build, and all 800-odd pages change together.
+
+     Three jobs: count the visit, offer fullscreen, and offer the way home.
+     Each project was built separately over four years and none of them knows
+     about the others, so none of this can rely on their markup. It adds its
+     own elements, and takes over from theirs where they had their own.
+
+     ../index.html is replaced per page with the relative path back to the front
+     page, because these pages sit at every depth from /index.html to
+     /MarsWorm/v1-bioengineered-organism/experiments/index.html. A relative
+     path works on the live site and equally on a page opened off the disk; a
+     link to "/" would mean the root of the hard drive. -->
+
+<style data-sp>
+/* Named with a prefix nothing else here uses, so no project's stylesheet can
+   reach these by accident and nothing here can reach a project's. */
+.sp-home {
+  /* The top left corner. Every one of these sites centres whatever it keeps
+     up there, so the corner is empty on all of them. */
+  position: fixed; top: 14px; left: 14px; z-index: 2147483000;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 16px 9px 13px;
+  border-radius: 999px;
+  background: rgba(253, 252, 251, 0.92);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid #e2ddd9;
+  box-shadow: 0 2px 10px rgba(80, 50, 35, 0.10);
+  /* Her own hand, the one she signs the portrait with on the front page and
+     on every MarsWorm page. A grey sans chip in the corner looked like
+     something the browser had added; this looks like it belongs to her. */
+  font: 700 16px/1 "Bradley Hand", "Noteworthy", "Segoe Script", cursive;
+  color: #8a3317; text-decoration: none;
+  transition: box-shadow .15s, border-color .15s, transform .15s;
+}
+.sp-home:hover {
+  border-color: #b3401f; transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(80, 50, 35, 0.16);
+}
+.sp-home svg {
+  width: 14px; height: 14px; flex: none; margin-top: -1px;
+  fill: none; stroke: currentColor; stroke-width: 2.2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* Tighter on a phone, where 14px of margin is a lot of the screen. */
+/* On a phone these bars stop centring and put their own logo hard left,
+   which is where this was sitting: it covered MarsWorm's wordmark and
+   SPARK's. Down to the bottom corner, where nothing else goes. The
+   fullscreen button is not drawn on a touch device, so that corner is free. */
+@media (max-width: 760px) {
+  .sp-home {
+    top: auto; bottom: 12px; left: 12px;
+    padding: 7px 13px 8px 11px; font-size: 15px;
+  }
+}
+@media print { .sp-home, .sp-fs { display: none; } }
+
+.sp-fs {
+  position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 2147483000;
+  width: 2.4rem; height: 2.4rem; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #fdfcfb; color: #6b6b6b;
+  border: 1px solid #e2ddd9; border-radius: 0.5rem;
+  cursor: pointer; opacity: 0.55;
+  transition: opacity .15s, color .15s, border-color .15s;
+}
+.sp-fs svg {
+  width: 1rem; height: 1rem; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.sp-fs:hover { opacity: 1; color: #b3401f; border-color: #b3401f; }
+.sp-fs:focus-visible { opacity: 1; outline: 2px solid #b3401f; outline-offset: 2px; }
+</style>
+
+<!-- One property for the whole site. apply_global.py strips the per-project
+     tags MarsWorm and NitRobe carried, so nothing is counted twice. -->
+<script data-sp async src="https://www.googletagmanager.com/gtag/js?id=G-FJ4CWSDFEW"></script>
+<script data-sp>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FJ4CWSDFEW');
+</script>
+
+<script data-sp>
+(function () {
+  'use strict';
+
+  /* A swapped-in page brings its own copy of this block. Only the first one
+     wires anything to the window or the document; the rest would stack a
+     second click handler and a second button on every swap. */
+  if (window.__saanviGlobal) return;
+  window.__saanviGlobal = true;
+
+  /* The stylesheet moves to the head, where a body swap cannot take it. */
+  var css = document.querySelector('style[data-sp]');
+  if (css) document.head.appendChild(css);
+
+  /* ---- the way home ----------------------------------------------------
+     Every page gets it, including the front page's own children. The front
+     page itself is skipped at injection time, because a link home from home
+     is furniture with nothing behind it. */
+
+  /* The front page is injected with an empty path, because a link home from
+     home is furniture with nothing behind it. */
+  var where = '../index.html';
+  /* The front page, as an address: the injected path from here, or, on the
+     front page itself, this page. Worked out once, at load, so that a page
+     swapped in later under fullscreen can be told whether it is home. */
+  var FRONT = new URL(where || 'index.html', location.href);
+  function isFront(url) {
+    return url.pathname === FRONT.pathname ||
+           url.pathname === FRONT.pathname.replace(/index\.html$/, '');
+  }
+  /* The pill is always made, and only shown away from home. It used to be
+     made only on pages that had a path home, so fullscreen entered on the
+     front page carried no pill into any project. */
+  var home = document.createElement('a');
+  home.className = 'sp-home';
+  home.href = FRONT.href;
+  home.innerHTML =
+    '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+    '<path d="M3 10.6 12 3.4l9 7.2"/><path d="M5.6 9.6V20h12.8V9.6"/>' +
+    '<path d="M10 20v-5h4v5"/></svg><span>Saanvi</span>';
+  home.setAttribute('aria-label', "All of Saanvi's projects");
+  home.title = "All of Saanvi's projects";
+  if (!isFront(new URL(location.href))) document.body.appendChild(home);
+
+  /* ---- fullscreen ------------------------------------------------------
+     One button for the whole site. Seven of these projects shipped their own
+     and two shipped none, so this takes any it finds away and puts one back.
+     Theirs are built by their own scripts, which may run after this, so the
+     sweep repeats a moment later rather than only once. */
+
+  /* Seven of these projects shipped a fullscreen button of their own and one
+     shipped two names for it. Every spelling found so far is listed; a
+     button of ours is never matched, because all of ours are .sp-fs. */
+  var THEIRS = '.fs, .fs-label, #fs-label, .fullscreen-btn, #fullscreen-btn,'
+             + ' [aria-label*="fullscreen" i]:not(.sp-fs),'
+             + ' [title*="full screen" i]:not(.sp-fs)';
+
+  function sweep() {
+    var theirs = document.querySelectorAll(THEIRS);
+    for (var i = 0; i < theirs.length; i++) {
+      if (theirs[i].className !== 'sp-fs') theirs[i].remove();
+    }
+  }
+  sweep();
+  setTimeout(sweep, 400);
+  addEventListener('load', sweep);
+
+  var root = document.documentElement;
+  if (!(root.requestFullscreen || root.webkitRequestFullscreen)) return;
+  /* A phone has no fullscreen for a page, and on a tablet the button sits
+     under a thumb. */
+  if ('ontouchstart' in window) return;
+
+  var EXPAND = '<path d="M3 8V3h5M17 3h5v5M22 17v5h-5M8 22H3v-5"/>';
+  var SHRINK = '<path d="M8 3v5H3M22 8h-5V3M17 22v-5h5M3 17h5v5"/>';
+
+  var btn = document.createElement('button');
+  btn.className = 'sp-fs';
+  btn.type = 'button';
+  document.body.appendChild(btn);
+
+  function on() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function paint() {
+    var label = on() ? 'Leave fullscreen' : 'View fullscreen';
+    btn.setAttribute('aria-label', label);
+    btn.title = label + '  (F)';
+    btn.innerHTML = '<svg viewBox="0 0 25 25" aria-hidden="true">' +
+                    (on() ? SHRINK : EXPAND) + '</svg>';
+  }
+  function toggle() {
+    if (on()) {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+    }
+  }
+
+  btn.addEventListener('click', toggle);
+  document.addEventListener('fullscreenchange', paint);
+  document.addEventListener('webkitfullscreenchange', paint);
+
+  /* The shortcut a video player uses, but never while something is being
+     typed into, and never on top of a browser shortcut. */
+  /* In the capture phase, and stopped dead once handled. Several of these
+     projects bind F to their own fullscreen, and two handlers toggling the
+     same thing cancel each other out: the key would do nothing at all. */
+  addEventListener('keydown', function (e) {
+    if (e.key !== 'f' && e.key !== 'F') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.isContentEditable ||
+              /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    toggle();
+  }, true);
+
+  paint();
+
+  /* ---- staying in fullscreen across a link -----------------------------
+     Fullscreen belongs to a document. Follow an ordinary link and it ends,
+     and the new page cannot ask to go back in: a browser only grants
+     fullscreen off a click, and a fresh document has no click behind it. So
+     SPARK's menu dropped you out of fullscreen on every page.
+
+     While fullscreen is on, and only then, a click on a link to another page
+     of this site fetches it and swaps it in rather than navigating. The
+     document never changes, so fullscreen never ends. Outside fullscreen
+     none of this runs and every link is an ordinary link, which is what
+     keeps these plain static pages for anyone reading them normally, and
+     what makes a failure here harmless. */
+
+  /* The scripts already on this document, by address. A swapped-in page
+     that asks for one of them again is not made to download it twice: the
+     gene finder's model is half a megabyte. */
+  var fetched = {};
+  for (var f = 0; f < document.scripts.length; f++) {
+    if (document.scripts[f].src) fetched[document.scripts[f].src] = true;
+  }
+
+  function runScripts(where) {
+    /* A script inserted as parsed markup does not execute. Re-creating each
+       one does, which is what keeps a project's own behaviour alive after a
+       swap: SPARK's play buttons, NitRobe's gene finder.
+
+       In order, and one at a time. A script made here is async by default,
+       so three external files would race each other and the inline script
+       after them would run first, against a model that had not arrived yet:
+       that is how the finder came to say its files did not load. An inline
+       script is wrapped in a function, so walking back onto a page does not
+       redeclare its variables; what a page means to share between its
+       scripts it hangs on window, which still works. */
+    var olds = where.querySelectorAll('script'), list = [];
+    for (var i = 0; i < olds.length; i++) {
+      var o = olds[i];
+      list.push([o.src, o.text]);
+      o.remove();
+    }
+    return list.reduce(function (chain, item) {
+      return chain.then(function () {
+        return new Promise(function (done) {
+          var src = item[0], s = document.createElement('script');
+          if (src) {
+            if (fetched[src]) return done();
+            fetched[src] = true;
+            s.src = src;
+            s.async = false;
+            s.onload = s.onerror = function () { done(); };
+          } else {
+            s.text = '(function(){' + item[1] + '\n})();';
+          }
+          where.appendChild(s);
+          if (!src) done();
+        });
+      });
+    }, Promise.resolve());
+  }
+
+  function swap(url, push) {
+    fetch(url.href).then(function (r) {
+      if (!r.ok) throw 0;
+      return r.text();
+    }).then(function (text) {
+      var doc = new DOMParser().parseFromString(text, 'text/html');
+      if (!doc.body) throw 0;
+      /* The address changes first: every relative href and src in the
+         incoming markup resolves against it, and these pages sit at
+         different depths. */
+      if (push) history.pushState({}, '', url.href);
+
+      /* The incoming page's stylesheets. Within one project these are the
+         same files and nothing happens; crossing from one project to another
+         they are different, and the old ones have to go or two designs fight
+         over the same page. */
+      var head = document.head;
+      var mine = head.querySelectorAll(
+        'link[rel="stylesheet"]:not([data-sp]), style:not([data-sp])');
+      for (var i = 0; i < mine.length; i++) mine[i].remove();
+      var theirs = doc.head.querySelectorAll('link[rel="stylesheet"], style');
+      for (var k = 0; k < theirs.length; k++) head.appendChild(theirs[k]);
+
+      document.title = doc.title;
+
+      /* The incoming page carries its own copy of this block. Out it comes,
+         and the live pill and button are put back afterwards, so there is
+         one of each however far you wander. */
+      var copies = doc.body.querySelectorAll('[data-sp], .sp-home, .sp-fs');
+      for (var c = 0; c < copies.length; c++) copies[c].remove();
+
+      document.body.replaceWith(document.adoptNode(doc.body));
+      if (!isFront(url)) document.body.appendChild(home);
+      if (btn) document.body.appendChild(btn);
+      return runScripts(document.body).then(function () {
+        var el = url.hash && document.getElementById(
+          decodeURIComponent(url.hash.slice(1)));
+        if (el) el.scrollIntoView(true); else scrollTo(0, 0);
+      });
+    }).catch(function () {
+      location.href = url.href;            // give up quietly, navigate
+    });
+  }
+
+  /* In the capture phase, so this runs before any router the page brought
+     with it. MarsWorm and NitRobe ship their own, written for their own
+     pages: fine inside those sites, and fatal leaving them, because their
+     fallback on a page they do not understand is to navigate, which ends
+     fullscreen. When this handles a click it stops the event dead so theirs
+     never sees it. Which means this one does all the work on the live site,
+     and a page swapped in here has to work as well as it does under its own
+     router: the finder's model has to load, in order, before the finder. */
+  addEventListener('click', function (e) {
+    if (!on() || e.defaultPrevented) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
+    var a = e.target.closest && e.target.closest('a');
+    if (!a || a.target || a.hasAttribute('download')) return;
+    var url = new URL(a.href, location.href);
+    if (url.origin !== location.origin) return;
+    /* Only pages. A PDF or a film is a download or a viewer, and neither is
+       something to paste into this one. */
+    if (!/\.html$/.test(url.pathname)) return;
+    if (url.pathname === location.pathname) {
+      /* The page you are already on. With a #section it is an anchor, and
+         the browser just scrolls, which keeps fullscreen. Without one it is
+         a reload, and a reload ends fullscreen: clicking Contact Me twice
+         dropped you out. There is nothing to load, so nothing happens. */
+      if (!url.hash) {
+        e.preventDefault(); e.stopImmediatePropagation(); scrollTo(0, 0);
+      }
+      return;
+    }
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    swap(url, true);
+  }, true);
+
+  addEventListener('popstate', function () {
+    if (on()) swap(new URL(location.href), false);
+  });
+})();
+</script>
+
+<!-- /saanvi-showcase -->
+</body>
+</html>

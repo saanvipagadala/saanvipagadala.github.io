@@ -1,0 +1,21 @@
+# MarsWorm | V1 The bioengineered organism | Stage 6 | Does MarsWorm actually turn Martian dirt into soil?
+# Sheet: harvest.csv | invented numbers, a dry run and not a result | scenario: marsworm-works | every column is defined in the codebook for this experiment
+container_id,date,sprouts_cut,dry_plant_weight_g,notes
+C01,2027-05-24,2,0.06,
+C02,2027-05-24,2,0.01,
+C03,2027-05-24,2,0.01,
+C04,2027-05-24,4,0.31,
+C05,2027-05-24,4,0.29,
+C06,2027-05-24,4,0.33,
+C07,2027-05-24,6,0.69,
+C08,2027-05-24,7,0.63,
+C09,2027-05-24,7,0.81,
+C10,2027-05-24,10,1.28,
+C11,2027-05-24,9,1.23,
+C12,2027-05-24,7,0.89,
+C13,2027-05-24,6,0.68,
+C14,2027-05-24,5,0.61,
+C15,2027-05-24,6,0.60,
+C16,2027-05-24,8,0.99,
+C17,2027-05-24,10,1.28,
+C18,2027-05-24,10,1.46,

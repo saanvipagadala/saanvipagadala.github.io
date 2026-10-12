@@ -1,0 +1,319 @@
+/* Primate Explorer.
+   The look follows the Google Site this replaced: Lato, teal headings on
+   white, everything centred, and a full-bleed photograph across the top. */
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+
+:root {
+  --ink:      #212121;
+  --teal:     #226e93;
+  --teal-dim: #1e6c93;
+  --line:     #e0e0e0;
+  /* A hairline of dark charcoal around every screenshot and film, so a
+     picture of a bright screen has an edge against a white page. */
+  --edge:     #2f3437;
+  --paper:    #ffffff;
+  --paper-2:  #f2f2f2;
+  --measure:  58rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 20px/1.6 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 1076px of content inside 62px gutters: the measure shared by all
+   three of these sites. */
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 62px; }
+@media (max-width: 700px) { .wrap { padding: 0 20px; } }
+
+/* ---- banner ----------------------------------------------------------- */
+
+/* A slim strip rather than the 340px slab the Google Site used. It is a
+   grace note above the title, not a photograph to study, so it wants to be
+   read past in a glance. object-position keeps the flower's centre in frame
+   as the crop tightens. */
+.banner {
+  height: 170px; width: 100%; display: block;
+  object-fit: cover; object-position: center 55%;
+  background: var(--paper-2);
+}
+@media (max-width: 767px) { .banner { height: 120px; } }
+@media (max-width: 479px) { .banner { height: 96px; } }
+
+/* ---- headings --------------------------------------------------------- */
+
+h1.page {
+  color: var(--teal); text-align: center;
+  font-size: 45px; font-weight: 300; line-height: 1.15;
+  letter-spacing: 0.5px; margin: 56px 0 10px;
+}
+h2 {
+  color: var(--teal); text-align: center;
+  font-size: 45px; font-weight: 300; line-height: 1.2;
+  /* Margins collapse with the paragraph above, so this is the gap. */
+  letter-spacing: 0.5px; margin: 24px 0 22px;
+}
+@media (max-width: 479px) {
+  h1.page { font-size: 32px; margin-top: 34px; }
+  h2 { font-size: 30px; }
+}
+
+/* ---- prose ------------------------------------------------------------ */
+
+main { padding-bottom: 64px; }
+/* Justified, and filling the column. Centred things carry a class,
+   which beats a bare element selector, so they keep their alignment. */
+p, ul { max-width: none; text-align: justify; }
+p { margin-top: 0; margin-bottom: 1.1em; }
+/* Bullets sit a line apart, not a line plus a margin: the Google Site runs
+   its list items at 34-37px and a half-em margin on top of the line-height
+   pushed these past 50px. */
+ul { padding-left: 1.4em; margin: 0 0 0.3em; }
+li { margin-bottom: 0; }
+a { color: #006580; }
+a:hover { color: #007a93; }
+strong { font-weight: 700; }
+
+/* The three lines under the app icon sit centred, as they did before. */
+.lede {
+  text-align: center; font-size: 20px; color: var(--ink);
+  margin: 0 auto 0.15em;
+}
+
+.intro { text-align: center; }
+.intro p { margin-bottom: 0.15em; font-size: 20px; text-align: center; }
+
+.app-icon {
+  display: block; margin: 28px auto 34px;
+  width: 150px; height: 150px;
+}
+
+.callout {
+  color: var(--teal); text-align: center; font-weight: 300;
+  /* This line is long enough to wrap at 45px -- it needs about 1370px and
+     the column is 1076px -- and it reads as one sentence, so it is set
+     smaller here rather than broken over two lines. */
+  font-size: 34px; line-height: 1.2; letter-spacing: 0.5px;
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  padding: 22px 0; margin: 30px auto; max-width: none;
+}
+
+hr.rule { border: 0; border-top: 1px solid #d9d9d9; margin: 46px 0; max-width: none; }
+
+/* ---- galleries -------------------------------------------------------- */
+
+.shots { display: grid; gap: 26px; margin: 8px 0 12px; }
+.shots.phone { grid-template-columns: repeat(3, 1fr); }
+/* The tablet species cards run two to a row so the animal is worth looking
+   at; the tablet app screens run three to a row, as on the Google Site. */
+.shots.tablet { grid-template-columns: repeat(2, 1fr); }
+.shots.tablet-small { grid-template-columns: repeat(3, 1fr); margin-top: 26px; }
+.shots img {
+  width: 100%; height: auto; display: block; border-radius: 6px;
+  background: var(--paper-2);
+  border: 1px solid var(--edge);
+}
+
+.films { display: grid; gap: 26px; margin: 8px 0 12px; }
+.films.phone { grid-template-columns: repeat(3, 1fr); }
+.films.tablet { grid-template-columns: repeat(2, 1fr); }
+/* Five films in a two-column grid would leave the last one stranded. The
+   Google Site put the welcome film alone on the first row, centred, and the
+   two pairs below it; this does the same. */
+.films.tablet figure:first-child {
+  grid-column: 1 / -1; justify-self: center; width: calc(50% - 13px);
+}
+.films video {
+  width: 100%; height: auto; display: block; border-radius: 6px; background: #000;
+  border: 1px solid var(--edge);
+}
+.films figure, .shots figure { margin: 0; }
+
+/* The frame a film sits in, so the play button has something to centre on:
+   the figure includes the caption, and centring on that would sit the button
+   low. */
+.vid { position: relative; line-height: 0; }
+
+/* A film with native controls alone reads as a picture -- the browser's own
+   play button is a few pixels in a corner. This is the button a video
+   thumbnail is expected to have: big, centred, and obviously pressable.
+   Built by script, so it never appears without something behind it. */
+.playbtn {
+  position: absolute; inset: 0; margin: auto;
+  width: 66px; height: 66px; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  border: 0; border-radius: 50%;
+  background: rgba(24, 28, 30, 0.62);
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+  color: #fff; cursor: pointer;
+  transition: opacity 0.18s, transform 0.18s, background 0.18s;
+  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+}
+.playbtn svg { width: 26px; height: 26px; fill: currentColor; margin-left: 3px; }
+.playbtn:hover { background: rgba(30, 108, 147, 0.88); transform: scale(1.06); }
+.playbtn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.vid.playing .playbtn { opacity: 0; pointer-events: none; transform: scale(0.9); }
+@media (max-width: 479px) { .playbtn { width: 54px; height: 54px; } }
+/* Captions, under a picture or under a film. One definition, so a line under
+   a screenshot and a line under a video are the same thing on all three of
+   these sites. */
+figcaption, .film-desc {
+  margin: 9px auto 0;
+  font-size: 15px; color: #212121;
+  text-align: center; font-weight: 700;
+}
+@media (max-width: 767px) {
+  .shots.phone, .films.phone { grid-template-columns: repeat(2, 1fr); }
+  .shots.tablet-small { grid-template-columns: repeat(2, 1fr); }
+  .shots.tablet, .films.tablet { grid-template-columns: 1fr; }
+  .films.tablet figure:first-child { width: 100%; }
+}
+@media (max-width: 479px) {
+  .shots.phone, .films.phone { grid-template-columns: 1fr; max-width: 20rem; margin-inline: auto; }
+}
+
+/* ---- contact form ----------------------------------------------------- */
+/* A card with a face on it. The app is a children's app about monkeys, and a
+   plain stack of grey boxes was not it. The yellow picks up the lily in the
+   banner; the charcoal edge is the same hairline that frames every
+   screenshot, so the card belongs to the same page. */
+
+/* The banana stripe is a background layer on the card itself, not a box drawn
+   on top of it. A background is clipped to the padding box's own rounded
+   corners, so the stripe cannot round differently from the card no matter
+   what either radius is later changed to.
+   It was a 10px-tall pseudo-element with an 18px radius, and CSS scales
+   radii down when they exceed the box they are on -- so the browser drew
+   those corners at 10px against the card's 18px, and the two arcs
+   disagreed. */
+.cform-card {
+  position: relative;
+  max-width: 34rem; margin: 62px auto 0;
+  background-color: var(--paper);
+  background-image: linear-gradient(90deg, #f6c445, #f3d97a 55%, var(--teal));
+  background-repeat: no-repeat;
+  background-size: 100% 10px;
+  background-position: 0 0;
+  background-origin: padding-box;
+  background-clip: padding-box;
+  border: 2px solid var(--edge); border-radius: 20px;
+  padding: 56px 34px 34px;
+  box-shadow: 0 10px 30px rgba(24, 28, 30, 0.10);
+}
+/* The monkey, sitting on the top edge and looking at the reader. */
+.cform-face {
+  position: absolute; top: -44px; left: 50%; transform: translateX(-50%);
+  width: 84px; height: 84px;
+  background: var(--paper); border-radius: 50%;
+  border: 2px solid var(--edge); padding: 4px;
+}
+
+.cform-intro {
+  text-align: center; margin: 0 auto 28px; max-width: 26rem;
+  color: #4a5459;
+}
+
+.cform label {
+  display: block; margin: 0 0 7px; font-weight: 700; font-size: 15px;
+}
+.cform .req { color: #c0392b; font-weight: 400; }
+.cform .opt { color: #7c8589; font-weight: 400; font-size: 13.5px; }
+
+.cform input[type="text"],
+.cform input[type="email"],
+.cform textarea {
+  /* block, not the inline-block an input is by default: the banana field is
+     narrower than the card, and inline the Send button rides up beside it. */
+  display: block;
+  width: 100%; margin: 0 0 22px;
+  font: inherit; color: var(--ink);
+  background: #fbfcfc;
+  padding: 12px 14px;
+  border: 2px solid #dfe5e7; border-radius: 12px;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+.cform textarea { resize: vertical; min-height: 7em; }
+.cform ::placeholder { color: #aab3b7; }
+.cform input:focus, .cform textarea:focus {
+  outline: 0; background: var(--paper);
+  border-color: var(--teal);
+  box-shadow: 0 0 0 4px rgba(34, 110, 147, 0.15);
+}
+/* :user-invalid, not :invalid -- an empty required field is invalid from the
+   moment the page loads, and a form that greets the reader in red before they
+   have typed anything is accusing them of nothing. This waits until a field
+   has actually been filled in badly and left. */
+.cform input:user-invalid,
+.cform textarea:user-invalid { border-color: #c0392b; }
+
+/* The one playful field, marked as such. */
+.banana-label { display: flex; align-items: center; gap: 7px; }
+.banana-label b { color: var(--teal); }
+.banana { font-size: 19px; line-height: 1; }
+#cf-human { max-width: 15rem; }
+
+/* The honeypot: off-screen rather than display:none, because some scripts
+   skip what is hidden outright but fill in what they can find. */
+.cform .hp {
+  position: absolute; left: -9999px; width: 1px; height: 1px;
+  opacity: 0; pointer-events: none;
+}
+
+.cform-send {
+  display: inline-flex; align-items: center; gap: 9px;
+  font: inherit; font-weight: 700; font-size: 16px; color: #fff;
+  background: var(--teal); border: 0;
+  padding: 13px 30px; border-radius: 999px; cursor: pointer;
+  transition: background 0.15s;
+}
+.cform-send svg { width: 18px; height: 18px; fill: currentColor; }
+.cform-send:hover { background: #24779f; }
+.cform-send:active { background: #14506d; }
+.cform-send:disabled { opacity: 0.55; cursor: default; }
+.cform-send:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+
+.cform-status { margin: 18px 0 0; font-size: 15px; min-height: 1.4em; }
+.cform-status.ok { color: #1d7a45; font-weight: 700; }
+.cform-status.bad { color: #c0392b; font-weight: 700; }
+
+@media (max-width: 479px) {
+  .cform-card { padding: 50px 20px 26px; border-radius: 16px; }
+  .cform-face { width: 68px; height: 68px; top: -36px; }
+}
+
+/* ---- footer ----------------------------------------------------------- */
+
+footer {
+  border-top: 1px solid var(--line); padding: 26px 0 44px;
+  color: #6b6b6b; font-size: 13px; text-align: center;
+}
+footer a { color: #6b6b6b; }
+
+/* ---- fullscreen button ------------------------------------------------ */
+/* The way a video player offers it: a quiet corner button that gets the
+   browser's own furniture out of the way. Added by script, so a browser that
+   cannot do it is never shown it. */
+
+.fs {
+  position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 20;
+  width: 2.5rem; height: 2.5rem; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--paper); color: #5f6b70;
+  border: 1px solid var(--edge); border-radius: 0.5rem;
+  cursor: pointer; opacity: 0.55;
+  transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+}
+.fs svg {
+  width: 1.05rem; height: 1.05rem; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.fs:hover { opacity: 1; color: var(--teal); border-color: var(--teal); }
+.fs:focus-visible { opacity: 1; outline: 2px solid var(--teal); outline-offset: 2px; }
+@media print { .fs { display: none; } }

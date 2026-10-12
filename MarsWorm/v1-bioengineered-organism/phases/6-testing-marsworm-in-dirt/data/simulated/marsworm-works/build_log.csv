@@ -1,0 +1,9 @@
+# MarsWorm | V1 The bioengineered organism | Stage 6 | Does MarsWorm actually turn Martian dirt into soil?
+# Sheet: build_log.csv | invented numbers, a dry run and not a result | scenario: marsworm-works | every column is defined in the codebook for this experiment
+round,round_name,date,colonies_on_plate,colonies_glowing,check_confirmed,test_passed,notes
+1,Water: freezing and drying,2026-11-30,93,78,yes,yes,
+2,"Damage: radiation, chemicals and repair",2026-12-21,98,88,yes,yes,
+3,"The Mars poison, and breathing without air",2027-01-11,145,117,yes,yes,
+4,"Making food, and building the home",2027-02-01,47,37,yes,yes,
+5,Breaking down what is dead,2027-02-22,90,70,yes,yes,
+6,Unlocking the rock,2027-03-15,139,115,yes,yes,

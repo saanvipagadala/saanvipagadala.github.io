@@ -1,0 +1,6 @@
+# MarsWorm | V1 The bioengineered organism | Stage 4 | Does a gene really bring its ability with it?
+# Sheet: chamber_log.csv | blank, to be filled in by hand at the bench | every column is defined in the codebook for this experiment
+run,date,hours_in_chamber,humidity_start_pct,humidity_end_pct,temperature_c,notes
+1,,,,,,
+2,,,,,,
+3,,,,,,

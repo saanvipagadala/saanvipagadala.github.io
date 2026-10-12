@@ -1,0 +1,19 @@
+# MarsWorm | V4 The bioengineered plant | Exp 4 | Where does the perchlorate end up?
+# Sheet: pots.csv | invented numbers, a dry run and not a result | scenario: it-stays-in-the-root | every column is defined in the codebook for this experiment
+pot_id,level,perchlorate_pct,bench_position,simulant_g,water_ml,perchlorate_mg,seeds_sown,date_sown
+R01,A,0.0,11,400,120,0.0,3,2027-08-02
+R02,A,0.0,12,400,120,0.0,3,2027-08-02
+R03,A,0.0,1,400,120,0.0,3,2027-08-02
+R04,A,0.0,3,400,120,0.0,3,2027-08-02
+R05,B,0.05,10,400,120,200.0,3,2027-08-02
+R06,B,0.05,15,400,120,200.0,3,2027-08-02
+R07,B,0.05,8,400,120,200.0,3,2027-08-02
+R08,B,0.05,5,400,120,200.0,3,2027-08-02
+R09,C,0.1,6,400,120,400.0,3,2027-08-02
+R10,C,0.1,7,400,120,400.0,3,2027-08-02
+R11,C,0.1,4,400,120,400.0,3,2027-08-02
+R12,C,0.1,14,400,120,400.0,3,2027-08-02
+R13,D,0.5,16,400,120,2000.0,3,2027-08-02
+R14,D,0.5,9,400,120,2000.0,3,2027-08-02
+R15,D,0.5,13,400,120,2000.0,3,2027-08-02
+R16,D,0.5,2,400,120,2000.0,3,2027-08-02

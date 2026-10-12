@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover" />
+  <title>MarsWorm</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../../site.css?v=3a3a16aec5" />
+  <meta name="color-scheme" content="light">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script>
+  /* Before anything else on the page: a reopened tab is otherwise restored to
+     wherever it was left, which opens the page below its own nav bar with the
+     heading cut in half. Set from the head, because by the end of the body the
+     browser has already done it. */
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+  </script>
+  <meta name="description" content="Designing an organism to make soil from Martian dirt. A bioengineering project by Saanvi, 2026.">
+  <link rel="canonical" href="https://saanvipagadala.github.io/MarsWorm/v1-bioengineered-organism/phases/3-testing-biology-enriches-dirt/README.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MarsWorm">
+  <meta property="og:title" content="Stage 3: Testing Biology Enriches Dirt">
+  <meta property="og:description" content="Designing an organism to make soil from Martian dirt. A bioengineering project by Saanvi, 2026.">
+  <meta property="og:url" content="https://saanvipagadala.github.io/MarsWorm/v1-bioengineered-organism/phases/3-testing-biology-enriches-dirt/README.html">
+  <meta property="og:image" content="https://saanvipagadala.github.io/MarsWorm/v1-bioengineered-organism/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="MarsWorm · designing an organism to make soil from Martian dirt">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Stage 3: Testing Biology Enriches Dirt">
+  <meta name="twitter:description" content="Designing an organism to make soil from Martian dirt. A bioengineering project by Saanvi, 2026.">
+  <meta name="twitter:image" content="https://saanvipagadala.github.io/MarsWorm/v1-bioengineered-organism/og-image.png">
+  <meta name="theme-color" content="#b3401f">
+  <link rel="icon" type="image/svg+xml" href="../../marsworm.svg">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<!-- Google Analytics 4, on every page of the site.
+
+     Injected into the <head> of every built page by add_analytics() in
+     build_site.py, rather than pasted into the three hand-written pages and
+     the pandoc header. The version folders are finished HTML that is copied
+     across untouched, so a component the page has to include would miss
+     them; a pass over the finished site/ is the only place that reaches all
+     of them. The measurement ID is filled in from GA_ID.
+
+     What GA4 counts by itself, once Enhanced measurement is on in the
+     property: page views, outbound clicks, file downloads, site search and
+     one scroll event at ninety per cent. None of that is repeated here. Its
+     video tracking only understands embedded YouTube, and the films on this
+     site are plain <video> elements served from the site itself, so the
+     watching is counted below. -->
+<script>
+(function () {
+  if (typeof gtag !== 'function') return;
+
+  function send(name, params) {
+    params = params || {};
+    params.page_path = location.pathname;
+    gtag('event', name, params);
+  }
+
+  /* This tag sits in the head, so when it runs the page below it does not
+     exist yet. Anything that has to find an element waits for the page; the
+     listeners on the document itself do not. */
+  function whenReady(fn) {
+    if (document.readyState === 'loading')
+      document.addEventListener('DOMContentLoaded', fn);
+    else fn();
+  }
+
+  /* What a report needs to name the thing that was watched or read. The
+     file name rather than the path, because the same film is reachable at
+     more than one URL and a report that splits it across them is no use. */
+  function assetName(el) {
+    var src = el.currentSrc || el.src || '';
+    if (!src) {
+      var s = el.querySelector && el.querySelector('source');
+      src = s ? s.getAttribute('src') : '';
+    }
+    return (src.split('/').pop() || 'unknown').replace(/\?.*$/, '');
+  }
+
+  /* The films and the audio. A play is easy to get and says little on its
+     own, since somebody who starts a film and leaves counts the same as
+     somebody who watches it through. So each player also reports the
+     quarters it passes, once each, and reaching the end. */
+  var MARKS = [25, 50, 75];
+  whenReady(function () {
+    document.querySelectorAll('video, audio').forEach(function (m) {
+      var kind = m.tagName.toLowerCase();
+      var seen = {};
+
+      m.addEventListener('play', function () {
+        send('media_play', {asset: assetName(m), media_type: kind});
+      });
+
+      m.addEventListener('timeupdate', function () {
+        if (!m.duration || !isFinite(m.duration)) return;
+        var pct = (m.currentTime / m.duration) * 100;
+        MARKS.forEach(function (mark) {
+          if (pct >= mark && !seen[mark]) {
+            seen[mark] = true;
+            send('media_progress', {
+              asset: assetName(m), media_type: kind, percent: mark});
+          }
+        });
+      });
+
+      m.addEventListener('ended', function () {
+        send('media_complete', {asset: assetName(m), media_type: kind});
+      });
+    });
+  });
+
+  /* How far down a page anybody got. GA4's own scroll event fires once, at
+     ninety per cent, which cannot tell a page nobody finished from one
+     nobody started. Reported under its own name so the two do not mix. */
+  var depths = [25, 50, 75, 100], reached = {};
+  function scrolled() {
+    var doc = document.documentElement;
+    var height = doc.scrollHeight - window.innerHeight;
+    if (height <= 0) return;
+    var pct = ((window.scrollY || doc.scrollTop) / height) * 100;
+    depths.forEach(function (d) {
+      if (pct >= d && !reached[d]) {
+        reached[d] = true;
+        send('scroll_depth', {percent: d});
+      }
+    });
+  }
+  window.addEventListener('scroll', scrolled, {passive: true});
+  whenReady(scrolled);
+
+  /* The controls the site draws itself: the full-screen button on every
+     page, and the speed and caption buttons under each film. Nothing
+     outside the site knows these were pressed. */
+  document.addEventListener('fullscreenchange', function () {
+    send(document.fullscreenElement ? 'fullscreen_enter' : 'fullscreen_exit');
+  });
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.speed button');
+    if (!b) return;
+    if (b.classList.contains('cc')) send('captions_toggle');
+    else send('playback_speed', {speed: (b.textContent || '').trim()});
+  });
+
+})();
+</script>
+</head>
+<body>
+<nav class="nav"><div class="inner"><a class="brand" href="../../../index.html"><img src="../../marsworm.svg" alt=""><span class="wordmark" style="display:flex;flex-direction:column;align-items:center;gap:.25rem;position:relative"><b style="line-height:1">MarsWorm</b><span class="vpill" style="display:inline-flex;align-items:center;gap:.4rem;align-self:center;padding:.14rem .6rem .14rem .14rem;border-radius:999px;background:#b08d3e;color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.18);font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:.74rem;font-weight:600;letter-spacing:.01em;white-space:nowrap;line-height:1.2"><b style="background:#fff;color:#b08d3e;font-size:.64rem;font-weight:800;letter-spacing:.06em;line-height:1;padding:.24rem .42rem;border-radius:999px">V1</b> The bioengineered organism</span></span></a><button class="menu" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span><span></span><span></span></button><div class="links" id="nav-links"><a href="../../index.html">Overview</a><a href="../../review.html">Design review</a><a href="../../host.html">Host question</a><a href="../../lab.html">Lab request</a><a href="../../end-to-end.html">End to end</a></div></div></nav><main class="page">
+<h1 id="stage-3-testing-biology-enriches-dirt">Stage 3: Testing Biology
+Enriches Dirt</h1>
+<h2
+id="can-earthworms-turn-mars-dirt-into-something-a-seedling-will-grow-in">Can
+earthworms turn Mars dirt into something a seedling will grow in?</h2>
+<p>The whole project rests on one assumption: put life into Martian dirt
+and you get soil. Nobody has checked it.</p>
+<p>That is what this stage is for. Live earthworms, real <a
+href="https://www.amazon.com/Regolith-Simulant-Authentic-Martian-Replicant/dp/B0D94YYYG7">Mars
+regolith simulant</a>, fifteen cups on a shelf, seven weeks. <strong>The
+protocol is written and the analysis is built and tested. The experiment
+has not been run yet.</strong></p>
+<h3 id="where-this-sits-in-the-project">Where this sits in the
+project</h3>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 34%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>Stage</th>
+<th>What it answers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a
+href="../../phases/1-searching-earth-for-MarsWorm/README.html">Stage
+1</a></td>
+<td>Searching Earth for MarsWorm</td>
+<td>Is there already an organism that can do this?</td>
+</tr>
+<tr>
+<td><a href="../../phases/2-designing-MarsWorm/README.html">Stage
+2</a></td>
+<td>Designing MarsWorm</td>
+<td>Nothing can, so borrow 37 real genes and design one</td>
+</tr>
+<tr>
+<td><strong>Stage 3</strong></td>
+<td><strong>Testing Biology Enriches Dirt</strong></td>
+<td><strong>Can life from Earth turn Martian dirt into soil at
+all?</strong></td>
+</tr>
+<tr>
+<td><a
+href="../../phases/4-testing-genes-enable-survival/README.html">Stage
+4</a></td>
+<td>Testing Genes Enable Survival</td>
+<td>Does a gene really bring its ability with it?</td>
+</tr>
+<tr>
+<td><a href="../../phases/5-building-MarsWorm/README.html">Stage
+5</a></td>
+<td>Building MarsWorm</td>
+<td>24 genes into one host, in six tested rounds</td>
+</tr>
+<tr>
+<td><a href="../../phases/6-testing-marsworm-in-dirt/README.html">Stage
+6</a></td>
+<td>Testing MarsWorm in Dirt</td>
+<td>Put it in Martian dirt and find out whether anything grows</td>
+</tr>
+</tbody>
+</table></div>
+<p>Stages 1 and 2 are a laptop and a database. This is where the project
+stops looking things up and starts getting its hands dirty. If it fails,
+the <a
+href="../../phases/2-designing-MarsWorm/results/genes_to_order.html">37-gene
+order</a> was aimed at the wrong target.</p>
+<h2 id="fifteen-cups">Fifteen cups</h2>
+<p>Five recipes, three cups each, so no single lucky cup can decide
+anything.</p>
+<figure class="fig wide">
+<img src="results/fifteen_cups.png" alt="The fifteen cups: five recipes with three cups each.
+Simulant only; simulant and dead leaves; simulant, leaves and three worms;
+simulant, leaves and worm castings with no worm; and ordinary potting soil.">
+<figcaption>
+<b>Groups 2 and 4 are the whole argument. Take the worms away but leave
+the food, then take the worms away but leave their work: if group 3
+still wins, the worms did it.</b>
+</figcaption>
+</figure>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 2%" />
+<col style="width: 40%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr>
+<th>Group</th>
+<th>What is in the cup</th>
+<th>Why it is here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Mars simulant only</td>
+<td>the floor: what Mars gives you</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Simulant + dead leaves</td>
+<td><strong>the food, with no worm</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Simulant + dead leaves + 3 worms</td>
+<td>the real thing</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Simulant + dead leaves + worm castings</td>
+<td><strong>worm poop, with no worm</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Ordinary potting soil</td>
+<td>the ceiling: real soil, for scale</td>
+</tr>
+</tbody>
+</table></div>
+<p>Groups 2 and 4 are what make this an experiment instead of a
+demonstration.</p>
+<p>Group 3 gets food <em>and</em> worms, so if it wins, you still do not
+know which one did it. Group 2 has the food alone. If Group 2 does just
+as well, the leaves did the work and the worms added nothing.</p>
+<p>Group 4 asks the sharper question. Worm castings are worm poop, full
+of microbes, with no living worm in it. <strong>If Group 4 keeps up with
+Group 3, the worm’s body is not what matters.</strong> The microbes it
+leaves behind are, and the worm is only the delivery van. That is the
+one result that would change how the rest of the project thinks.</p>
+<h2 id="what-gets-written-down">What gets written down</h2>
+<p>The cups sit side by side for four weeks: same room, same light, same
+water. Every week, five things are measured in every cup, and each one
+is a single reading you can take at a kitchen table.</p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 44%" />
+<col style="width: 34%" />
+</colgroup>
+<thead>
+<tr>
+<th>Measured</th>
+<th>How</th>
+<th>What it tells you</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Crumbs</strong></td>
+<td>tip a dried scoop onto a sieve, weigh what stays on top</td>
+<td>soil clumps, dust falls through</td>
+</tr>
+<tr>
+<td><strong>Water it holds</strong></td>
+<td>weigh a scoop dry, soak it, weigh it again</td>
+<td>dirt drains, soil holds on</td>
+</tr>
+<tr>
+<td><strong>pH</strong></td>
+<td>a test strip in muddy water</td>
+<td>whether a plant could stand it</td>
+</tr>
+<tr>
+<td><strong>Plant food</strong></td>
+<td>an aquarium nitrate strip</td>
+<td>whether there is anything to eat</td>
+</tr>
+<tr>
+<td><strong>Buried cloth</strong></td>
+<td>bury a cotton square, dig it up, weigh what is left</td>
+<td><strong>the more that rotted, the more life is in there.</strong>
+Nothing rots in sterile dust</td>
+</tr>
+</tbody>
+</table></div>
+<p>Then the payoff. At week 4 every cup gets ten seeds of the same
+radish, from the same packet. Sprouts are counted and measured every few
+days. At day 21 the sprouts are cut, dried and weighed, and <strong>that
+weight is the answer</strong>: the one number that says whether this
+dirt grew anything.</p>
+<details>
+<summary>
+<b>The full protocol</b>, materials and week-by-week steps
+</summary>
+<h4 id="materials">Materials</h4>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 20%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr>
+<th>What to get</th>
+<th>How much</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>Eisenia fetida</em>, red wiggler compost worms</td>
+<td>about 20</td>
+<td>from a garden centre or a bait shop</td>
+</tr>
+<tr>
+<td>MGS-1 Mars regolith simulant</td>
+<td><strong>order 4 kg</strong></td>
+<td>3.1 kg is used across 12 of the 15 cups. It is the most expensive
+item here, and the spare kilogram means a dead batch of worms costs a
+rebuild, not a delivery wait</td>
+</tr>
+<tr>
+<td>Shredded dead leaves, plus a little food scrap</td>
+<td>a few handfuls</td>
+<td>pre-composted for a week</td>
+</tr>
+<tr>
+<td>Ordinary potting soil</td>
+<td>enough for 3 cups</td>
+<td>this is Group 5, the ceiling</td>
+</tr>
+<tr>
+<td>Identical 8 oz cups with drainage holes</td>
+<td>15</td>
+<td>about 200 mL of medium each. Cup size is set by the worms, not the
+plants</td>
+</tr>
+<tr>
+<td>Radish seeds and lettuce seeds</td>
+<td>1 packet each</td>
+<td>both germinate fast and are well studied</td>
+</tr>
+<tr>
+<td>2 mm sieve</td>
+<td>1</td>
+<td>a kitchen sieve with roughly 2 mm holes is fine</td>
+</tr>
+<tr>
+<td>pH strips, and nitrate aquarium strips</td>
+<td>1 pack each</td>
+<td></td>
+</tr>
+<tr>
+<td>Squares of plain white cotton, cut from an old t-shirt</td>
+<td>15, all the same size</td>
+<td>one buried in each cup</td>
+</tr>
+<tr>
+<td>Kitchen scale</td>
+<td>1</td>
+<td>grams, 0.1 g resolution if possible</td>
+</tr>
+<tr>
+<td>Grow light on a timer</td>
+<td>1</td>
+<td>the same 12 to 14 hours a day for every group</td>
+</tr>
+<tr>
+<td>Spray bottle</td>
+<td>1</td>
+<td>so every cup is watered the same way</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="making-the-group-4-castings">Making the Group 4 castings</h4>
+<p>Run a small worm bin on ordinary soil and food scraps for about two
+weeks beforehand. Harvest only the dark crumbly castings, pick every
+worm back out, and mix those into plain simulant and organic matter.</p>
+<h4 id="weeks-1-to-4-let-it-work">Weeks 1 to 4: let it work</h4>
+<p>All 15 cups side by side, watered to the same dampness on the same
+schedule, and the schedule gets logged. Take the five weekly
+measurements and write each into its numbered column in
+<code>data/weekly_measurements.csv</code>. Bury the cotton squares in
+week 1 and dig one up in weeks 2, 3 and 4. Photograph every cup from
+directly above, same distance, same lighting, which a Pi camera can
+automate. <strong>Tip every scoop back into its own cup
+afterwards</strong>, because the cups are small and four weeks of
+sampling would empty them.</p>
+<h4 id="weeks-4-to-7-plant-it">Weeks 4 to 7: plant it</h4>
+<p>Sow 10 seeds of the same species from the same packet in every cup.
+Water identically and log every watering. Every 2 to 3 days, count the
+sprouts that are up and measure their height with a ruler. At day 21,
+cut the sprouts at soil level, dry them, and weigh them.</p>
+<h4 id="rules-that-keep-it-fair">Rules that keep it fair</h4>
+<p>Each of these closes a way the experiment could fool us.</p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 41%" />
+<col style="width: 58%" />
+</colgroup>
+<thead>
+<tr>
+<th>The rule</th>
+<th>What goes wrong without it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Same seed packet for every group</td>
+<td>seed batches germinate differently, so the seeds could win instead
+of the soil</td>
+</tr>
+<tr>
+<td>Cups laid out in the shuffled <code>bench_position</code> order from
+<code>data/containers.csv</code>, <strong>never</strong> grouped by
+treatment</td>
+<td>one group quietly gets the brightest, warmest end of the shelf</td>
+</tr>
+<tr>
+<td>Every measurement taken the same day for all 15 cups</td>
+<td>a cup measured three days later has had three more days to grow</td>
+</tr>
+<tr>
+<td>Photos labelled with a number, not a treatment name, before the
+sprouts are counted</td>
+<td>knowing which cup is which nudges the count</td>
+</tr>
+<tr>
+<td>Three cups per group, and always report all three, never only the
+average</td>
+<td>an average hides the one cup that disagrees</td>
+</tr>
+<tr>
+<td>Leave a cell <strong>blank</strong> if you did not measure it, and
+never type <code>0</code></td>
+<td>the analyser treats a zero as a real measurement of nothing</td>
+</tr>
+</tbody>
+</table></div>
+</details>
+<p>Write down only what you can read off an instrument. A weight, a
+number on a strip, a count of sprouts. Every column is explained in the
+<a
+href="../../phases/3-testing-biology-enriches-dirt/results/codebook.html">codebook</a>.</p>
+<h2 id="how-a-verdict-is-decided">How a verdict is decided</h2>
+<p>Seven weeks later, the worm cups look heavier. Did the worms win?</p>
+<p>Two rules answer that, and both were written down
+<strong>before</strong> any numbers existed, so nobody could invent a
+rule that made the answer come out nicely.</p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 41%" />
+<col style="width: 58%" />
+</colgroup>
+<thead>
+<tr>
+<th>The rule</th>
+<th>The question it asks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A clean win.</strong> The worst worm cup still beat the best
+no-worm cup</td>
+<td>was it every cup, or one lucky one?</td>
+</tr>
+<tr>
+<td><strong>Big enough.</strong> The gain covers at least a tenth of the
+ruler from bare dust to real potting soil</td>
+<td>was the difference big enough to matter?</td>
+</tr>
+</tbody>
+</table></div>
+<p>Say you are comparing the worm cups against the no-worm cups. If the
+worm cups pass both rules, they really did grow more. If they miss the
+first rule, the two groups are tangled together and one lucky cup might
+be doing all the work. If they miss the second rule, they really did
+grow more, but by so little that nobody would ever notice. Miss either
+rule and the answer is no.</p>
+<p>When the two groups overlap badly enough that neither wins, the
+report says <em>“we could not tell these apart with only three cups
+each”</em>, which is an honest answer as well.</p>
+<h3 id="why-big-enough-is-a-separate-bar">Why “big enough” is a separate
+bar</h3>
+<p>The two bars ask different things, <em>was it reliable?</em> and
+<em>was it big?</em>, and they can disagree. One of the practice runs is
+exactly that case.</p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 42%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>The three cups</th>
+<th>Average</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bare regolith</td>
+<td>0.041, 0.041, 0.042 g</td>
+<td>0.041 g</td>
+</tr>
+<tr>
+<td>With worms</td>
+<td>0.087, 0.091, 0.094 g</td>
+<td>0.091 g</td>
+</tr>
+<tr>
+<td><em>Potting soil, for scale</em></td>
+<td></td>
+<td><em>0.676 g</em></td>
+</tr>
+</tbody>
+</table></div>
+<p>Every worm cup beat every regolith cup, and twice as heavy. By the
+first bar alone, a triumph.</p>
+<p>But the whole scale is 0.676 − 0.041 = <strong>0.635 g</strong>, and
+the worms gained 0.049 g. That is <strong>8% of the way</strong> to real
+soil, and those plants sprouted and died. The bar is 10%, so the honest
+answer is <strong>no</strong>, and that is what the report says.</p>
+<h2 id="practice-runs-on-made-up-data">Practice runs on made-up
+data</h2>
+<p>Seven weeks is a long time to find out your code is broken. So
+invented numbers are written into the same sheets a person would fill in
+by hand, <strong>including runs where the experiment fails</strong>, and
+the report is run against each one to see whether it says something
+true.</p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 44%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+</colgroup>
+<thead>
+<tr>
+<th>Practice run</th>
+<th>What it pretends happened</th>
+<th>Did the dirt improve?</th>
+<th>Did the worms add anything?</th>
+<th>Were the castings enough?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a
+href="../../phases/3-testing-biology-enriches-dirt/results/worms-work/report.html"><code>worms-work</code></a></td>
+<td>the result we hope for</td>
+<td>✅ yes</td>
+<td>✅ yes</td>
+<td>❌ no, the live worm mattered</td>
+</tr>
+<tr>
+<td><a
+href="../../phases/3-testing-biology-enriches-dirt/results/castings-only/report.html"><code>castings-only</code></a></td>
+<td>the castings did it, not the worm</td>
+<td>✅ yes</td>
+<td>✅ yes</td>
+<td>✅ <strong>yes</strong></td>
+</tr>
+<tr>
+<td><a
+href="../../phases/3-testing-biology-enriches-dirt/results/food-not-worms/report.html"><code>food-not-worms</code></a></td>
+<td>dead leaves did it, worms added nothing</td>
+<td>✅ yes</td>
+<td>❌ <strong>no</strong></td>
+<td>n/a</td>
+</tr>
+<tr>
+<td><a
+href="../../phases/3-testing-biology-enriches-dirt/results/nothing-grew/report.html"><code>nothing-grew</code></a></td>
+<td>a tiny gain that means nothing</td>
+<td>❌ <strong>no</strong></td>
+<td>n/a</td>
+<td>n/a</td>
+</tr>
+</tbody>
+</table></div>
+<p>Every one of these reports is titled <strong>Dry run</strong>, so
+nobody can mistake one for a finding. They are not evidence of anything.
+They are proof that the report tells the truth before there is any truth
+to tell.</p>
+<p>Two of them matter most. <strong><code>castings-only</code></strong>
+is the world where microbes do the work and the worm is only the van,
+which would redirect the whole project.
+<strong><code>nothing-grew</code></strong> checks that the report says
+<strong>no</strong> without softening it, and that it knows when a
+question has stopped making sense. Once nothing has grown, <em>“was it
+the worms or the food?”</em> has no answer, so the report prints
+<strong>“nothing to compare”</strong> rather than inventing one. Those
+are the <code>n/a</code> cells, and they are a feature.</p>
+<p>Made-up data is also the only way to catch a broken <em>rule</em>.
+With the clean-win rule alone, <code>nothing-grew</code> reads as a
+triumph. The mistake is in the rules, not the numbers, so no amount of
+staring at real data would find it. Only a case where the right answer
+is already known can.</p>
+<h2 id="what-counts-as-success">What counts as success</h2>
+<p>Success is <a href="#fifteen-cups">Group 3</a>, the worm cups,
+growing heavier seedlings than <a href="#fifteen-cups">Group 1</a>, the
+bare Mars dust, by a gap that clears both rules, and holding more water
+and more crumbs along the way. Or <a href="#fifteen-cups">Group 4</a>,
+the castings with no worm in them, doing it instead. <a
+href="#fifteen-cups">Group 5</a> is ordinary potting soil, and it is the
+ceiling. The worm cups do not have to beat it, only close a real share
+of the distance to it.</p>
+<p><strong>A failure is still a result.</strong> If <a
+href="#fifteen-cups">Group 2</a>, the dead leaves with no worm, does
+just as well as Group 3, then the leaves did the work and the worms
+added nothing. That is worth knowing, and the report will print it
+without being asked twice.</p>
+</main>
+
+<!-- Printed at the foot of every page of the site. Mirrors the footer line
+     stamped on the PDFs, and carries the byline that the PDFs put inline. -->
+<footer class="foot">
+  <p class="line">MarsWorm &nbsp;·&nbsp; Making Arid Regolith into Soil, With
+    Organisms Redesigned for Mars &nbsp;·&nbsp; v1</p>
+  <p class="who"><b>Saanvi Pagadala</b> · Granite Bay, CA</p>
+</footer>
+
+<!-- The sticky nav covers whatever a #section link scrolls to, so every
+     heading carries a scroll margin the height of that bar. The bar is not
+     one height: it wraps as the window narrows, and no CSS breakpoint
+     predicts that reliably, so the page measures it and writes the real
+     number into --nav-h. -->
+<script>
+(function () {
+  var nav = document.querySelector('.nav');
+  if (!nav) return;
+  function measure() {
+    document.documentElement.style.setProperty(
+      '--nav-h', nav.getBoundingClientRect().height + 'px');
+  }
+  measure();
+  addEventListener('load', measure);
+  addEventListener('resize', measure);
+
+  // Reopening a tab, iOS lays the page out at the full height of the screen
+  // and draws its own address bar and toolbar on top of it, so the first
+  // hundred points or so of the page sit behind the browser's furniture. The
+  // page is not scrolled: scrollY, scrollingElement.scrollTop and the sticky
+  // bar's own position all read 0. Nothing in script can give those points
+  // back -- a one-pixel scroll to make Safari settle its bars leaves the
+  // viewport at 932 of 932 -- so the page steps its content down instead.
+  //
+  // The tell is the viewport height. Opened normally it is well short of the
+  // screen, because the bars take their share; behind the bars it is the
+  // whole screen exactly.
+  var touch = 'ontouchstart' in window;
+  function bars() {
+    var hidden = touch && window.innerHeight >= screen.height - 1;
+    document.documentElement.classList.toggle('bars-over', hidden);
+  }
+  bars();
+  addEventListener('resize', bars);
+  addEventListener('orientationchange', bars);
+  addEventListener('pageshow', bars);
+})();
+</script>
+
+<!-- The menu button, on small screens. Every listener is on the document
+     rather than on the button, because the markup around it can be replaced
+     the whole nav when it swaps a page in, and a listener bound to the old
+     button would go with it. -->
+<script>
+(function () {
+  function nav() { return document.querySelector('.nav'); }
+
+  function set(open) {
+    var n = nav();
+    if (!n) return;
+    n.classList.toggle('open', open);
+    var b = n.querySelector('.menu');
+    if (b) b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  // Capture, not bubble. A bubbling listener on the document never hears
+  // some taps on iOS; the capture phase runs from the window down to the
+  // target and always does.
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (!t || !t.closest) return;
+    if (t.closest('.menu')) { set(!nav().classList.contains('open')); return; }
+    // A tab was chosen, or the reader tapped the page behind the panel.
+    // Either way the menu has done its job.
+    set(false);
+  }, true);
+
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  // Turning the phone sideways can put the tabs back in the bar, and an open
+  // panel would then be a second copy of them.
+  addEventListener('resize', function () { set(false); });
+})();
+</script>
+
+<!-- The organism thumbnails in the gene tables. Hovering one shows the
+     picture at a size worth looking at. The preview is attached to the page
+     rather than to the cell, because a table scrolls inside its own box and
+     that box clips anything that grows out of it. Delegated, so it survives
+     the page changing underneath it. -->
+<script>
+(function () {
+  var box, img, cap;
+
+  function build() {
+    box = document.createElement('div');
+    box.id = 'orgpreview';
+    box.hidden = true;
+    img = document.createElement('img');
+    cap = document.createElement('b');
+    box.appendChild(img);
+    box.appendChild(cap);
+    document.body.appendChild(box);
+  }
+
+  function show(thumb) {
+    if (!box) build();
+    img.src = thumb.src;
+    cap.textContent = thumb.title || '';
+    box.hidden = false;
+    // Above the thumbnail by preference, below it when there is no room, and
+    // never off the right edge.
+    var r = thumb.getBoundingClientRect(), w = box.offsetWidth, h = box.offsetHeight;
+    var left = Math.min(Math.max(8, r.left - 8), innerWidth - w - 8);
+    var top = r.top - h - 8;
+    if (top < 8) top = Math.min(r.bottom + 8, innerHeight - h - 8);
+    box.style.left = left + 'px';
+    box.style.top = top + 'px';
+  }
+
+  function hide() { if (box) box.hidden = true; }
+
+  document.addEventListener('mouseover', function (e) {
+    var t = e.target;
+    if (t && t.classList && t.classList.contains('orgpic')) show(t);
+    else if (box && !box.hidden) hide();
+  });
+  addEventListener('scroll', hide, true);
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
+})();
+</script>
+
+<!-- Fullscreen, the way a video player offers it: a quiet corner button that
+     gets the browser's own furniture out of the way for reading. Written by
+     script rather than sitting in the markup, because a browser that cannot
+     do it should not be offered it. Desktop only: an iPhone has no fullscreen
+     for a page, and on a tablet the button would sit under a thumb. -->
+<script>
+(function () {
+  var root = document.documentElement;
+  if (!(root.requestFullscreen || root.webkitRequestFullscreen)) return;
+  if ('ontouchstart' in window) return;
+
+  var EXPAND = '<path d="M3 8V3h5M17 3h5v5M22 17v5h-5M8 22H3v-5"/>';
+  var SHRINK = '<path d="M8 3v5H3M22 8h-5V3M17 22v-5h5M3 17h5v5"/>';
+
+  var btn = document.createElement('button');
+  btn.className = 'fs';
+  btn.type = 'button';
+  document.body.appendChild(btn);
+
+  function on() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function paint() {
+    var label = on() ? 'Leave fullscreen' : 'Read fullscreen';
+    btn.setAttribute('aria-label', label);
+    btn.title = label + '  (F)';
+    btn.innerHTML = '<svg viewBox="0 0 25 25" aria-hidden="true">' +
+                    (on() ? SHRINK : EXPAND) + '</svg>';
+  }
+  function toggle() {
+    if (on()) {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+    }
+  }
+
+  btn.addEventListener('click', toggle);
+  document.addEventListener('fullscreenchange', paint);
+  document.addEventListener('webkitfullscreenchange', paint);
+  // The same shortcut a video player uses, but never while something is being
+  // typed into, and never on top of a browser shortcut.
+  addEventListener('keydown', function (e) {
+    if (e.key !== 'f' && e.key !== 'F') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.isContentEditable ||
+              /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    e.preventDefault();
+    toggle();
+  });
+  paint();
+})();
+</script>
+
+<!-- Fullscreen belongs to a document, so following an ordinary link drops out
+     of it, and the new page cannot ask to go back in: a browser only grants
+     fullscreen on a click, and a fresh document has no click behind it.
+
+     So while fullscreen is on, and only then, a click on a link to another
+     page of this site fetches that page and swaps it in rather than
+     navigating. The document never changes, so fullscreen never ends. Outside
+     fullscreen nothing here runs at all and every link is an ordinary link,
+     which is what keeps this plain static HTML for anyone reading it normally,
+     and what makes the failure of any of it harmless. -->
+<script>
+(function () {
+  var PARTS = ['.nav', '.page', '.foot'];
+
+  function full() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+
+  function settle(hash) {
+    // The nav's height and the landing on a #section are both worked out on
+    // load; a swapped-in page has to have them worked out again.
+    var nav = document.querySelector('.nav');
+    if (nav) {
+      document.documentElement.style.setProperty(
+        '--nav-h', nav.getBoundingClientRect().height + 'px');
+    }
+    var el = hash && document.getElementById(decodeURIComponent(hash.slice(1)));
+    // Nothing animates: the stylesheet asks for no smooth scrolling, so these
+    // arrive at once rather than gliding and being interrupted.
+    if (el) el.scrollIntoView(true);
+    else scrollTo(0, 0);
+  }
+
+  function swap(url, push) {
+    fetch(url.href).then(function (r) {
+      if (!r.ok) throw 0;
+      return r.text();
+    }).then(function (text) {
+      var doc = new DOMParser().parseFromString(text, 'text/html');
+      var next = PARTS.map(function (sel) { return doc.querySelector(sel); });
+      if (next.some(function (n) { return !n; })) throw 0;
+      // The URL is changed first: every relative href and src in the incoming
+      // markup is resolved against it, and the pages sit at different depths.
+      if (push) history.pushState({}, '', url.href);
+      PARTS.forEach(function (sel, i) {
+        document.querySelector(sel).replaceWith(next[i]);
+      });
+      document.title = doc.title;
+      if (window.wireFolds) wireFolds();
+      settle(url.hash);
+    }).catch(function () {
+      location.href = url.href;              // give up quietly, navigate
+    });
+  }
+
+  addEventListener('click', function (e) {
+    if (!full() || e.defaultPrevented) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
+    var a = e.target.closest && e.target.closest('a');
+    if (!a || a.target || a.hasAttribute('download')) return;
+    var url = new URL(a.href, location.href);
+    if (url.origin !== location.origin) return;
+    // Only pages. A .csv or an image is a download or a viewer, and neither
+    // is something to paste into this one.
+    if (!/\.html$/.test(url.pathname)) return;
+    if (url.pathname === location.pathname) return;   // an anchor on this page
+    e.preventDefault();
+    swap(url, true);
+  });
+
+  addEventListener('popstate', function () {
+    if (full()) swap(new URL(location.href), false);
+  });
+})();
+</script>
+
+<script>
+// Foldable groups inside a long table. The heading rows are made by
+// span_category_rows() in the build; everything between one of them and the
+// next (or the totals row) belongs to that group.
+(function () {
+  function body(row) {
+    var out = [], r = row.nextElementSibling;
+    while (r && !r.querySelector('td.catrow') && !r.querySelector('.tot')) {
+      out.push(r); r = r.nextElementSibling;
+    }
+    return out;
+  }
+  window.wireFolds = function () {
+  document.querySelectorAll('td.catrow').forEach(function (cell) {
+    if (cell.dataset.folds) return;            // already wired
+    cell.dataset.folds = '1';
+    var row = cell.parentNode, open = true;
+    cell.setAttribute('role', 'button');
+    cell.setAttribute('tabindex', '0');
+    function toggle() {
+      open = !open;
+      row.classList.toggle('closed', !open);
+      body(row).forEach(function (r) { r.hidden = !open; });
+    }
+    toggle();                                  // start folded
+    cell.addEventListener('click', toggle);
+    cell.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  });
+  };
+  wireFolds();
+})();
+</script>
+<!-- saanvi-showcase: shared block, injected by apply_global.py -->
+<!-- The block every page on the site carries, injected by apply_global.py.
+     Edit it here, run the build, and all 800-odd pages change together.
+
+     Three jobs: count the visit, offer fullscreen, and offer the way home.
+     Each project was built separately over four years and none of them knows
+     about the others, so none of this can rely on their markup. It adds its
+     own elements, and takes over from theirs where they had their own.
+
+     ../../../../index.html is replaced per page with the relative path back to the front
+     page, because these pages sit at every depth from /index.html to
+     /MarsWorm/v1-bioengineered-organism/experiments/index.html. A relative
+     path works on the live site and equally on a page opened off the disk; a
+     link to "/" would mean the root of the hard drive. -->
+
+<style data-sp>
+/* Named with a prefix nothing else here uses, so no project's stylesheet can
+   reach these by accident and nothing here can reach a project's. */
+.sp-home {
+  /* The top left corner. Every one of these sites centres whatever it keeps
+     up there, so the corner is empty on all of them. */
+  position: fixed; top: 14px; left: 14px; z-index: 2147483000;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 16px 9px 13px;
+  border-radius: 999px;
+  background: rgba(253, 252, 251, 0.92);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid #e2ddd9;
+  box-shadow: 0 2px 10px rgba(80, 50, 35, 0.10);
+  /* Her own hand, the one she signs the portrait with on the front page and
+     on every MarsWorm page. A grey sans chip in the corner looked like
+     something the browser had added; this looks like it belongs to her. */
+  font: 700 16px/1 "Bradley Hand", "Noteworthy", "Segoe Script", cursive;
+  color: #8a3317; text-decoration: none;
+  transition: box-shadow .15s, border-color .15s, transform .15s;
+}
+.sp-home:hover {
+  border-color: #b3401f; transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(80, 50, 35, 0.16);
+}
+.sp-home svg {
+  width: 14px; height: 14px; flex: none; margin-top: -1px;
+  fill: none; stroke: currentColor; stroke-width: 2.2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* Tighter on a phone, where 14px of margin is a lot of the screen. */
+/* On a phone these bars stop centring and put their own logo hard left,
+   which is where this was sitting: it covered MarsWorm's wordmark and
+   SPARK's. Down to the bottom corner, where nothing else goes. The
+   fullscreen button is not drawn on a touch device, so that corner is free. */
+@media (max-width: 760px) {
+  .sp-home {
+    top: auto; bottom: 12px; left: 12px;
+    padding: 7px 13px 8px 11px; font-size: 15px;
+  }
+}
+@media print { .sp-home, .sp-fs { display: none; } }
+
+.sp-fs {
+  position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 2147483000;
+  width: 2.4rem; height: 2.4rem; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #fdfcfb; color: #6b6b6b;
+  border: 1px solid #e2ddd9; border-radius: 0.5rem;
+  cursor: pointer; opacity: 0.55;
+  transition: opacity .15s, color .15s, border-color .15s;
+}
+.sp-fs svg {
+  width: 1rem; height: 1rem; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.sp-fs:hover { opacity: 1; color: #b3401f; border-color: #b3401f; }
+.sp-fs:focus-visible { opacity: 1; outline: 2px solid #b3401f; outline-offset: 2px; }
+</style>
+
+<!-- One property for the whole site. apply_global.py strips the per-project
+     tags MarsWorm and NitRobe carried, so nothing is counted twice. -->
+<script data-sp async src="https://www.googletagmanager.com/gtag/js?id=G-FJ4CWSDFEW"></script>
+<script data-sp>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FJ4CWSDFEW');
+</script>
+
+<script data-sp>
+(function () {
+  'use strict';
+
+  /* A swapped-in page brings its own copy of this block. Only the first one
+     wires anything to the window or the document; the rest would stack a
+     second click handler and a second button on every swap. */
+  if (window.__saanviGlobal) return;
+  window.__saanviGlobal = true;
+
+  /* The stylesheet moves to the head, where a body swap cannot take it. */
+  var css = document.querySelector('style[data-sp]');
+  if (css) document.head.appendChild(css);
+
+  /* ---- the way home ----------------------------------------------------
+     Every page gets it, including the front page's own children. The front
+     page itself is skipped at injection time, because a link home from home
+     is furniture with nothing behind it. */
+
+  /* The front page is injected with an empty path, because a link home from
+     home is furniture with nothing behind it. */
+  var where = '../../../../index.html';
+  /* The front page, as an address: the injected path from here, or, on the
+     front page itself, this page. Worked out once, at load, so that a page
+     swapped in later under fullscreen can be told whether it is home. */
+  var FRONT = new URL(where || 'index.html', location.href);
+  function isFront(url) {
+    return url.pathname === FRONT.pathname ||
+           url.pathname === FRONT.pathname.replace(/index\.html$/, '');
+  }
+  /* The pill is always made, and only shown away from home. It used to be
+     made only on pages that had a path home, so fullscreen entered on the
+     front page carried no pill into any project. */
+  var home = document.createElement('a');
+  home.className = 'sp-home';
+  home.href = FRONT.href;
+  home.innerHTML =
+    '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+    '<path d="M3 10.6 12 3.4l9 7.2"/><path d="M5.6 9.6V20h12.8V9.6"/>' +
+    '<path d="M10 20v-5h4v5"/></svg><span>Saanvi</span>';
+  home.setAttribute('aria-label', "All of Saanvi's projects");
+  home.title = "All of Saanvi's projects";
+  if (!isFront(new URL(location.href))) document.body.appendChild(home);
+
+  /* ---- fullscreen ------------------------------------------------------
+     One button for the whole site. Seven of these projects shipped their own
+     and two shipped none, so this takes any it finds away and puts one back.
+     Theirs are built by their own scripts, which may run after this, so the
+     sweep repeats a moment later rather than only once. */
+
+  /* Seven of these projects shipped a fullscreen button of their own and one
+     shipped two names for it. Every spelling found so far is listed; a
+     button of ours is never matched, because all of ours are .sp-fs. */
+  var THEIRS = '.fs, .fs-label, #fs-label, .fullscreen-btn, #fullscreen-btn,'
+             + ' [aria-label*="fullscreen" i]:not(.sp-fs),'
+             + ' [title*="full screen" i]:not(.sp-fs)';
+
+  function sweep() {
+    var theirs = document.querySelectorAll(THEIRS);
+    for (var i = 0; i < theirs.length; i++) {
+      if (theirs[i].className !== 'sp-fs') theirs[i].remove();
+    }
+  }
+  sweep();
+  setTimeout(sweep, 400);
+  addEventListener('load', sweep);
+
+  var root = document.documentElement;
+  if (!(root.requestFullscreen || root.webkitRequestFullscreen)) return;
+  /* A phone has no fullscreen for a page, and on a tablet the button sits
+     under a thumb. */
+  if ('ontouchstart' in window) return;
+
+  var EXPAND = '<path d="M3 8V3h5M17 3h5v5M22 17v5h-5M8 22H3v-5"/>';
+  var SHRINK = '<path d="M8 3v5H3M22 8h-5V3M17 22v-5h5M3 17h5v5"/>';
+
+  var btn = document.createElement('button');
+  btn.className = 'sp-fs';
+  btn.type = 'button';
+  document.body.appendChild(btn);
+
+  function on() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function paint() {
+    var label = on() ? 'Leave fullscreen' : 'View fullscreen';
+    btn.setAttribute('aria-label', label);
+    btn.title = label + '  (F)';
+    btn.innerHTML = '<svg viewBox="0 0 25 25" aria-hidden="true">' +
+                    (on() ? SHRINK : EXPAND) + '</svg>';
+  }
+  function toggle() {
+    if (on()) {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+    }
+  }
+
+  btn.addEventListener('click', toggle);
+  document.addEventListener('fullscreenchange', paint);
+  document.addEventListener('webkitfullscreenchange', paint);
+
+  /* The shortcut a video player uses, but never while something is being
+     typed into, and never on top of a browser shortcut. */
+  /* In the capture phase, and stopped dead once handled. Several of these
+     projects bind F to their own fullscreen, and two handlers toggling the
+     same thing cancel each other out: the key would do nothing at all. */
+  addEventListener('keydown', function (e) {
+    if (e.key !== 'f' && e.key !== 'F') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.isContentEditable ||
+              /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    toggle();
+  }, true);
+
+  paint();
+
+  /* ---- staying in fullscreen across a link -----------------------------
+     Fullscreen belongs to a document. Follow an ordinary link and it ends,
+     and the new page cannot ask to go back in: a browser only grants
+     fullscreen off a click, and a fresh document has no click behind it. So
+     SPARK's menu dropped you out of fullscreen on every page.
+
+     While fullscreen is on, and only then, a click on a link to another page
+     of this site fetches it and swaps it in rather than navigating. The
+     document never changes, so fullscreen never ends. Outside fullscreen
+     none of this runs and every link is an ordinary link, which is what
+     keeps these plain static pages for anyone reading them normally, and
+     what makes a failure here harmless. */
+
+  /* The scripts already on this document, by address. A swapped-in page
+     that asks for one of them again is not made to download it twice: the
+     gene finder's model is half a megabyte. */
+  var fetched = {};
+  for (var f = 0; f < document.scripts.length; f++) {
+    if (document.scripts[f].src) fetched[document.scripts[f].src] = true;
+  }
+
+  function runScripts(where) {
+    /* A script inserted as parsed markup does not execute. Re-creating each
+       one does, which is what keeps a project's own behaviour alive after a
+       swap: SPARK's play buttons, NitRobe's gene finder.
+
+       In order, and one at a time. A script made here is async by default,
+       so three external files would race each other and the inline script
+       after them would run first, against a model that had not arrived yet:
+       that is how the finder came to say its files did not load. An inline
+       script is wrapped in a function, so walking back onto a page does not
+       redeclare its variables; what a page means to share between its
+       scripts it hangs on window, which still works. */
+    var olds = where.querySelectorAll('script'), list = [];
+    for (var i = 0; i < olds.length; i++) {
+      var o = olds[i];
+      list.push([o.src, o.text]);
+      o.remove();
+    }
+    return list.reduce(function (chain, item) {
+      return chain.then(function () {
+        return new Promise(function (done) {
+          var src = item[0], s = document.createElement('script');
+          if (src) {
+            if (fetched[src]) return done();
+            fetched[src] = true;
+            s.src = src;
+            s.async = false;
+            s.onload = s.onerror = function () { done(); };
+          } else {
+            s.text = '(function(){' + item[1] + '\n})();';
+          }
+          where.appendChild(s);
+          if (!src) done();
+        });
+      });
+    }, Promise.resolve());
+  }
+
+  function swap(url, push) {
+    fetch(url.href).then(function (r) {
+      if (!r.ok) throw 0;
+      return r.text();
+    }).then(function (text) {
+      var doc = new DOMParser().parseFromString(text, 'text/html');
+      if (!doc.body) throw 0;
+      /* The address changes first: every relative href and src in the
+         incoming markup resolves against it, and these pages sit at
+         different depths. */
+      if (push) history.pushState({}, '', url.href);
+
+      /* The incoming page's stylesheets. Within one project these are the
+         same files and nothing happens; crossing from one project to another
+         they are different, and the old ones have to go or two designs fight
+         over the same page. */
+      var head = document.head;
+      var mine = head.querySelectorAll(
+        'link[rel="stylesheet"]:not([data-sp]), style:not([data-sp])');
+      for (var i = 0; i < mine.length; i++) mine[i].remove();
+      var theirs = doc.head.querySelectorAll('link[rel="stylesheet"], style');
+      for (var k = 0; k < theirs.length; k++) head.appendChild(theirs[k]);
+
+      document.title = doc.title;
+
+      /* The incoming page carries its own copy of this block. Out it comes,
+         and the live pill and button are put back afterwards, so there is
+         one of each however far you wander. */
+      var copies = doc.body.querySelectorAll('[data-sp], .sp-home, .sp-fs');
+      for (var c = 0; c < copies.length; c++) copies[c].remove();
+
+      document.body.replaceWith(document.adoptNode(doc.body));
+      if (!isFront(url)) document.body.appendChild(home);
+      if (btn) document.body.appendChild(btn);
+      return runScripts(document.body).then(function () {
+        var el = url.hash && document.getElementById(
+          decodeURIComponent(url.hash.slice(1)));
+        if (el) el.scrollIntoView(true); else scrollTo(0, 0);
+      });
+    }).catch(function () {
+      location.href = url.href;            // give up quietly, navigate
+    });
+  }
+
+  /* In the capture phase, so this runs before any router the page brought
+     with it. MarsWorm and NitRobe ship their own, written for their own
+     pages: fine inside those sites, and fatal leaving them, because their
+     fallback on a page they do not understand is to navigate, which ends
+     fullscreen. When this handles a click it stops the event dead so theirs
+     never sees it. Which means this one does all the work on the live site,
+     and a page swapped in here has to work as well as it does under its own
+     router: the finder's model has to load, in order, before the finder. */
+  addEventListener('click', function (e) {
+    if (!on() || e.defaultPrevented) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
+    var a = e.target.closest && e.target.closest('a');
+    if (!a || a.target || a.hasAttribute('download')) return;
+    var url = new URL(a.href, location.href);
+    if (url.origin !== location.origin) return;
+    /* Only pages. A PDF or a film is a download or a viewer, and neither is
+       something to paste into this one. */
+    if (!/\.html$/.test(url.pathname)) return;
+    if (url.pathname === location.pathname) {
+      /* The page you are already on. With a #section it is an anchor, and
+         the browser just scrolls, which keeps fullscreen. Without one it is
+         a reload, and a reload ends fullscreen: clicking Contact Me twice
+         dropped you out. There is nothing to load, so nothing happens. */
+      if (!url.hash) {
+        e.preventDefault(); e.stopImmediatePropagation(); scrollTo(0, 0);
+      }
+      return;
+    }
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    swap(url, true);
+  }, true);
+
+  addEventListener('popstate', function () {
+    if (on()) swap(new URL(location.href), false);
+  });
+})();
+</script>
+
+<!-- /saanvi-showcase -->
+</body>
+</html>

@@ -1,0 +1,9 @@
+# MarsWorm | V5 A plant on open Mars | Exp 1 | Does a cold leaf hold its water at Martian pressure?
+# Sheet: run_log.csv | invented numbers, a dry run and not a result | scenario: the-step-is-real | every column is defined in the codebook for this experiment
+run_id,date,leaf_type,target_pressure_mbar,pressure_reached_mbar,hold_ok,pump_down_minutes,filmed,notes
+R1,2027-03-08,crop leaf,6,6.13,y,4,y,
+R2,2027-03-09,desert succulent,6,5.82,y,4,y,
+R3,2027-03-10,moss,6,6.22,y,4,y,
+R4,2027-03-11,crop leaf,1013,1012.0,y,0,y,
+R5,2027-03-12,desert succulent,1013,1013.6,y,0,y,
+R6,2027-03-13,moss,1013,1012.4,y,0,y,

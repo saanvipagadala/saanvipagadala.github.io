@@ -1,0 +1,13 @@
+box_id,treatment,treatment_name,bench_position,start_mass_g,worms_in_g,date_started
+P01,A,"Simulant + compost, no worms",2,602.5,0,2027-02-08
+P02,A,"Simulant + compost, no worms",8,604.8,0,2027-02-08
+P03,A,"Simulant + compost, no worms",11,605.9,0,2027-02-08
+P04,B,"Simulant + compost, with worms",1,608.8,4.19,2027-02-08
+P05,B,"Simulant + compost, with worms",7,608.4,3.62,2027-02-08
+P06,B,"Simulant + compost, with worms",12,599.3,4.35,2027-02-08
+P07,C,"Simulant + compost, with castings, no live worm",5,603.0,0,2027-02-08
+P08,C,"Simulant + compost, with castings, no live worm",6,608.0,0,2027-02-08
+P09,C,"Simulant + compost, with castings, no live worm",3,592.3,0,2027-02-08
+P10,D,"Compost only, with worms",9,599.4,3.8,2027-02-08
+P11,D,"Compost only, with worms",10,600.9,4.06,2027-02-08
+P12,D,"Compost only, with worms",4,590.3,3.77,2027-02-08

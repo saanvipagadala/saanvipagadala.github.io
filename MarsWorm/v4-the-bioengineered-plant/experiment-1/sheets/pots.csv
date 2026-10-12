@@ -1,0 +1,19 @@
+# MarsWorm | V4 The bioengineered plant | Exp 1 | Is the plant poisoning itself?
+# Sheet: pots.csv | blank, to be filled in by hand at the bench | every column is defined in the codebook for this experiment
+pot_id,level,salt,nitrogen_source,bench_position,simulant_g,water_ml,salt_mg,seeds_sown,date_sown
+P01,A,chlorate,nitrate,2,,,,,
+P02,A,chlorate,nitrate,16,,,,,
+P03,A,chlorate,nitrate,12,,,,,
+P04,A,chlorate,nitrate,1,,,,,
+P05,B,none,nitrate,8,,,,,
+P06,B,none,nitrate,15,,,,,
+P07,B,none,nitrate,14,,,,,
+P08,B,none,nitrate,11,,,,,
+P09,C,chlorate,ammonium,9,,,,,
+P10,C,chlorate,ammonium,5,,,,,
+P11,C,chlorate,ammonium,10,,,,,
+P12,C,chlorate,ammonium,7,,,,,
+P13,D,perchlorate,nitrate,3,,,,,
+P14,D,perchlorate,nitrate,4,,,,,
+P15,D,perchlorate,nitrate,6,,,,,
+P16,D,perchlorate,nitrate,13,,,,,

@@ -1,0 +1,350 @@
+/* Saanvi's projects: the front door.
+
+   The palette and the type are MarsWorm's: warm paper rather than white, a
+   serif for reading, a sans for the furniture, and the same rust and gold.
+   The nine project sites below are brighter and cooler, which is right for
+   them; this is the page with her face on it, and it should feel like a
+   person's page rather than a product's.
+
+   One palette, always, and never the system's dark theme. */
+
+:root {
+  --ink:      #1a1a1a;
+  --ink-2:    #4a4a4a;
+  --ink-3:    #6b6b6b;
+  --accent:   #b3401f;
+  --accent-2: #8a3317;
+  --gold:     #7d6016;        /* dark enough to read at the date's size */
+  --gold-2:   #b08d3e;
+  --foot:     #877060;        /* the footer line, as on the MarsWorm PDFs */
+  --foot-rule:#e6dbd4;        /* and the warm hairline above it */
+  --rule:     #e2ddd9;
+  --rule-2:   #f0ecea;        /* the hairline between one project and the next */
+  --bg:       #fdfcfb;
+  --bg-2:     #f7f3f1;
+  --col:      1080px;
+  color-scheme: light;
+  --serif:    "Charter", "Georgia", "Times New Roman", serif;
+  --sans:     "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* The hand that writes her name under the portrait, and nothing else. */
+  --hand:     "Bradley Hand", "Noteworthy", "Segoe Script", cursive;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+/* The root size MarsWorm and NitRobe set. Everything here is sized in rem,
+   and rem resolves against the root rather than against body, so leaving the
+   root at the browser's 16px made this page's text a size smaller than the
+   project sites it links to. */
+html { font-size: 18px; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 400 1rem/1.62 var(--serif);
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--accent); }
+a:hover { color: var(--accent-2); }
+
+/* A warm wash across the top of the window, fading out before the first
+   project. The page used to begin on flat paper, which made a long column of
+   entries feel longer. Full bleed, behind everything, and it scrolls away. */
+body::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 520px;
+  background: linear-gradient(180deg, #f6efe6 0%, #faf6f1 45%,
+                              rgba(253, 252, 251, 0) 100%);
+  z-index: -1; pointer-events: none;
+}
+
+.page {
+  max-width: var(--col); margin: 0 auto;
+  padding: 0 clamp(1rem, 5vw, 2rem);
+}
+
+/* ---- the head --------------------------------------------------------- */
+
+/* Her face, her name in her own hand under it, then a few lines. No banner
+   photograph: this page is an index, and a picture across the top would push
+   the first entry below the fold for no gain. */
+
+.me { text-align: center; padding: 56px 0 0; }
+.me figure { margin: 0 0 20px; }
+.me figure img {
+  width: 132px; height: 132px; border-radius: 50%; object-fit: cover;
+  border: 2px solid var(--rule); margin: 0 auto;
+}
+.me figcaption {
+  font-family: var(--hand); font-size: 1.3rem; font-weight: 700;
+  color: var(--accent-2); margin-top: 0.4rem;
+}
+.me h1 {
+  font-family: var(--sans); font-weight: 700;
+  font-size: 2.1rem; line-height: 1.2; letter-spacing: -0.01em;
+  color: var(--ink); margin: 0 0 14px;
+}
+/* The rust rule under the title, as on every MarsWorm page. */
+.me h1::after {
+  content: ""; display: block; width: 92px; height: 2px;
+  background: var(--accent); margin: 14px auto 0;
+}
+/* Wide enough that each of these sits on one line. At a reading measure they
+   wrapped onto two apiece, which made the head of the page twice as tall as
+   it needed to be for three short sentences. */
+.me .about {
+  font-size: 1.02rem; line-height: 1.6; color: var(--ink);
+  margin: 0 auto 4px; max-width: var(--col);
+}
+.me p {
+  font-family: var(--sans); font-size: 0.82rem; letter-spacing: 0.02em;
+  line-height: 1.5; color: var(--ink-2);
+  margin: 14px auto 0; max-width: var(--col);
+}
+@media (max-width: 479px) {
+  .me h1 { font-size: 1.6rem; }
+  .me figure img { width: 104px; height: 104px; }
+  .me .about { font-size: 0.95rem; }
+}
+
+/* ---- the list --------------------------------------------------------- */
+
+h2.band {
+  font-family: var(--sans); font-weight: 700;
+  font-size: 1.32rem; letter-spacing: -0.01em; color: var(--ink);
+  text-align: center;
+  border-top: 1px solid var(--rule);
+  padding-top: 2.6rem; margin: 3.2rem 0 26px;
+}
+
+/* The entries are divided by a hairline rather than by white space alone.
+   Lighter than the rule above a heading, so it separates without announcing
+   itself: a reader should feel the boundary rather than notice it. */
+.list { display: grid; gap: 36px; margin: 0 0 1rem; }
+/* The hairline between entries is drawn above the card rather than on it, so
+   the card itself can round its corners and lift without the line coming
+   along for the ride. */
+.list .item + .item::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -18px;
+  height: 1px; background: var(--rule-2);
+}
+
+/* A picture of the site beside what it is. The picture leads, because these
+   projects do not look alike and the thumbnail says more in a glance than the
+   title does. */
+.item {
+  position: relative;
+  display: grid; gap: 22px 28px;
+  grid-template-columns: 340px 1fr; align-items: start;
+  /* Pulled out by its own padding, so the text still lines up with the
+     heading above while the card has room to show a background. */
+  padding: 18px; margin: 0 -18px; border-radius: 14px;
+  transition: background .18s, box-shadow .18s, transform .18s;
+}
+/* On warm paper a near-white card is invisible. This one goes to pure white
+   with a defined edge and a deeper shadow, so the row it is on clearly lifts
+   off the page rather than merely brightening slightly. */
+/* The hovered row has to read as picked up off the page, not merely
+   brightened. White against the warm paper, a rust ring rather than a grey
+   one, a shadow deep enough to cast, and enough lift to see it move. The
+   title and the link follow, so the whole row answers at once. */
+.item:hover {
+  background: #fff;
+  box-shadow: 0 18px 42px rgba(80, 50, 35, 0.20),
+              0 2px 6px rgba(80, 50, 35, 0.10),
+              0 0 0 1.5px rgba(179, 64, 31, 0.30);
+  transform: translateY(-6px);
+}
+.item:hover h3 a { color: var(--accent); }
+.item:hover .go { text-decoration: underline; }
+/* The picture is the project's own subject -- the robot, the dollhouse, the
+   newspaper, the mandrill -- rather than a screenshot of its home page. A
+   page shrunk to this width is unreadable and every one of them comes out
+   the same pale rectangle; the thing itself is recognisable at a glance.
+   One 4:3 box for all nine, so the column has a straight edge. */
+.item .shot {
+  display: block; border: 1px solid var(--rule); border-radius: 6px;
+  overflow: hidden; background: var(--bg-2);
+  aspect-ratio: 4 / 3;
+  /* The whole card is one link, so the picture is part of the target rather
+     than a decoration beside it. */
+  transition: border-color .18s, box-shadow .18s, transform .18s;
+}
+/* Every other entry turns round, so the eye zig-zags down the page instead
+   of running down one straight edge. */
+.item.flip { grid-template-columns: 1fr 340px; }
+.item.flip .shot { grid-column: 2; grid-row: 1; }
+.item.flip > div { grid-column: 1; grid-row: 1; }
+@media (max-width: 760px) {
+  .item.flip { grid-template-columns: 1fr; }
+  .item.flip .shot, .item.flip > div { grid-column: 1; grid-row: auto; }
+  .item.flip .shot { order: -1; }
+}
+
+/* The card already draws a rust ring when the row is hovered, and a second
+   one around the picture inside it is one outline too many. The picture
+   answers by moving instead: it eases in a little inside its own frame,
+   which the frame crops, so the edges stay exactly where they were. */
+.item .shot img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .35s ease;
+}
+.item:hover .shot img { transform: scale(1.045); }
+.item:hover .shot { border-color: var(--rule); }
+/* Big enough that each entry announces itself and the eye knows where one
+   project stops and the next begins. At the old size they read as a run of
+   headings in one long document. */
+.item h3 {
+  font-family: var(--sans); margin: 0;
+  font-size: 1.7rem; font-weight: 700; line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+@media (max-width: 760px) { .item h3 { font-size: 1.4rem; } }
+.item h3 a { color: var(--ink); text-decoration: none; }
+.item h3 a:hover { color: var(--accent); }
+.item .when {
+  display: block; margin: 8px 0 0;
+  font-family: var(--sans); font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold);
+}
+.item p { margin: 12px 0 0; font-size: 1rem; line-height: 1.58; color: var(--ink); }
+.item .go {
+  display: inline-block; margin-top: 12px;
+  font-family: var(--sans); font-size: 0.82rem; font-weight: 700;
+  letter-spacing: 0.01em; text-decoration: none;
+}
+.item .go:hover { text-decoration: underline; }
+/* A grid track will not shrink below its content's own minimum, and the
+   minimum of a 900px picture is 900px. Without this the single column on a
+   phone stays as wide as the image and the whole page scrolls sideways. */
+.item > * { min-width: 0; }
+
+@media (max-width: 760px) {
+  .item { grid-template-columns: 1fr; gap: 14px; }
+  /* The card's bleed costs more than it gives at this width. */
+  .item { padding: 14px; margin: 0 -14px; }
+}
+
+/* The ribbon that says what something won. */
+.ribbon {
+  display: flex; align-items: center; gap: 8px;
+  width: max-content; max-width: 100%; margin: 12px 0 0;
+  padding: 6px 15px;
+  background: #faf4e6; border: 1px solid #e7d6a8; border-radius: 999px;
+  font-family: var(--sans); font-size: 0.78rem; font-weight: 700;
+  letter-spacing: 0.01em; color: var(--gold);
+}
+.ribbon svg {
+  flex: none; width: 16px; height: 16px;
+  fill: none; stroke: var(--gold-2); stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* ---- a project written up here ----------------------------------------- */
+
+/* Most of these link out to a site of their own. One or two are written up
+   on this site instead, and this is the page they get. */
+/* The same measure the front page and the project sites use, 1076px inside
+   the gutters. A narrower column made these pages very tall for what is on
+   them. */
+.note { max-width: var(--col); margin: 0 auto; padding-bottom: 1rem; }
+.note > h1 {
+  font-family: var(--sans); font-weight: 700; text-align: center;
+  font-size: 1.8rem; line-height: 1.2; letter-spacing: -0.01em;
+  margin: 56px 0 12px;
+}
+.note > h1::after {
+  content: ""; display: block; width: 92px; height: 2px;
+  background: var(--accent); margin: 14px auto 0;
+}
+.note .when {
+  display: block; text-align: center;
+  font-family: var(--sans); font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold-2);
+}
+.note .ribbon { margin: 16px auto 0; }
+.note .body {
+  margin-top: 2.2rem; border-top: 1px solid var(--rule); padding-top: 2.2rem;
+}
+.note .body p { margin: 1rem 0; }
+.note figure { margin: 1.9rem 0; }
+.note figcaption {
+  margin-top: 4px;
+  font-family: var(--sans); font-size: 0.78rem; line-height: 1.5;
+  color: var(--ink-3); text-align: center;
+}
+
+/* An aside that is the point of the piece rather than part of its flow.
+   Set off with the rust bar the rest of the site uses for emphasis, on the
+   warm panel colour, so it reads as a step out of the story and back. */
+.note .body .callout {
+  margin: 2rem 0; padding: 1.15rem 1.4rem;
+  background: var(--bg-2);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+}
+
+/* The billing block at the foot of the piece, the way a poster sets it. */
+.note .body .billing {
+  text-align: center; margin: 2.2rem auto 0; max-width: 32rem;
+  font-size: 0.98rem; line-height: 1.5;
+}
+.note .body .smallprint {
+  text-align: center; margin: 1rem auto 0; max-width: 32rem;
+  font-size: 0.86rem; color: var(--ink-3);
+}
+
+/* The credits, as a plain two-column table. */
+.note .body table {
+  border-collapse: collapse; width: 100%; margin: 1.4rem 0;
+  font-family: var(--sans); font-size: 0.86rem;
+}
+.note .body td { padding: 9px 0; border-bottom: 1px solid var(--rule-2); vertical-align: top; }
+.note .body td:first-child {
+  width: 11rem; padding-right: 18px; color: var(--ink-3);
+  font-weight: 700; letter-spacing: 0.02em;
+}
+.note .body tr:last-child td { border-bottom: 0; }
+
+/* A film on such a page. A 16:9 box that keeps its shape at every width, so
+   the page does not jump as the frame loads. Capped: at the full width of
+   this column a 16:9 frame is 600px tall and pushes everything off screen. */
+.note .film {
+  position: relative; aspect-ratio: 16 / 9;
+  max-width: 46rem; margin: 1.8rem auto;
+  border-radius: 6px; overflow: hidden; background: #000;
+}
+.note .film iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.note .body h2 {
+  font-family: var(--sans); font-weight: 700; font-size: 1.22rem;
+  letter-spacing: -0.01em; margin: 2.2rem 0 0.4rem;
+}
+
+/* ---- footer ----------------------------------------------------------- */
+
+footer {
+  margin-top: 3rem;
+  border-top: 1px solid var(--foot-rule); padding: 22px 0 30px;
+  font-family: var(--sans); font-size: 0.78rem; line-height: 1.8;
+  color: var(--foot); text-align: center;
+}
+footer .wrap { max-width: 1200px; margin: 0 auto; padding: 0 62px; }
+@media (max-width: 700px) { footer .wrap { padding: 0 20px; } }
+footer a { color: var(--foot); }
+
+/* ---- fullscreen button ------------------------------------------------ */
+
+.fs {
+  position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 20;
+  width: 2.4rem; height: 2.4rem; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg); color: var(--ink-3);
+  border: 1px solid var(--rule); border-radius: 0.5rem;
+  cursor: pointer; opacity: 0.55;
+  transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+}
+.fs svg {
+  width: 1rem; height: 1rem; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.fs:hover { opacity: 1; color: var(--accent); border-color: var(--accent); }
+.fs:focus-visible { opacity: 1; outline: 2px solid var(--accent); outline-offset: 2px; }
+@media print { .fs { display: none; } }

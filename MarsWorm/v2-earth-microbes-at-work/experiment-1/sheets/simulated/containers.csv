@@ -1,0 +1,16 @@
+container_id,group,group_name,bench_position
+C01,1,Regolith only,7
+C02,1,Regolith only,2
+C03,1,Regolith only,13
+C04,2,Regolith + organics,5
+C05,2,Regolith + organics,11
+C06,2,Regolith + organics,1
+C07,3,Regolith + organics + worms,9
+C08,3,Regolith + organics + worms,15
+C09,3,Regolith + organics + worms,4
+C10,4,Regolith + organics + castings,12
+C11,4,Regolith + organics + castings,6
+C12,4,Regolith + organics + castings,14
+C13,5,Potting soil,3
+C14,5,Potting soil,10
+C15,5,Potting soil,8

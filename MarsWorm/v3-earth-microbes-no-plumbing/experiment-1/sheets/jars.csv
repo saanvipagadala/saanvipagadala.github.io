@@ -1,0 +1,15 @@
+# MarsWorm | V3 Earth microbes, no plumbing | Exp 1 | Does Azospira clean dirt, and not just water?
+# Sheet: jars.csv | blank, to be filled in by hand at the bench | every column is defined in the codebook for this experiment
+jar_id,level,medium,microbe,hydrogen,bench_position,simulant_g,water_ml,perchlorate_mg,date_started
+J01,A,dirt,yes,yes,2,,,,
+J02,A,dirt,yes,yes,8,,,,
+J03,A,dirt,yes,yes,11,,,,
+J04,B,dirt,no,yes,1,,,,
+J05,B,dirt,no,yes,7,,,,
+J06,B,dirt,no,yes,12,,,,
+J07,C,water,yes,yes,5,,,,
+J08,C,water,yes,yes,6,,,,
+J09,C,water,yes,yes,3,,,,
+J10,D,dirt,yes,no,9,,,,
+J11,D,dirt,yes,no,10,,,,
+J12,D,dirt,yes,no,4,,,,

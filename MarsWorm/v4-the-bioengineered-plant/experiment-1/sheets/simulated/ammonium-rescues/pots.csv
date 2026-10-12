@@ -1,0 +1,19 @@
+# MarsWorm | V4 The bioengineered plant | Exp 1 | Is the plant poisoning itself?
+# Sheet: pots.csv | invented numbers, a dry run and not a result | scenario: ammonium-rescues | every column is defined in the codebook for this experiment
+pot_id,level,salt,nitrogen_source,bench_position,simulant_g,water_ml,salt_mg,seeds_sown,date_sown
+P01,A,chlorate,nitrate,2,400,120,2000,3,2027-05-03
+P02,A,chlorate,nitrate,16,400,120,2000,3,2027-05-03
+P03,A,chlorate,nitrate,12,400,120,2000,3,2027-05-03
+P04,A,chlorate,nitrate,1,400,120,2000,3,2027-05-03
+P05,B,none,nitrate,8,400,120,0,3,2027-05-03
+P06,B,none,nitrate,15,400,120,0,3,2027-05-03
+P07,B,none,nitrate,14,400,120,0,3,2027-05-03
+P08,B,none,nitrate,11,400,120,0,3,2027-05-03
+P09,C,chlorate,ammonium,9,400,120,2000,3,2027-05-03
+P10,C,chlorate,ammonium,5,400,120,2000,3,2027-05-03
+P11,C,chlorate,ammonium,10,400,120,2000,3,2027-05-03
+P12,C,chlorate,ammonium,7,400,120,2000,3,2027-05-03
+P13,D,perchlorate,nitrate,3,400,120,2000,3,2027-05-03
+P14,D,perchlorate,nitrate,4,400,120,2000,3,2027-05-03
+P15,D,perchlorate,nitrate,6,400,120,2000,3,2027-05-03
+P16,D,perchlorate,nitrate,13,400,120,2000,3,2027-05-03

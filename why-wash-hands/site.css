@@ -1,0 +1,235 @@
+/* Wash Your Hands.
+
+   The shape of the page is its own: a full-bleed photograph, the title under
+   it, and one narrow column of reading underneath. The project is a story
+   with three guesses in it, so it wants a column you read down rather than
+   the wide centred slabs an app's landing page wants.
+
+   What it takes from Primate Explorer, Spark Robotics and ZippyZoom is
+   everything that makes them feel like one family: Lato, the teal, the
+   charcoal hairline around every photograph, the grey centred footer, and the
+   fullscreen button in the corner.
+
+   One palette, always, and never the system's dark theme: the page is shown
+   on a classroom projector as often as on a phone, and a dark theme would
+   wash the microscope photographs out. */
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+
+:root {
+  --ink:      #212121;
+  --ink-2:    #45545a;
+  --ink-3:    #6b7a80;
+  --teal:     #226e93;
+  --line:     #e0e0e0;
+  --edge:     #2f3437;        /* the charcoal the other sites outline with */
+  --paper:    #ffffff;
+  --paper-2:  #f6f8f9;
+  /* 1080px, which is the 1076px the other three sites run their content at.
+     The column shape is this page's own; its width is the family's. */
+  --col:      1080px;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 22px/1.6 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; height: auto; display: block; }
+
+/* ---- the head --------------------------------------------------------- */
+
+/* The opening photograph is the project in one frame: a first grader, a
+   microscope, and the thing she found on the screen behind her. So it runs
+   full width and the title sits under it rather than on top of it, where it
+   would have to fight the picture for contrast. */
+
+.hero img { width: 100%; }
+.hero .titles {
+  max-width: var(--col); margin: 0 auto;
+  padding: 52px clamp(1rem, 5vw, 2rem) 0;
+}
+/* The title and the section headings are set exactly as Primate Explorer,
+   Spark Robotics and ZippyZoom set theirs: teal, centred, 45px in the light
+   weight, dropping to 32 and 30 on a narrow screen. */
+.hero h1 {
+  color: var(--teal); text-align: center;
+  font-size: 45px; font-weight: 300; line-height: 1.15;
+  letter-spacing: 0.5px; margin: 0 0 10px;
+}
+/* Who made it and where, one to a line, centred under the centred title. Set
+   below the body size and tight: these two lines are a caption on the title,
+   not a paragraph, and at the body size they argued with it. */
+.hero .by {
+  text-align: center;
+  font-size: 19px; font-weight: 400; line-height: 1.45; color: var(--ink-3);
+  margin: 12px 0 0;
+}
+.hero .by strong { color: var(--ink-2); font-weight: 700; }
+
+/* The award. It is the first thing most people open this page to find out,
+   so it gets a shape of its own rather than a third line of grey byline: a
+   quiet gold ribbon with a medal on it, centred under the name. */
+.award {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  width: max-content; max-width: 100%; margin: 20px auto 0;
+  padding: 9px 22px;
+  background: #fdf8ec; border: 1px solid #e7d6a8; border-radius: 999px;
+  color: #8a6d1f; font-size: 17px; font-weight: 700; letter-spacing: 0.3px;
+  text-align: center;
+}
+.award .medal { flex: none; display: flex; }
+.award svg {
+  width: 21px; height: 21px;
+  fill: none; stroke: #b08d3e; stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+@media (max-width: 479px) {
+  .award { font-size: 15px; padding: 9px 16px; border-radius: 16px; }
+}
+
+/* ---- the column ------------------------------------------------------- */
+
+.page {
+  max-width: var(--col); margin: 0 auto;
+  padding: 0 clamp(1rem, 5vw, 2rem);
+}
+.page h2 {
+  color: var(--teal); text-align: center;
+  font-size: 45px; font-weight: 300; line-height: 1.2; letter-spacing: 0.5px;
+  /* Every section opens on a hairline across the column, so the page reads
+     as a run of chapters rather than one long scroll. The rule sits on the
+     heading rather than between the sections, because an <hr> between them
+     would be one more thing to remember to put in by hand. */
+  border-top: 1px solid var(--line);
+  padding-top: 2.6rem; margin: 3.4rem 0 22px;
+}
+
+@media (max-width: 479px) {
+  .hero h1 { font-size: 32px; }
+  .page h2 { font-size: 30px; }
+}
+
+.page p { margin: 1rem 0; }
+.page a { color: #006580; }
+.page a:hover { color: #007a93; }
+
+/* The four things she used, on one line divided by dots. Four short nouns
+   stacked down the left edge of a 1080px column left most of it empty. */
+.kit { text-align: center; }
+
+/* The two steps. Numbered by hand rather than by an <ol>, because the number
+   is part of the look here and wants to be the size it is in the deck. */
+.step { margin: 1.3rem 0; }
+.step .n {
+  display: block; margin-bottom: 0.15rem;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+.step p { margin: 0; }
+
+/* A guess, and then how it turned out. The two wrong guesses and the right
+   one are all set the same way, so the page does not tip its hand before the
+   reader gets there. */
+.guess {
+  background: var(--paper-2); border-left: 3px solid var(--teal);
+  border-radius: 0 6px 6px 0;
+  padding: 1.1rem 1.3rem; margin: 1.6rem 0;
+}
+.guess .lbl {
+  display: block; margin-bottom: 0.25rem;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+.guess p { margin: 0; font-size: 28px; font-weight: 300; line-height: 1.35; }
+/* How the guess turned out. The same box as the guess itself, so a guess and
+   its answer read as a pair, with its own label and a warmer bar down the
+   side to tell the two apart at a glance. */
+.guess.result { border-left-color: #c2410c; }
+
+/* A photograph with its caption. The caption says what to look at, because a
+   field of microbes means nothing to a reader who has never seen one. */
+figure { margin: 1.9rem 0; }
+/* The photographs carry no frame. Every one of them is a picture of a screen,
+   already a bright rectangle with its own edges, and a border round it only
+   adds a second edge beside the one the picture already has. */
+/* A short line under the picture, centred on it. Plain weight: there is one
+   caption per photograph here, not a grid of them needing to be told apart,
+   so it can sit quietly. */
+figcaption {
+  /* Sitting right under the picture it belongs to. Several of these
+     photographs are deck slides with white already baked into their lower
+     edge, so any margin here reads as a gap twice the size it is. */
+  margin-top: 4px;
+  font-size: 15px; line-height: 1.5; color: var(--ink-3);
+  text-align: center;
+}
+
+/* The offer of the deck itself, under the two films. */
+.getit { text-align: center; font-size: 17px; color: var(--ink-3); margin-top: 1.6rem; }
+
+/* The film. A 16:9 box that keeps its shape at every width, so the page does
+   not jump as the frame loads. */
+.film {
+  position: relative; aspect-ratio: 16 / 9; margin: 1.4rem 0 0;
+  overflow: hidden; background: #000;
+}
+.film iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* The closing line from the last slide. It is the point of the whole project,
+   so it gets the page to itself. */
+.sendoff {
+  text-align: center; margin: 3.4rem 0 0;
+  padding: 2.2rem 1rem;
+  /* Opens on a rule and closes on nothing: the footer draws its own line a
+     moment later, and two of them with only air between read as a mistake. */
+  border-top: 1px solid var(--line);
+}
+.sendoff p {
+  color: var(--teal); font-weight: 300;
+  /* One line on anything wider than a phone, so it is sized to fit the
+     column rather than to a fixed number of pixels. */
+  font-size: clamp(1.7rem, 4.6vw, 3rem); line-height: 1.25;
+  letter-spacing: 0.5px; margin: 0;
+}
+
+/* ---- footer ----------------------------------------------------------- */
+/* The same grey centred line the other sites end on. */
+
+footer {
+  /* The send-off above already ends on a generous run of white, so the footer
+     takes none of its own on top. */
+  border-top: 1px solid var(--line); padding: 20px 0 28px;
+  color: #6b6b6b; font-size: 13px; line-height: 1.8; text-align: center;
+}
+footer .wrap { max-width: 1200px; margin: 0 auto; padding: 0 62px; }
+@media (max-width: 700px) { footer .wrap { padding: 0 20px; } }
+footer a { color: #6b6b6b; }
+
+/* ---- fullscreen button ------------------------------------------------ */
+/* The way a video player offers it: a quiet corner button that gets the
+   browser's own furniture out of the way. Added by script, so a browser that
+   cannot do it is never shown it. */
+
+.fs {
+  position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 20;
+  width: 2.5rem; height: 2.5rem; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--paper); color: #5f6b70;
+  border: 1px solid var(--edge); border-radius: 0.5rem;
+  cursor: pointer; opacity: 0.55;
+  transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+}
+.fs svg {
+  width: 1.05rem; height: 1.05rem; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.fs:hover { opacity: 1; color: var(--teal); border-color: var(--teal); }
+.fs:focus-visible { opacity: 1; outline: 2px solid var(--teal); outline-offset: 2px; }
+@media print { .fs { display: none; } }

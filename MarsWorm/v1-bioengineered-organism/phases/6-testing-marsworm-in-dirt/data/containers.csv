@@ -1,0 +1,21 @@
+# MarsWorm | V1 The bioengineered organism | Stage 6 | Does MarsWorm actually turn Martian dirt into soil?
+# Sheet: containers.csv | blank, to be filled in by hand at the bench | every column is defined in the codebook for this experiment
+container_id,group,group_name,bench_position
+C01,1,Mars dirt only,11
+C02,1,Mars dirt only,4
+C03,1,Mars dirt only,17
+C04,2,Mars dirt + food,8
+C05,2,Mars dirt + food,1
+C06,2,Mars dirt + food,14
+C07,3,Mars dirt + food + earthworms,6
+C08,3,Mars dirt + food + earthworms,18
+C09,3,Mars dirt + food + earthworms,3
+C10,4,Mars dirt + food + MarsWorm,12
+C11,4,Mars dirt + food + MarsWorm,9
+C12,4,Mars dirt + food + MarsWorm,15
+C13,5,"Mars dirt + MarsWorm, no food",2
+C14,5,"Mars dirt + MarsWorm, no food",7
+C15,5,"Mars dirt + MarsWorm, no food",16
+C16,6,Potting soil,5
+C17,6,Potting soil,13
+C18,6,Potting soil,10

@@ -1,0 +1,11 @@
+# MarsWorm | V3 Earth microbes, no plumbing | Exp 4 | Does the added gene blow the chlorine off?
+# Sheet: flasks.csv | invented numbers, a dry run and not a result | scenario: gas-comes-off | every column is defined in the codebook for this experiment
+flask_id,level,gene,cells,chloride_mg_per_l_target,bench_position,liquid_ml,headspace_ml,date_started
+F01,A,yes,yes,1200,4,50,70,2027-06-01
+F02,A,yes,yes,1200,2,50,70,2027-06-01
+F03,B,no,yes,1200,1,50,70,2027-06-01
+F04,B,no,yes,1200,5,50,70,2027-06-01
+F05,C,yes,yes,0,6,50,70,2027-06-01
+F06,C,yes,yes,0,3,50,70,2027-06-01
+F07,D,yes,no,1200,8,50,70,2027-06-01
+F08,D,yes,no,1200,7,50,70,2027-06-01

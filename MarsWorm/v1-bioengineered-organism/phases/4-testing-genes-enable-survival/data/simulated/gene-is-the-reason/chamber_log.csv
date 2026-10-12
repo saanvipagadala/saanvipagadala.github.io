@@ -1,0 +1,6 @@
+# MarsWorm | V1 The bioengineered organism | Stage 4 | Does a gene really bring its ability with it?
+# Sheet: chamber_log.csv | invented numbers, a dry run and not a result | scenario: gene-is-the-reason | every column is defined in the codebook for this experiment
+run,date,hours_in_chamber,humidity_start_pct,humidity_end_pct,temperature_c,notes
+1,2027-02-08,6,86,43,20.9,
+2,2027-02-15,6,87,43,20.6,
+3,2027-02-22,6,88,41,20.6,

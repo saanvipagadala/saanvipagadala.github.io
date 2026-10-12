@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover" />
+  <title>MarsWorm</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../../site.css?v=3a3a16aec5" />
+  <meta name="color-scheme" content="light">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script>
+  /* Before anything else on the page: a reopened tab is otherwise restored to
+     wherever it was left, which opens the page below its own nav bar with the
+     heading cut in half. Set from the head, because by the end of the body the
+     browser has already done it. */
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+  </script>
+  <meta name="description" content="Designing an organism to make soil from Martian dirt. A bioengineering project by Saanvi, 2026.">
+  <link rel="canonical" href="https://saanvipagadala.github.io/MarsWorm/v1-bioengineered-organism/phases/2-designing-MarsWorm/README.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MarsWorm">
+  <meta property="og:title" content="Stage 2: Designing MarsWorm">
+  <meta property="og:description" content="Designing an organism to make soil from Martian dirt. A bioengineering project by Saanvi, 2026.">
+  <meta property="og:url" content="https://saanvipagadala.github.io/MarsWorm/v1-bioengineered-organism/phases/2-designing-MarsWorm/README.html">
+  <meta property="og:image" content="https://saanvipagadala.github.io/MarsWorm/v1-bioengineered-organism/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="MarsWorm · designing an organism to make soil from Martian dirt">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Stage 2: Designing MarsWorm">
+  <meta name="twitter:description" content="Designing an organism to make soil from Martian dirt. A bioengineering project by Saanvi, 2026.">
+  <meta name="twitter:image" content="https://saanvipagadala.github.io/MarsWorm/v1-bioengineered-organism/og-image.png">
+  <meta name="theme-color" content="#b3401f">
+  <link rel="icon" type="image/svg+xml" href="../../marsworm.svg">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<!-- Google Analytics 4, on every page of the site.
+
+     Injected into the <head> of every built page by add_analytics() in
+     build_site.py, rather than pasted into the three hand-written pages and
+     the pandoc header. The version folders are finished HTML that is copied
+     across untouched, so a component the page has to include would miss
+     them; a pass over the finished site/ is the only place that reaches all
+     of them. The measurement ID is filled in from GA_ID.
+
+     What GA4 counts by itself, once Enhanced measurement is on in the
+     property: page views, outbound clicks, file downloads, site search and
+     one scroll event at ninety per cent. None of that is repeated here. Its
+     video tracking only understands embedded YouTube, and the films on this
+     site are plain <video> elements served from the site itself, so the
+     watching is counted below. -->
+<script>
+(function () {
+  if (typeof gtag !== 'function') return;
+
+  function send(name, params) {
+    params = params || {};
+    params.page_path = location.pathname;
+    gtag('event', name, params);
+  }
+
+  /* This tag sits in the head, so when it runs the page below it does not
+     exist yet. Anything that has to find an element waits for the page; the
+     listeners on the document itself do not. */
+  function whenReady(fn) {
+    if (document.readyState === 'loading')
+      document.addEventListener('DOMContentLoaded', fn);
+    else fn();
+  }
+
+  /* What a report needs to name the thing that was watched or read. The
+     file name rather than the path, because the same film is reachable at
+     more than one URL and a report that splits it across them is no use. */
+  function assetName(el) {
+    var src = el.currentSrc || el.src || '';
+    if (!src) {
+      var s = el.querySelector && el.querySelector('source');
+      src = s ? s.getAttribute('src') : '';
+    }
+    return (src.split('/').pop() || 'unknown').replace(/\?.*$/, '');
+  }
+
+  /* The films and the audio. A play is easy to get and says little on its
+     own, since somebody who starts a film and leaves counts the same as
+     somebody who watches it through. So each player also reports the
+     quarters it passes, once each, and reaching the end. */
+  var MARKS = [25, 50, 75];
+  whenReady(function () {
+    document.querySelectorAll('video, audio').forEach(function (m) {
+      var kind = m.tagName.toLowerCase();
+      var seen = {};
+
+      m.addEventListener('play', function () {
+        send('media_play', {asset: assetName(m), media_type: kind});
+      });
+
+      m.addEventListener('timeupdate', function () {
+        if (!m.duration || !isFinite(m.duration)) return;
+        var pct = (m.currentTime / m.duration) * 100;
+        MARKS.forEach(function (mark) {
+          if (pct >= mark && !seen[mark]) {
+            seen[mark] = true;
+            send('media_progress', {
+              asset: assetName(m), media_type: kind, percent: mark});
+          }
+        });
+      });
+
+      m.addEventListener('ended', function () {
+        send('media_complete', {asset: assetName(m), media_type: kind});
+      });
+    });
+  });
+
+  /* How far down a page anybody got. GA4's own scroll event fires once, at
+     ninety per cent, which cannot tell a page nobody finished from one
+     nobody started. Reported under its own name so the two do not mix. */
+  var depths = [25, 50, 75, 100], reached = {};
+  function scrolled() {
+    var doc = document.documentElement;
+    var height = doc.scrollHeight - window.innerHeight;
+    if (height <= 0) return;
+    var pct = ((window.scrollY || doc.scrollTop) / height) * 100;
+    depths.forEach(function (d) {
+      if (pct >= d && !reached[d]) {
+        reached[d] = true;
+        send('scroll_depth', {percent: d});
+      }
+    });
+  }
+  window.addEventListener('scroll', scrolled, {passive: true});
+  whenReady(scrolled);
+
+  /* The controls the site draws itself: the full-screen button on every
+     page, and the speed and caption buttons under each film. Nothing
+     outside the site knows these were pressed. */
+  document.addEventListener('fullscreenchange', function () {
+    send(document.fullscreenElement ? 'fullscreen_enter' : 'fullscreen_exit');
+  });
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.speed button');
+    if (!b) return;
+    if (b.classList.contains('cc')) send('captions_toggle');
+    else send('playback_speed', {speed: (b.textContent || '').trim()});
+  });
+
+})();
+</script>
+</head>
+<body>
+<nav class="nav"><div class="inner"><a class="brand" href="../../../index.html"><img src="../../marsworm.svg" alt=""><span class="wordmark" style="display:flex;flex-direction:column;align-items:center;gap:.25rem;position:relative"><b style="line-height:1">MarsWorm</b><span class="vpill" style="display:inline-flex;align-items:center;gap:.4rem;align-self:center;padding:.14rem .6rem .14rem .14rem;border-radius:999px;background:#b08d3e;color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.18);font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:.74rem;font-weight:600;letter-spacing:.01em;white-space:nowrap;line-height:1.2"><b style="background:#fff;color:#b08d3e;font-size:.64rem;font-weight:800;letter-spacing:.06em;line-height:1;padding:.24rem .42rem;border-radius:999px">V1</b> The bioengineered organism</span></span></a><button class="menu" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span><span></span><span></span></button><div class="links" id="nav-links"><a href="../../index.html">Overview</a><a href="../../review.html">Design review</a><a href="../../host.html">Host question</a><a href="../../lab.html">Lab request</a><a href="../../end-to-end.html">End to end</a></div></div></nav><main class="page">
+<h1 id="stage-2-designing-marsworm">Stage 2: Designing MarsWorm</h1>
+<h2 id="if-nothing-can-do-the-job-design-something-that-can">If nothing
+can do the job, design something that can</h2>
+<p><a
+href="../../phases/1-searching-earth-for-MarsWorm/README.html">Stage
+1</a> scored 322 organisms and got a flat answer: <strong>nothing on
+Earth both survives Mars and enriches dirt.</strong> The best single
+organism manages 14 of the <a
+href="../../phases/1-searching-earth-for-MarsWorm/results/the_map-notes.html#the-23-jobs">23
+jobs</a>, and never both halves at once.</p>
+<p>So the organism cannot be found. It has to be assembled: take the
+best real gene for each of the <a
+href="../../phases/1-searching-earth-for-MarsWorm/results/the_map-notes.html#the-23-jobs">23
+jobs</a>, from whichever organism does that one job best, and write the
+result up as an order a DNA synthesis company could print.</p>
+<p>That is this stage. It needs a laptop and public databases, and no
+lab at all.</p>
+<h3 id="where-this-sits-in-the-project">Where this sits in the
+project</h3>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 34%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>Stage</th>
+<th>What it answers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a
+href="../../phases/1-searching-earth-for-MarsWorm/README.html">Stage
+1</a></td>
+<td>Searching Earth for MarsWorm</td>
+<td>Is there already an organism that can do this?</td>
+</tr>
+<tr>
+<td><strong>Stage 2</strong></td>
+<td><strong>Designing MarsWorm</strong></td>
+<td><strong>Nothing can, so borrow 37 real genes and design
+one</strong></td>
+</tr>
+<tr>
+<td><a
+href="../../phases/3-testing-biology-enriches-dirt/README.html">Stage
+3</a></td>
+<td>Testing Biology Enriches Dirt</td>
+<td>Can life from Earth turn Martian dirt into soil at all?</td>
+</tr>
+<tr>
+<td><a
+href="../../phases/4-testing-genes-enable-survival/README.html">Stage
+4</a></td>
+<td>Testing Genes Enable Survival</td>
+<td>Does a gene really bring its ability with it?</td>
+</tr>
+<tr>
+<td><a href="../../phases/5-building-MarsWorm/README.html">Stage
+5</a></td>
+<td>Building MarsWorm</td>
+<td>24 genes into one host, in six tested rounds</td>
+</tr>
+<tr>
+<td><a href="../../phases/6-testing-marsworm-in-dirt/README.html">Stage
+6</a></td>
+<td>Testing MarsWorm in Dirt</td>
+<td>Put it in Martian dirt and find out whether anything grows</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="what-the-job-actually-is">What the job actually is</h2>
+<p>Feed an earthworm dead leaves and it gives back castings: dark,
+crumbly stuff that plants grow in. That is not one action. It is
+five.</p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 2%" />
+<col style="width: 47%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>The worm’s job</th>
+<th>Why soil needs it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Chews dead matter into small pieces</td>
+<td>Gives microbes more surface to work on</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Drags waste down and brings minerals up</td>
+<td>Puts carbon and minerals in contact</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Burrows, leaving channels</td>
+<td>Air, water and roots can move through</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Leaves castings behind</td>
+<td>Builds crumbs that hold water</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Carries microbes in its gut</td>
+<td>These do the actual chemistry</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Job 5 is the one people miss.</strong> The worm does not
+digest soil itself. Its gut microbes do. The worm is mostly a delivery
+vehicle, which is the first clue that the answer may not need to be a
+worm at all.</p>
+<p>Now put that worm on Mars. Six things kill it, and each one is enough
+on its own.</p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 41%" />
+<col style="width: 58%" />
+</colgroup>
+<thead>
+<tr>
+<th>Mars</th>
+<th>What it does to a worm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>About −60 °C</td>
+<td>Freezes it, and ice tears its cells open</td>
+</tr>
+<tr>
+<td>Almost no liquid water</td>
+<td>Dries it out; worms breathe through wet skin</td>
+</tr>
+<tr>
+<td>Radiation reaching the ground</td>
+<td>Shreds its DNA</td>
+</tr>
+<tr>
+<td>Perchlorate salt in the dust</td>
+<td>Poisons it</td>
+</tr>
+<tr>
+<td>Almost no oxygen</td>
+<td>Suffocates it</td>
+</tr>
+<tr>
+<td>Almost no dead plants or animals</td>
+<td>Nothing to eat</td>
+</tr>
+</tbody>
+</table></div>
+<p>Those two tables are the specification: <strong>five jobs to do, six
+conditions to survive.</strong></p>
+<h2 id="nothing-has-everything-but-everything-has-something">Nothing has
+everything, but everything has something</h2>
+<p>Every line in both tables is already solved somewhere on Earth.</p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 39%" />
+<col style="width: 2%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr>
+<th>The problem</th>
+<th></th>
+<th>Something on Earth already handles it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Freezing</td>
+<td></td>
+<td><a
+href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=28229"><em>Colwellia
+psychrerythraea</em></a>, which grows below 0 °C in Arctic sea ice</td>
+</tr>
+<tr>
+<td>Drying out</td>
+<td></td>
+<td><a
+href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=42241">Tardigrades</a>
+and brine shrimp, which lose nearly all their water and revive</td>
+</tr>
+<tr>
+<td>Radiation</td>
+<td><img class="orgpic" src="../1-searching-earth-for-MarsWorm/results/photos/deinococcus_radiodurans.jpg" alt="" title="Deinococcus radiodurans" width="30" height="30" loading="lazy"></td>
+<td><a
+href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1299"><em>Deinococcus
+radiodurans</em></a>, which takes about 1000 times a human-lethal
+dose</td>
+</tr>
+<tr>
+<td>Perchlorate</td>
+<td></td>
+<td><a
+href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=36863"><em>Ideonella
+dechloratans</em></a>, which breathes the stuff</td>
+</tr>
+<tr>
+<td>No oxygen</td>
+<td></td>
+<td><a
+href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1488"><em>Clostridium
+acetobutylicum</em></a>, which oxygen actually harms</td>
+</tr>
+<tr>
+<td>Breaking down dead plants</td>
+<td><img class="orgpic" src="../1-searching-earth-for-MarsWorm/results/photos/streptomyces_coelicolor.png" alt="" title="Streptomyces coelicolor" width="30" height="30" loading="lazy"></td>
+<td><a
+href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1902"><em>Streptomyces
+coelicolor</em></a>, one of the great soil decomposers</td>
+</tr>
+<tr>
+<td>Nitrogen from the air</td>
+<td><img class="orgpic" src="../1-searching-earth-for-MarsWorm/results/photos/azotobacter_vinelandii.jpg" alt="" title="Azotobacter sp." width="30" height="30" loading="lazy"></td>
+<td><a
+href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=354"><em>Azotobacter
+vinelandii</em></a>, which turns air into plant food</td>
+</tr>
+<tr>
+<td>Working through sediment</td>
+<td></td>
+<td><a
+href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=283909"><em>Capitella
+teleta</em></a>, which eats through mud like a marine earthworm</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>No organism is on that list twice.</strong> Every one is a
+specialist. <em>Deinococcus</em> shrugs off radiation and builds no
+soil. <em>Azotobacter</em> makes plant food and would freeze solid.</p>
+<p><strong>The blueprint already exists. It is just scattered across the
+tree of life, because nowhere on Earth ever needed all of it at
+once.</strong></p>
+<p>So the question this stage answers is:</p>
+<blockquote>
+<p>If we take the best real gene for each job and put them in one
+design, how close to a Mars soil-maker does that get, and what is still
+missing?</p>
+</blockquote>
+<p>The design is called MarsWorm, but nothing says it has to be a worm.
+The name describes the job. Given Job 5, the answer is mostly
+microbial.</p>
+<hr />
+<h2 id="from-a-trait-to-a-gene">From a trait to a gene</h2>
+<p>Surviving Mars and enriching dirt is too big a thing to shop for. So
+it is broken down. First into <a href="#the-order">13 traits</a>, the
+abilities MarsWorm needs, then into <a
+href="../../phases/1-searching-earth-for-MarsWorm/results/the_map-notes.html#the-23-jobs">23
+jobs</a>, each one small enough that a single protein can do it. Those
+23 are what <a
+href="../../phases/1-searching-earth-for-MarsWorm/README.html">Stage
+1</a> scored all 322 organisms against, and they are the shopping list
+for this stage.</p>
+<h3 id="you-cannot-search-a-database-for-a-trait">You cannot search a
+database for a trait</h3>
+<p>The 23 jobs are written in human words. <em>Stop ice from tearing the
+cell apart.</em> <em>Pull iron out of the dirt.</em> Those sentences say
+what is needed, and they are how a person thinks about it.</p>
+<p><a href="https://www.uniprot.org/">UniProt</a>, the protein database
+this stage shops in, does not understand any of it. It stores proteins,
+each with a name, a sequence, and notes from whoever studied it. Type a
+job into the search box and you get nothing useful back. Type
+<code>toxic</code> and it hands back snake venom.</p>
+<p>So each job has to be translated into the database’s own words. The
+job <em>stop ice from tearing the cell apart</em> becomes
+<code>antifreeze</code>, <code>ice-binding</code> and
+<code>ice structuring</code>. <em>Pull iron out of the dirt</em> becomes
+<code>ferric reductase</code>, <code>siderophore synthetase</code> and
+<code>ferric uptake</code>. <em>Break down starch, the stuff in a
+potato</em> becomes <code>amylase</code> and <code>glucoamylase</code>.
+<em>Pull plant food out of thin air</em> becomes one word,
+<code>nitrogenase</code>.</p>
+<p>Finding those words is the hard part, and no program can do it. It is
+searching, reading, asking a teacher or a parent, and trying a term to
+see what comes back. Sometimes the database can be asked directly.
+Nobody has to already know the phrase “ice structuring”: type
+<em>antifreeze</em> into <a
+href="https://www.uniprot.org/keywords">UniProt’s keyword list</a> and
+it hands back <code>KW-0047 Antifreeze protein</code>, synonym <em>Ice
+structuring protein</em>. Ask the database for its vocabulary, never
+guess it.</p>
+<details>
+<summary>
+<b>All 45 search terms</b>, for the 23 jobs
+</summary>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Job</th>
+<th>What is searched for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Keep working in the freezing cold</td>
+<td><code>cold shock</code></td>
+</tr>
+<tr>
+<td>Stop ice from tearing the cell apart</td>
+<td><code>antifreeze</code>, <code>ice-binding</code>,
+<code>ice structuring</code></td>
+</tr>
+<tr>
+<td>Hold everything together once the water is gone</td>
+<td><code>dehydrin</code>, <code>late embryogenesis abundant</code>,
+<code>hydrophilin</code>, <code>desiccation</code></td>
+</tr>
+<tr>
+<td>Make the sugar that protects it while dry</td>
+<td><code>trehalose-phosphate synthase</code></td>
+</tr>
+<tr>
+<td>Put a shield around the DNA</td>
+<td><code>DNA protection</code>, <code>damage suppressor</code></td>
+</tr>
+<tr>
+<td>Mend the DNA that gets broken anyway</td>
+<td><code>radiation response</code>, <code>radiation resistance</code>,
+<code>photolyase</code>, <code>DNA repair protein</code></td>
+</tr>
+<tr>
+<td>Catch the first burning chemical</td>
+<td><code>superoxide dismutase</code></td>
+</tr>
+<tr>
+<td>Destroy the second one before it burns the cell</td>
+<td><code>catalase</code>, <code>peroxiredoxin</code>,
+<code>glutathione peroxidase</code></td>
+</tr>
+<tr>
+<td>Break down the poison in the Mars dust</td>
+<td><code>perchlorate reductase</code></td>
+</tr>
+<tr>
+<td>Finish the poison off, and get oxygen back</td>
+<td><code>chlorite dismutase</code></td>
+</tr>
+<tr>
+<td>Make energy with no air</td>
+<td><code>fumarate reductase</code>, <code>hydrogenase</code></td>
+</tr>
+<tr>
+<td>Grab broken proteins before they stick together</td>
+<td><code>small heat shock protein</code></td>
+</tr>
+<tr>
+<td>Fold them back into shape</td>
+<td><code>chaperone protein DnaK</code>,
+<code>chaperone protein DnaJ</code></td>
+</tr>
+<tr>
+<td>Catch carbon dioxide straight out of the air</td>
+<td><code>ribulose-bisphosphate carboxylase</code></td>
+</tr>
+<tr>
+<td>Keep the carbon-catching cycle turning</td>
+<td><code>phosphoribulokinase</code></td>
+</tr>
+<tr>
+<td>Chew up tough plant stalks and leaves</td>
+<td><code>cellulase</code>, <code>cellobiohydrolase</code>,
+<code>endoglucanase</code></td>
+</tr>
+<tr>
+<td>Chew up fungus threads and insect shells</td>
+<td><code>chitinase</code>, <code>chitin deacetylase</code></td>
+</tr>
+<tr>
+<td>Pull plant food out of thin air</td>
+<td><code>nitrogenase</code></td>
+</tr>
+<tr>
+<td>Unlock phosphorus from solid rock</td>
+<td><code>phytase</code>, <code>alkaline phosphatase</code>,
+<code>acid phosphatase</code></td>
+</tr>
+<tr>
+<td>Pull iron out of the dirt</td>
+<td><code>ferric reductase</code>, <code>siderophore synthetase</code>,
+<code>ferric uptake</code></td>
+</tr>
+<tr>
+<td>Build a home the helpful microbes can live in</td>
+<td><code>biofilm</code>, <code>exopolysaccharide</code></td>
+</tr>
+<tr>
+<td>Break down starch, the stuff in a potato</td>
+<td><code>amylase</code>, <code>glucoamylase</code></td>
+</tr>
+<tr>
+<td>Break down fat and oil</td>
+<td><code>lipase</code></td>
+</tr>
+</tbody>
+</table></div>
+</details>
+<h3 id="the-rules-then-the-winner">The rules, then the winner</h3>
+<p>The 45 terms bring back <strong>2,108 proteins</strong>. Far too
+many, and most of them are no good. So they get filtered.</p>
+<p>Five rules do the filtering, and all five were written down
+<em>before</em> the search ran. That order matters. Rules picked
+afterwards would just be rules that keep the proteins you already
+liked.</p>
+<details>
+<summary>
+<b>The five rules</b>
+</summary>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>A protein is out if</th>
+<th>Because</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No expert has checked it</td>
+<td>a computer’s guess is not evidence</td>
+</tr>
+<tr>
+<td>It has never been seen in a lab</td>
+<td>somebody should have held this protein</td>
+</tr>
+<tr>
+<td>It is a fragment, or outside 40 to 2,000 letters</td>
+<td>too broken to fold, or too dear to print</td>
+</tr>
+<tr>
+<td>It comes from a germ or a parasite</td>
+<td>this ends up in soil</td>
+</tr>
+<tr>
+<td>It is an <em>inhibitor</em></td>
+<td>an “amylase inhibitor” blocks digestion</td>
+</tr>
+</tbody>
+</table></div>
+</details>
+<p>The five rules throw out <strong>601</strong> proteins, leaving
+<strong>1,507</strong>. Most jobs still have dozens of good candidates,
+so those are put in order by a second set of rules, and whoever comes
+top wins the job. One winner per job, so <strong>23 proteins are
+chosen</strong> and 1,484 are not. Most of the 1,484 are perfectly good
+proteins. They were simply beaten by a better one for the same job.</p>
+<details>
+<summary>
+<b>How the winner is picked</b>, in order
+</summary>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 41%" />
+<col style="width: 58%" />
+</colgroup>
+<thead>
+<tr>
+<th>Ranked by</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Which search term it matched</td>
+<td>the first term for a job is the most exact one</td>
+</tr>
+<tr>
+<td>Whether it comes from an over-studied lab organism</td>
+<td>those genomes are searched hardest, so the match may be an accident
+of attention</td>
+</tr>
+<tr>
+<td>How carefully it has been written up</td>
+<td>more curation means fewer surprises</td>
+</tr>
+<tr>
+<td>Length, last</td>
+<td>hundreds tie on everything above, and the shortest entries are
+scraps rather than working enzymes</td>
+</tr>
+</tbody>
+</table></div>
+<p>Length has to come last. Let it lead and <a
+href="../../phases/2-designing-MarsWorm/results/trace/nitrogen.html">nitrogenase</a>
+loses to a nitrite reductase, and alpha-amylase finishes behind a
+97-letter mosquito protein.</p>
+</details>
+<p><strong>Every one of these decisions is written down, one page per
+trait.</strong> <a
+href="../../phases/2-designing-MarsWorm/results/trace/cold.html">Surviving
+the cold</a> is one of the 13: what each term found, what was thrown out
+and by which rule, what won, and <strong>the ones that lost</strong>.
+That last part is how you check the winner beat something, rather than
+being the only thing in the room.</p>
+<details>
+<summary>
+<b>The 13 trait pages</b>, one for each
+</summary>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 48%" />
+<col style="width: 3%" />
+<col style="width: 48%" />
+</colgroup>
+<thead>
+<tr>
+<th>Trait</th>
+<th>Genes</th>
+<th>The whole story</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Survival on Mars</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Survive freezing</td>
+<td>2</td>
+<td><a
+href="../../phases/2-designing-MarsWorm/results/trace/cold.html">How
+this trait became 2 genes</a></td>
+</tr>
+<tr>
+<td>Survive drying out</td>
+<td>2</td>
+<td><a
+href="../../phases/2-designing-MarsWorm/results/trace/drying.html">How
+this trait became 2 genes</a></td>
+</tr>
+<tr>
+<td>Repair radiation damage</td>
+<td>2</td>
+<td><a
+href="../../phases/2-designing-MarsWorm/results/trace/radiation.html">How
+this trait became 2 genes</a></td>
+</tr>
+<tr>
+<td>Handle toxic chemicals</td>
+<td>2</td>
+<td><a
+href="../../phases/2-designing-MarsWorm/results/trace/toxic_chemicals.html">How
+this trait became 2 genes</a></td>
+</tr>
+<tr>
+<td>Detoxify the Mars poison</td>
+<td>4</td>
+<td><a
+href="../../phases/2-designing-MarsWorm/results/trace/perchlorate.html">How
+this trait became 4 genes</a></td>
+</tr>
+<tr>
+<td>Live without oxygen</td>
+<td>1</td>
+<td><a
+href="../../phases/2-designing-MarsWorm/results/trace/no_oxygen.html">How
+this trait became 1 gene</a></td>
+</tr>
+<tr>
+<td>General damage control</td>
+<td>2</td>
+<td><a
+href="../../phases/2-designing-MarsWorm/results/trace/general_damage.html">How
+this trait became 2 genes</a></td>
+</tr>
+<tr>
+<td><strong>Turning dirt into soil</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Make food out of thin air</td>
+<td>2</td>
+<td><a
+href="../../phases/2-designing-MarsWorm/results/trace/carbon.html">How
+this trait became 2 genes</a></td>
+</tr>
+<tr>
+<td>Break down dead plants</td>
+<td>2</td>
+<td><a
+href="../../phases/2-designing-MarsWorm/results/trace/decomposition.html">How
+this trait became 2 genes</a></td>
+</tr>
+<tr>
+<td>Make nitrogen fertiliser</td>
+<td>13</td>
+<td><a
+href="../../phases/2-designing-MarsWorm/results/trace/nitrogen.html">How
+this trait became 13 genes</a></td>
+</tr>
+<tr>
+<td>Unlock minerals from rock</td>
+<td>2</td>
+<td><a
+href="../../phases/2-designing-MarsWorm/results/trace/minerals.html">How
+this trait became 2 genes</a></td>
+</tr>
+<tr>
+<td>Team up with other microbes</td>
+<td>1</td>
+<td><a
+href="../../phases/2-designing-MarsWorm/results/trace/microbe_partnership.html">How
+this trait became 1 gene</a></td>
+</tr>
+<tr>
+<td>Digest food</td>
+<td>2</td>
+<td><a
+href="../../phases/2-designing-MarsWorm/results/trace/digestion.html">How
+this trait became 2 genes</a></td>
+</tr>
+</tbody>
+</table></div>
+</details>
+<hr />
+<h2 id="the-order">The order</h2>
+<p><strong>37 genes · 23 of <a
+href="../../phases/1-searching-earth-for-MarsWorm/results/the_map-notes.html#the-23-jobs">23
+jobs</a> · 18 organisms · 41,445 letters of DNA · roughly $2,900 to
+$6,200</strong></p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Trait</th>
+<th>Genes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Survive freezing</td>
+<td>2: CspB, antifreeze protein</td>
+</tr>
+<tr>
+<td>Survive drying out</td>
+<td>2: dehydrin CAS31, trehalose-phosphate synthase</td>
+</tr>
+<tr>
+<td>Repair radiation damage</td>
+<td>2: IrrE, DNA protection during starvation</td>
+</tr>
+<tr>
+<td>Handle toxic chemicals</td>
+<td>2: superoxide dismutase, catalase</td>
+</tr>
+<tr>
+<td>Detoxify the Mars poison</td>
+<td>4: perchlorate reductase (3 parts), chlorite dismutase</td>
+</tr>
+<tr>
+<td>Live without oxygen</td>
+<td>1: fumarate reductase</td>
+</tr>
+<tr>
+<td>General damage control</td>
+<td>2: small heat shock protein, DnaK</td>
+</tr>
+<tr>
+<td>Make food out of thin air</td>
+<td>2: RuBisCO, phosphoribulokinase</td>
+</tr>
+<tr>
+<td>Break down dead plants</td>
+<td>2: cellulase, chitinase</td>
+</tr>
+<tr>
+<td>Make nitrogen fertiliser</td>
+<td>13: the whole nitrogenase machine</td>
+</tr>
+<tr>
+<td>Unlock minerals from rock</td>
+<td>2: phytase, ferric reductase</td>
+</tr>
+<tr>
+<td>Team up with other microbes</td>
+<td>1: biofilm matrix protein</td>
+</tr>
+<tr>
+<td>Digest food</td>
+<td>2: amylase, lipase</td>
+</tr>
+</tbody>
+</table></div>
+<p>One job takes 13 genes because nitrogenase is not a protein, it is a
+machine, and ordering one piece of it builds nothing. The parts did not
+have to be guessed at: each entry in the database names the partner it
+binds to, and which protein builds the metal cluster at its heart.</p>
+<p><strong>We are not buying organisms. We are buying printed
+DNA.</strong> A synthesis company takes a sequence and posts you the
+molecule, so the source organism never has to be grown, shipped, or even
+still alive. That is why the antifreeze protein in the order comes from
+<img class="orgpic" src="../1-searching-earth-for-MarsWorm/results/photos/pseudopleuronectes_americanus.jpg" alt="" title="Pseudopleuronectes americanus" width="30" height="30" loading="lazy">
+<a
+href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=8265">a
+winter flounder</a>.</p>
+<p><a
+href="../../phases/2-designing-MarsWorm/results/genes_to_order.html">The
+full list</a> has every gene with its job, protein, source organism and
+length, and the warnings on the ones we are least sure of. The <a
+href="../../phases/2-designing-MarsWorm/results/genes_to_order.csv">same
+list as a spreadsheet</a> is what a synthesis company would be
+handed.</p>
+<h2 id="scoring-the-design-the-same-way">Scoring the design the same
+way</h2>
+<p>Stage 1 asked every one of its 322 organisms the same question about
+each of the 23 jobs: <em>does it have a protein that can fill this job
+at all?</em> The design is put through that identical question 23 times,
+so the comparison is fair, and it answers yes to all of them: <strong>13
+of 13</strong> on survival, <strong>10 of 10</strong> on enrichment.</p>
+<p><a
+href="../../phases/1-searching-earth-for-MarsWorm/results/the_map.html">The
+map</a> has an <strong>Our design</strong> toggle, so you can watch the
+empty corner fill.</p>
+<blockquote>
+<p>No single organism on Earth reaches that corner. A combination of
+real genes does.</p>
+</blockquote>
+<hr />
+<h2 id="what-this-design-still-gets-wrong">What this design still gets
+wrong</h2>
+<p>A result nobody can criticise is a result nobody checked. The first
+three are faults this stage cannot fix, because a protein search cannot
+reach them, and <a
+href="../../phases/5-building-MarsWorm/README.html">Stage 5</a> answers
+each one in italics.</p>
+<ul>
+<li><strong>This search cannot choose a host.</strong> Nothing in a
+protein record says whether an organism breathes oxygen, lives in soil,
+or can be engineered. Those are facts about organisms, and this method
+searches proteins. <em>Stage 5 chose</em> <strong>Azotobacter
+vinelandii</strong>, <em>which already carries 13 of the 37
+genes.</em></li>
+<li><strong>These are protein-coding sequences only.</strong> A gene
+also needs a switch telling the cell to read it, and nothing here picks
+one. <em>Stage 5 uses the host’s own <code>nifH</code> switch, and that
+choice is one of the three questions the design review asks
+about.</em></li>
+<li><strong>Oxygen destroys the nitrogenase in seconds</strong>, and 6
+of the ordered genes carry that warning. Worse, the perchlorate genes
+<em>release</em> oxygen: one trait makes the gas another trait cannot be
+near, which only became visible once both traits existed. <em>Stage 5’s
+answer is that the chosen host is itself an oxygen sink. Nobody has ever
+tried it, so it is tested at round 3 of 6, before anything expensive
+depends on it.</em></li>
+<li><strong>35% of the order is one trait.</strong> 13 of the 37 genes
+are nitrogenase. That is the biology rather than a mistake, but it is a
+large bet on one job.</li>
+<li><strong>Twenty-three jobs is a judgement, not a
+measurement.</strong> A person decided where to cut each of the <a
+href="../../phases/1-searching-earth-for-MarsWorm/results/the_map-notes.html#the-23-jobs">13
+traits</a> into steps. Surviving the cold was cut into two jobs. <a
+href="../../phases/1-searching-earth-for-MarsWorm/results/the_map-notes.html#the-23-jobs">Fixing
+nitrogen</a> was left as one. Every cut has a reason, but nothing in the
+biology says 23 is the right number. Cut them differently and every
+score on this page changes.</li>
+</ul>
+</main>
+
+<!-- Printed at the foot of every page of the site. Mirrors the footer line
+     stamped on the PDFs, and carries the byline that the PDFs put inline. -->
+<footer class="foot">
+  <p class="line">MarsWorm &nbsp;·&nbsp; Making Arid Regolith into Soil, With
+    Organisms Redesigned for Mars &nbsp;·&nbsp; v1</p>
+  <p class="who"><b>Saanvi Pagadala</b> · Granite Bay, CA</p>
+</footer>
+
+<!-- The sticky nav covers whatever a #section link scrolls to, so every
+     heading carries a scroll margin the height of that bar. The bar is not
+     one height: it wraps as the window narrows, and no CSS breakpoint
+     predicts that reliably, so the page measures it and writes the real
+     number into --nav-h. -->
+<script>
+(function () {
+  var nav = document.querySelector('.nav');
+  if (!nav) return;
+  function measure() {
+    document.documentElement.style.setProperty(
+      '--nav-h', nav.getBoundingClientRect().height + 'px');
+  }
+  measure();
+  addEventListener('load', measure);
+  addEventListener('resize', measure);
+
+  // Reopening a tab, iOS lays the page out at the full height of the screen
+  // and draws its own address bar and toolbar on top of it, so the first
+  // hundred points or so of the page sit behind the browser's furniture. The
+  // page is not scrolled: scrollY, scrollingElement.scrollTop and the sticky
+  // bar's own position all read 0. Nothing in script can give those points
+  // back -- a one-pixel scroll to make Safari settle its bars leaves the
+  // viewport at 932 of 932 -- so the page steps its content down instead.
+  //
+  // The tell is the viewport height. Opened normally it is well short of the
+  // screen, because the bars take their share; behind the bars it is the
+  // whole screen exactly.
+  var touch = 'ontouchstart' in window;
+  function bars() {
+    var hidden = touch && window.innerHeight >= screen.height - 1;
+    document.documentElement.classList.toggle('bars-over', hidden);
+  }
+  bars();
+  addEventListener('resize', bars);
+  addEventListener('orientationchange', bars);
+  addEventListener('pageshow', bars);
+})();
+</script>
+
+<!-- The menu button, on small screens. Every listener is on the document
+     rather than on the button, because the markup around it can be replaced
+     the whole nav when it swaps a page in, and a listener bound to the old
+     button would go with it. -->
+<script>
+(function () {
+  function nav() { return document.querySelector('.nav'); }
+
+  function set(open) {
+    var n = nav();
+    if (!n) return;
+    n.classList.toggle('open', open);
+    var b = n.querySelector('.menu');
+    if (b) b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  // Capture, not bubble. A bubbling listener on the document never hears
+  // some taps on iOS; the capture phase runs from the window down to the
+  // target and always does.
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (!t || !t.closest) return;
+    if (t.closest('.menu')) { set(!nav().classList.contains('open')); return; }
+    // A tab was chosen, or the reader tapped the page behind the panel.
+    // Either way the menu has done its job.
+    set(false);
+  }, true);
+
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  // Turning the phone sideways can put the tabs back in the bar, and an open
+  // panel would then be a second copy of them.
+  addEventListener('resize', function () { set(false); });
+})();
+</script>
+
+<!-- The organism thumbnails in the gene tables. Hovering one shows the
+     picture at a size worth looking at. The preview is attached to the page
+     rather than to the cell, because a table scrolls inside its own box and
+     that box clips anything that grows out of it. Delegated, so it survives
+     the page changing underneath it. -->
+<script>
+(function () {
+  var box, img, cap;
+
+  function build() {
+    box = document.createElement('div');
+    box.id = 'orgpreview';
+    box.hidden = true;
+    img = document.createElement('img');
+    cap = document.createElement('b');
+    box.appendChild(img);
+    box.appendChild(cap);
+    document.body.appendChild(box);
+  }
+
+  function show(thumb) {
+    if (!box) build();
+    img.src = thumb.src;
+    cap.textContent = thumb.title || '';
+    box.hidden = false;
+    // Above the thumbnail by preference, below it when there is no room, and
+    // never off the right edge.
+    var r = thumb.getBoundingClientRect(), w = box.offsetWidth, h = box.offsetHeight;
+    var left = Math.min(Math.max(8, r.left - 8), innerWidth - w - 8);
+    var top = r.top - h - 8;
+    if (top < 8) top = Math.min(r.bottom + 8, innerHeight - h - 8);
+    box.style.left = left + 'px';
+    box.style.top = top + 'px';
+  }
+
+  function hide() { if (box) box.hidden = true; }
+
+  document.addEventListener('mouseover', function (e) {
+    var t = e.target;
+    if (t && t.classList && t.classList.contains('orgpic')) show(t);
+    else if (box && !box.hidden) hide();
+  });
+  addEventListener('scroll', hide, true);
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
+})();
+</script>
+
+<!-- Fullscreen, the way a video player offers it: a quiet corner button that
+     gets the browser's own furniture out of the way for reading. Written by
+     script rather than sitting in the markup, because a browser that cannot
+     do it should not be offered it. Desktop only: an iPhone has no fullscreen
+     for a page, and on a tablet the button would sit under a thumb. -->
+<script>
+(function () {
+  var root = document.documentElement;
+  if (!(root.requestFullscreen || root.webkitRequestFullscreen)) return;
+  if ('ontouchstart' in window) return;
+
+  var EXPAND = '<path d="M3 8V3h5M17 3h5v5M22 17v5h-5M8 22H3v-5"/>';
+  var SHRINK = '<path d="M8 3v5H3M22 8h-5V3M17 22v-5h5M3 17h5v5"/>';
+
+  var btn = document.createElement('button');
+  btn.className = 'fs';
+  btn.type = 'button';
+  document.body.appendChild(btn);
+
+  function on() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function paint() {
+    var label = on() ? 'Leave fullscreen' : 'Read fullscreen';
+    btn.setAttribute('aria-label', label);
+    btn.title = label + '  (F)';
+    btn.innerHTML = '<svg viewBox="0 0 25 25" aria-hidden="true">' +
+                    (on() ? SHRINK : EXPAND) + '</svg>';
+  }
+  function toggle() {
+    if (on()) {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+    }
+  }
+
+  btn.addEventListener('click', toggle);
+  document.addEventListener('fullscreenchange', paint);
+  document.addEventListener('webkitfullscreenchange', paint);
+  // The same shortcut a video player uses, but never while something is being
+  // typed into, and never on top of a browser shortcut.
+  addEventListener('keydown', function (e) {
+    if (e.key !== 'f' && e.key !== 'F') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.isContentEditable ||
+              /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    e.preventDefault();
+    toggle();
+  });
+  paint();
+})();
+</script>
+
+<!-- Fullscreen belongs to a document, so following an ordinary link drops out
+     of it, and the new page cannot ask to go back in: a browser only grants
+     fullscreen on a click, and a fresh document has no click behind it.
+
+     So while fullscreen is on, and only then, a click on a link to another
+     page of this site fetches that page and swaps it in rather than
+     navigating. The document never changes, so fullscreen never ends. Outside
+     fullscreen nothing here runs at all and every link is an ordinary link,
+     which is what keeps this plain static HTML for anyone reading it normally,
+     and what makes the failure of any of it harmless. -->
+<script>
+(function () {
+  var PARTS = ['.nav', '.page', '.foot'];
+
+  function full() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+
+  function settle(hash) {
+    // The nav's height and the landing on a #section are both worked out on
+    // load; a swapped-in page has to have them worked out again.
+    var nav = document.querySelector('.nav');
+    if (nav) {
+      document.documentElement.style.setProperty(
+        '--nav-h', nav.getBoundingClientRect().height + 'px');
+    }
+    var el = hash && document.getElementById(decodeURIComponent(hash.slice(1)));
+    // Nothing animates: the stylesheet asks for no smooth scrolling, so these
+    // arrive at once rather than gliding and being interrupted.
+    if (el) el.scrollIntoView(true);
+    else scrollTo(0, 0);
+  }
+
+  function swap(url, push) {
+    fetch(url.href).then(function (r) {
+      if (!r.ok) throw 0;
+      return r.text();
+    }).then(function (text) {
+      var doc = new DOMParser().parseFromString(text, 'text/html');
+      var next = PARTS.map(function (sel) { return doc.querySelector(sel); });
+      if (next.some(function (n) { return !n; })) throw 0;
+      // The URL is changed first: every relative href and src in the incoming
+      // markup is resolved against it, and the pages sit at different depths.
+      if (push) history.pushState({}, '', url.href);
+      PARTS.forEach(function (sel, i) {
+        document.querySelector(sel).replaceWith(next[i]);
+      });
+      document.title = doc.title;
+      if (window.wireFolds) wireFolds();
+      settle(url.hash);
+    }).catch(function () {
+      location.href = url.href;              // give up quietly, navigate
+    });
+  }
+
+  addEventListener('click', function (e) {
+    if (!full() || e.defaultPrevented) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
+    var a = e.target.closest && e.target.closest('a');
+    if (!a || a.target || a.hasAttribute('download')) return;
+    var url = new URL(a.href, location.href);
+    if (url.origin !== location.origin) return;
+    // Only pages. A .csv or an image is a download or a viewer, and neither
+    // is something to paste into this one.
+    if (!/\.html$/.test(url.pathname)) return;
+    if (url.pathname === location.pathname) return;   // an anchor on this page
+    e.preventDefault();
+    swap(url, true);
+  });
+
+  addEventListener('popstate', function () {
+    if (full()) swap(new URL(location.href), false);
+  });
+})();
+</script>
+
+<script>
+// Foldable groups inside a long table. The heading rows are made by
+// span_category_rows() in the build; everything between one of them and the
+// next (or the totals row) belongs to that group.
+(function () {
+  function body(row) {
+    var out = [], r = row.nextElementSibling;
+    while (r && !r.querySelector('td.catrow') && !r.querySelector('.tot')) {
+      out.push(r); r = r.nextElementSibling;
+    }
+    return out;
+  }
+  window.wireFolds = function () {
+  document.querySelectorAll('td.catrow').forEach(function (cell) {
+    if (cell.dataset.folds) return;            // already wired
+    cell.dataset.folds = '1';
+    var row = cell.parentNode, open = true;
+    cell.setAttribute('role', 'button');
+    cell.setAttribute('tabindex', '0');
+    function toggle() {
+      open = !open;
+      row.classList.toggle('closed', !open);
+      body(row).forEach(function (r) { r.hidden = !open; });
+    }
+    toggle();                                  // start folded
+    cell.addEventListener('click', toggle);
+    cell.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  });
+  };
+  wireFolds();
+})();
+</script>
+<!-- saanvi-showcase: shared block, injected by apply_global.py -->
+<!-- The block every page on the site carries, injected by apply_global.py.
+     Edit it here, run the build, and all 800-odd pages change together.
+
+     Three jobs: count the visit, offer fullscreen, and offer the way home.
+     Each project was built separately over four years and none of them knows
+     about the others, so none of this can rely on their markup. It adds its
+     own elements, and takes over from theirs where they had their own.
+
+     ../../../../index.html is replaced per page with the relative path back to the front
+     page, because these pages sit at every depth from /index.html to
+     /MarsWorm/v1-bioengineered-organism/experiments/index.html. A relative
+     path works on the live site and equally on a page opened off the disk; a
+     link to "/" would mean the root of the hard drive. -->
+
+<style data-sp>
+/* Named with a prefix nothing else here uses, so no project's stylesheet can
+   reach these by accident and nothing here can reach a project's. */
+.sp-home {
+  /* The top left corner. Every one of these sites centres whatever it keeps
+     up there, so the corner is empty on all of them. */
+  position: fixed; top: 14px; left: 14px; z-index: 2147483000;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 16px 9px 13px;
+  border-radius: 999px;
+  background: rgba(253, 252, 251, 0.92);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid #e2ddd9;
+  box-shadow: 0 2px 10px rgba(80, 50, 35, 0.10);
+  /* Her own hand, the one she signs the portrait with on the front page and
+     on every MarsWorm page. A grey sans chip in the corner looked like
+     something the browser had added; this looks like it belongs to her. */
+  font: 700 16px/1 "Bradley Hand", "Noteworthy", "Segoe Script", cursive;
+  color: #8a3317; text-decoration: none;
+  transition: box-shadow .15s, border-color .15s, transform .15s;
+}
+.sp-home:hover {
+  border-color: #b3401f; transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(80, 50, 35, 0.16);
+}
+.sp-home svg {
+  width: 14px; height: 14px; flex: none; margin-top: -1px;
+  fill: none; stroke: currentColor; stroke-width: 2.2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* Tighter on a phone, where 14px of margin is a lot of the screen. */
+/* On a phone these bars stop centring and put their own logo hard left,
+   which is where this was sitting: it covered MarsWorm's wordmark and
+   SPARK's. Down to the bottom corner, where nothing else goes. The
+   fullscreen button is not drawn on a touch device, so that corner is free. */
+@media (max-width: 760px) {
+  .sp-home {
+    top: auto; bottom: 12px; left: 12px;
+    padding: 7px 13px 8px 11px; font-size: 15px;
+  }
+}
+@media print { .sp-home, .sp-fs { display: none; } }
+
+.sp-fs {
+  position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 2147483000;
+  width: 2.4rem; height: 2.4rem; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #fdfcfb; color: #6b6b6b;
+  border: 1px solid #e2ddd9; border-radius: 0.5rem;
+  cursor: pointer; opacity: 0.55;
+  transition: opacity .15s, color .15s, border-color .15s;
+}
+.sp-fs svg {
+  width: 1rem; height: 1rem; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.sp-fs:hover { opacity: 1; color: #b3401f; border-color: #b3401f; }
+.sp-fs:focus-visible { opacity: 1; outline: 2px solid #b3401f; outline-offset: 2px; }
+</style>
+
+<!-- One property for the whole site. apply_global.py strips the per-project
+     tags MarsWorm and NitRobe carried, so nothing is counted twice. -->
+<script data-sp async src="https://www.googletagmanager.com/gtag/js?id=G-FJ4CWSDFEW"></script>
+<script data-sp>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FJ4CWSDFEW');
+</script>
+
+<script data-sp>
+(function () {
+  'use strict';
+
+  /* A swapped-in page brings its own copy of this block. Only the first one
+     wires anything to the window or the document; the rest would stack a
+     second click handler and a second button on every swap. */
+  if (window.__saanviGlobal) return;
+  window.__saanviGlobal = true;
+
+  /* The stylesheet moves to the head, where a body swap cannot take it. */
+  var css = document.querySelector('style[data-sp]');
+  if (css) document.head.appendChild(css);
+
+  /* ---- the way home ----------------------------------------------------
+     Every page gets it, including the front page's own children. The front
+     page itself is skipped at injection time, because a link home from home
+     is furniture with nothing behind it. */
+
+  /* The front page is injected with an empty path, because a link home from
+     home is furniture with nothing behind it. */
+  var where = '../../../../index.html';
+  /* The front page, as an address: the injected path from here, or, on the
+     front page itself, this page. Worked out once, at load, so that a page
+     swapped in later under fullscreen can be told whether it is home. */
+  var FRONT = new URL(where || 'index.html', location.href);
+  function isFront(url) {
+    return url.pathname === FRONT.pathname ||
+           url.pathname === FRONT.pathname.replace(/index\.html$/, '');
+  }
+  /* The pill is always made, and only shown away from home. It used to be
+     made only on pages that had a path home, so fullscreen entered on the
+     front page carried no pill into any project. */
+  var home = document.createElement('a');
+  home.className = 'sp-home';
+  home.href = FRONT.href;
+  home.innerHTML =
+    '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+    '<path d="M3 10.6 12 3.4l9 7.2"/><path d="M5.6 9.6V20h12.8V9.6"/>' +
+    '<path d="M10 20v-5h4v5"/></svg><span>Saanvi</span>';
+  home.setAttribute('aria-label', "All of Saanvi's projects");
+  home.title = "All of Saanvi's projects";
+  if (!isFront(new URL(location.href))) document.body.appendChild(home);
+
+  /* ---- fullscreen ------------------------------------------------------
+     One button for the whole site. Seven of these projects shipped their own
+     and two shipped none, so this takes any it finds away and puts one back.
+     Theirs are built by their own scripts, which may run after this, so the
+     sweep repeats a moment later rather than only once. */
+
+  /* Seven of these projects shipped a fullscreen button of their own and one
+     shipped two names for it. Every spelling found so far is listed; a
+     button of ours is never matched, because all of ours are .sp-fs. */
+  var THEIRS = '.fs, .fs-label, #fs-label, .fullscreen-btn, #fullscreen-btn,'
+             + ' [aria-label*="fullscreen" i]:not(.sp-fs),'
+             + ' [title*="full screen" i]:not(.sp-fs)';
+
+  function sweep() {
+    var theirs = document.querySelectorAll(THEIRS);
+    for (var i = 0; i < theirs.length; i++) {
+      if (theirs[i].className !== 'sp-fs') theirs[i].remove();
+    }
+  }
+  sweep();
+  setTimeout(sweep, 400);
+  addEventListener('load', sweep);
+
+  var root = document.documentElement;
+  if (!(root.requestFullscreen || root.webkitRequestFullscreen)) return;
+  /* A phone has no fullscreen for a page, and on a tablet the button sits
+     under a thumb. */
+  if ('ontouchstart' in window) return;
+
+  var EXPAND = '<path d="M3 8V3h5M17 3h5v5M22 17v5h-5M8 22H3v-5"/>';
+  var SHRINK = '<path d="M8 3v5H3M22 8h-5V3M17 22v-5h5M3 17h5v5"/>';
+
+  var btn = document.createElement('button');
+  btn.className = 'sp-fs';
+  btn.type = 'button';
+  document.body.appendChild(btn);
+
+  function on() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function paint() {
+    var label = on() ? 'Leave fullscreen' : 'View fullscreen';
+    btn.setAttribute('aria-label', label);
+    btn.title = label + '  (F)';
+    btn.innerHTML = '<svg viewBox="0 0 25 25" aria-hidden="true">' +
+                    (on() ? SHRINK : EXPAND) + '</svg>';
+  }
+  function toggle() {
+    if (on()) {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+    }
+  }
+
+  btn.addEventListener('click', toggle);
+  document.addEventListener('fullscreenchange', paint);
+  document.addEventListener('webkitfullscreenchange', paint);
+
+  /* The shortcut a video player uses, but never while something is being
+     typed into, and never on top of a browser shortcut. */
+  /* In the capture phase, and stopped dead once handled. Several of these
+     projects bind F to their own fullscreen, and two handlers toggling the
+     same thing cancel each other out: the key would do nothing at all. */
+  addEventListener('keydown', function (e) {
+    if (e.key !== 'f' && e.key !== 'F') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.isContentEditable ||
+              /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    toggle();
+  }, true);
+
+  paint();
+
+  /* ---- staying in fullscreen across a link -----------------------------
+     Fullscreen belongs to a document. Follow an ordinary link and it ends,
+     and the new page cannot ask to go back in: a browser only grants
+     fullscreen off a click, and a fresh document has no click behind it. So
+     SPARK's menu dropped you out of fullscreen on every page.
+
+     While fullscreen is on, and only then, a click on a link to another page
+     of this site fetches it and swaps it in rather than navigating. The
+     document never changes, so fullscreen never ends. Outside fullscreen
+     none of this runs and every link is an ordinary link, which is what
+     keeps these plain static pages for anyone reading them normally, and
+     what makes a failure here harmless. */
+
+  /* The scripts already on this document, by address. A swapped-in page
+     that asks for one of them again is not made to download it twice: the
+     gene finder's model is half a megabyte. */
+  var fetched = {};
+  for (var f = 0; f < document.scripts.length; f++) {
+    if (document.scripts[f].src) fetched[document.scripts[f].src] = true;
+  }
+
+  function runScripts(where) {
+    /* A script inserted as parsed markup does not execute. Re-creating each
+       one does, which is what keeps a project's own behaviour alive after a
+       swap: SPARK's play buttons, NitRobe's gene finder.
+
+       In order, and one at a time. A script made here is async by default,
+       so three external files would race each other and the inline script
+       after them would run first, against a model that had not arrived yet:
+       that is how the finder came to say its files did not load. An inline
+       script is wrapped in a function, so walking back onto a page does not
+       redeclare its variables; what a page means to share between its
+       scripts it hangs on window, which still works. */
+    var olds = where.querySelectorAll('script'), list = [];
+    for (var i = 0; i < olds.length; i++) {
+      var o = olds[i];
+      list.push([o.src, o.text]);
+      o.remove();
+    }
+    return list.reduce(function (chain, item) {
+      return chain.then(function () {
+        return new Promise(function (done) {
+          var src = item[0], s = document.createElement('script');
+          if (src) {
+            if (fetched[src]) return done();
+            fetched[src] = true;
+            s.src = src;
+            s.async = false;
+            s.onload = s.onerror = function () { done(); };
+          } else {
+            s.text = '(function(){' + item[1] + '\n})();';
+          }
+          where.appendChild(s);
+          if (!src) done();
+        });
+      });
+    }, Promise.resolve());
+  }
+
+  function swap(url, push) {
+    fetch(url.href).then(function (r) {
+      if (!r.ok) throw 0;
+      return r.text();
+    }).then(function (text) {
+      var doc = new DOMParser().parseFromString(text, 'text/html');
+      if (!doc.body) throw 0;
+      /* The address changes first: every relative href and src in the
+         incoming markup resolves against it, and these pages sit at
+         different depths. */
+      if (push) history.pushState({}, '', url.href);
+
+      /* The incoming page's stylesheets. Within one project these are the
+         same files and nothing happens; crossing from one project to another
+         they are different, and the old ones have to go or two designs fight
+         over the same page. */
+      var head = document.head;
+      var mine = head.querySelectorAll(
+        'link[rel="stylesheet"]:not([data-sp]), style:not([data-sp])');
+      for (var i = 0; i < mine.length; i++) mine[i].remove();
+      var theirs = doc.head.querySelectorAll('link[rel="stylesheet"], style');
+      for (var k = 0; k < theirs.length; k++) head.appendChild(theirs[k]);
+
+      document.title = doc.title;
+
+      /* The incoming page carries its own copy of this block. Out it comes,
+         and the live pill and button are put back afterwards, so there is
+         one of each however far you wander. */
+      var copies = doc.body.querySelectorAll('[data-sp], .sp-home, .sp-fs');
+      for (var c = 0; c < copies.length; c++) copies[c].remove();
+
+      document.body.replaceWith(document.adoptNode(doc.body));
+      if (!isFront(url)) document.body.appendChild(home);
+      if (btn) document.body.appendChild(btn);
+      return runScripts(document.body).then(function () {
+        var el = url.hash && document.getElementById(
+          decodeURIComponent(url.hash.slice(1)));
+        if (el) el.scrollIntoView(true); else scrollTo(0, 0);
+      });
+    }).catch(function () {
+      location.href = url.href;            // give up quietly, navigate
+    });
+  }
+
+  /* In the capture phase, so this runs before any router the page brought
+     with it. MarsWorm and NitRobe ship their own, written for their own
+     pages: fine inside those sites, and fatal leaving them, because their
+     fallback on a page they do not understand is to navigate, which ends
+     fullscreen. When this handles a click it stops the event dead so theirs
+     never sees it. Which means this one does all the work on the live site,
+     and a page swapped in here has to work as well as it does under its own
+     router: the finder's model has to load, in order, before the finder. */
+  addEventListener('click', function (e) {
+    if (!on() || e.defaultPrevented) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
+    var a = e.target.closest && e.target.closest('a');
+    if (!a || a.target || a.hasAttribute('download')) return;
+    var url = new URL(a.href, location.href);
+    if (url.origin !== location.origin) return;
+    /* Only pages. A PDF or a film is a download or a viewer, and neither is
+       something to paste into this one. */
+    if (!/\.html$/.test(url.pathname)) return;
+    if (url.pathname === location.pathname) {
+      /* The page you are already on. With a #section it is an anchor, and
+         the browser just scrolls, which keeps fullscreen. Without one it is
+         a reload, and a reload ends fullscreen: clicking Contact Me twice
+         dropped you out. There is nothing to load, so nothing happens. */
+      if (!url.hash) {
+        e.preventDefault(); e.stopImmediatePropagation(); scrollTo(0, 0);
+      }
+      return;
+    }
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    swap(url, true);
+  }, true);
+
+  addEventListener('popstate', function () {
+    if (on()) swap(new URL(location.href), false);
+  });
+})();
+</script>
+
+<!-- /saanvi-showcase -->
+</body>
+</html>

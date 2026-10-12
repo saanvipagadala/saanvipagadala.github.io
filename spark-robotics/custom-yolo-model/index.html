@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teaching a Computer to Find Toys! · SPARK</title>
+<meta name="description" content="Training a custom YOLO object detection model from scratch — the data labeling, the training, and the results, explained simply.">
+<link rel="canonical" href="https://saanvipagadala.github.io/spark-robotics/custom-yolo-model/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Teaching a Computer to Find Toys! · SPARK">
+<meta property="og:description" content="Training a custom YOLO object detection model from scratch — the data labeling, the training, and the results, explained simply.">
+<meta property="og:url" content="https://saanvipagadala.github.io/spark-robotics/custom-yolo-model/">
+<meta property="og:image" content="https://saanvipagadala.github.io/spark-robotics/media/home/home-01.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../media/icon.png">
+<link rel="apple-touch-icon" href="../media/icon.png">
+<link rel="stylesheet" href="../site.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">SPARK</a>
+    <button class="menu" type="button" aria-label="Menu" aria-expanded="false" aria-controls="spark-nav"><span></span><span></span><span></span></button><nav class="nav" id="spark-nav"><a href="../index.html">Home</a><a href="../custom-yolo-model/index.html" aria-current="page">Custom YOLO Model</a><a href="../el-remoto/index.html">El Remoto</a><a href="../contact-me/index.html">Contact Me</a></nav>
+  </div>
+</header>
+
+<div class="wrap">
+  
+  <h1 class="page">Teaching a Computer to Find Toys!</h1>
+  <main class="left-headings">
+<p class="lede"><em>Training a Custom YOLO Object Detection Model</em></p>
+<p class="lede small">YOLO (You Only Look Once) means the AI looks at an image just once to find everything in it.</p>
+<hr class="rule">
+<h2 id="synopsis">Synopsis</h2>
+<p>This report shows how I taught a computer to find and recognize toys in pictures, just like teaching a friend to spot their favorite characters!</p>
+<p><strong>Objects to Detect:</strong> Pikachu, Rosita, Sage, Timon (my Toys)<br><strong>How Many Practice Sessions:</strong> 100<br><strong>Final Score:</strong> 99.5 out of 100!</p>
+<figure class="shot one" style="max-width:none"><img src="../media/yolo/yolo-01.jpg" alt="Custom YOLO Model in Action" loading="lazy"><figcaption>Custom YOLO Model in Action</figcaption></figure>
+<hr class="rule">
+<h2 id="what-did-i-do">What Did I Do?</h2>
+<p>Imagine you have a friend who has never seen your favorite toys before. You want to teach them to find these toys in pictures. That's exactly what I did with a computer!</p>
+<p><strong>My Mission:</strong> Teach a computer to find these toys in pictures:</p>
+<figure class="shot one" style="max-width:none"><img src="../media/yolo/yolo-02.jpg" alt="Meet My Toy Characters! These are the toys the computer learned to find." loading="lazy"><figcaption>Meet My Toy Characters! These are the toys the computer learned to find.</figcaption></figure>
+<hr class="rule">
+<h2 id="how-did-i-teach-the-computer">How did I teach the computer?</h2>
+<p>Just like you learn by practicing, I showed the computer many, many pictures of these toys. Each time, I told it "Yes, that's Pikachu!" or "That's Rosita!" The computer learned by looking at the pictures over and over again — just like how you learned to read by practicing every day!</p>
+<div class="shots cols-4"><figure><img src="../media/yolo/yolo-03.jpg" alt="Training Example 1" loading="lazy"><figcaption>Training Example 1</figcaption></figure><figure><img src="../media/yolo/yolo-04.jpg" alt="Training Example 2" loading="lazy"><figcaption>Training Example 2</figcaption></figure><figure><img src="../media/yolo/yolo-05.jpg" alt="Training Example 3" loading="lazy"><figcaption>Training Example 3</figcaption></figure><figure><img src="../media/yolo/yolo-06.jpg" alt="Training Example 4" loading="lazy"><figcaption>Training Example 4</figcaption></figure></div>
+<p>The computer learned by looking at pictures like these. The colored boxes show where each toy is located. I annotated my images using <a href="https://roboflow.com/">Roboflow</a>, and the dataset is available for <a href="https://app.roboflow.com/myworkspace-42vph/toys-v7xfk/browse">download</a> directly from Roboflow.</p>
+<hr class="rule">
+<h2 id="understanding-my-results">Understanding My Results</h2>
+<p>Before diving into the results, let's understand what some metrics mean in simple terms. Think of training a model like teaching a student — we need ways to measure how well they are learning.</p>
+<h3 id="practice-sessions-epochs">Practice Sessions (Epochs)</h3>
+<p>Each practice session means the computer looked at ALL the toy pictures one time. I had 100 practice sessions. That's like reading the same book 100 times to get really good at it.</p>
+<h3 id="score-accuracy">Score (Accuracy)</h3>
+<p>This is like getting a grade on a test. If the computer finds toys correctly 95 times out of 100, that's a 95% score — pretty awesome!</p>
+<h3 id="finding-all-toys">Finding All Toys</h3>
+<p>Did the computer find EVERY toy in the picture? If there are 5 toys and it finds all 5, that's 100%! If it only finds 4 out of 5, that's 80%.</p>
+<h3 id="being-correct">Being Correct</h3>
+<p>When the computer says "I found Pikachu!", is it really Pikachu? Being correct means not making mistakes like calling Rosita "Pikachu" by accident!</p>
+<h3 id="mistakes">Mistakes</h3>
+<p>Sometimes the computer makes mistakes, like missing a toy or getting confused. The good news? It makes fewer mistakes as it practices more!</p>
+<hr class="rule">
+<h2 id="getting-better-over-time">Getting Better Over Time!</h2>
+<p>Remember when you first learned to ride a bike? You probably wobbled a lot at first, but got better with practice. The computer did the same thing!</p>
+<figure class="shot one" style="max-width:none"><img src="../media/yolo/yolo-07.jpg" alt="SPARK" loading="lazy"></figure>
+<p class="centre">Look at this graph! At the start, the computer was not very good (the line is low). But after lots of practice, it got really good at finding toys! The line goes up and up!</p>
+<h3 id="fun-facts">Fun Facts:</h3>
+<ul>
+<li>Starting score: 58.5%</li>
+<li>Final score: 99.5%</li>
+<li>Got better by: 41.0 points!</li>
+</ul>
+<p>That's like going from a C grade to an A+! Amazing!</p>
+<hr class="rule">
+<h2 id="practice-vs-real-test">Practice vs Real Test</h2>
+<p>Think about how you learn at school:</p>
+<p><strong>Practice (Training):</strong> You do homework problems that your teacher helps you with. You learn from these!</p>
+<p><strong>Real Test (Validation):</strong> Then comes the test with NEW problems you have not seen before. This shows if you really learned or just memorized the homework!</p>
+<p>I did the same with the computer! I gave it practice pictures, then tested it with NEW pictures it had never seen. Let's see how it did:</p>
+<figure class="shot one" style="max-width:none"><img src="../media/yolo/yolo-08.jpg" alt="SPARK" loading="lazy"></figure>
+<p class="centre"><strong>What this shows:</strong> The red line (practice) and blue line (test) stay close together! This means the computer did not just memorize — it really learned! It is like understanding math concepts instead of just memorizing answers. Great job, computer!</p>
+<hr class="rule">
+<h2 id="finding-toys-being-right">Finding Toys &amp; Being Right</h2>
+<p>There are two important things I want the computer to do:</p>
+<p>1. Find ALL the toys (don't miss any!)</p>
+<p>2. Be correct when it finds them (don't make mistakes!)</p>
+<h3 id="example">Example:</h3>
+<p><b class="lead-in">Scenario 1:</b> The computer finds all 10 Pikachus (GOOD!)</p>
+<p>Finding all toys: 10 out of 10 = 100%</p>
+<p><b class="lead-in">Scenario 2:</b> The computer says "I found 10 Pikachus!" but 2 were actually Rosita (oops!)</p>
+<p>Being correct: 8 out of 10 = 80%</p>
+<p>I want BOTH numbers to be high!</p>
+<figure class="shot one" style="max-width:none"><img src="../media/yolo/yolo-09.jpg" alt="SPARK" loading="lazy"></figure>
+<p>My Computer's Results:</p>
+<ul>
+<li>Finding all toys: 100.0%</li>
+<li>Being correct: 99.6%</li>
+</ul>
+<p>Wow! The computer is doing an amazing job at both!</p>
+<hr class="rule">
+<h2 id="watching-mistakes-disappear">Watching Mistakes Disappear!</h2>
+<p>Remember how I said the computer makes mistakes? Let's see what happened to those mistakes as the computer practiced more and more.</p>
+<p>Think of it like learning to spell. At first, you might spell "because" as "becuz". But after practicing, you get it right every time!</p>
+<figure class="shot one" style="max-width:none"><img src="../media/yolo/yolo-10.jpg" alt="SPARK" loading="lazy"></figure>
+<p class="centre"><strong>Look at that!</strong> The lines are going DOWN!</p>
+<p class="centre">Going down means FEWER mistakes. At the beginning, the computer made lots of mistakes (the lines are high). But after practicing, the mistakes got smaller and smaller (the lines go down). This is exactly what I wanted!</p>
+<hr class="rule">
+<h2 id="final-report-card">Final Report Card!</h2>
+<figure class="shot one" style="max-width:none"><img src="../media/yolo/yolo-11.jpg" alt="SPARK" loading="lazy"></figure>
+<p class="centre"><b class="lead-in">CONGRATULATIONS TO MY COMPUTER!</b></p>
+<p>After 100 practice sessions, my computer learned to find toys like a pro. It went from being confused at the start to becoming a toy-finding expert.</p>
+<h3 id="what-can-my-computer-do-now">What can my computer do now?</h3>
+<ul>
+<li>Look at a picture and find all the toys</li>
+<li>Tell you exactly which character each toy is</li>
+<li>Do it super fast — faster than blinking!</li>
+<li>Work on pictures it has never seen before</li>
+</ul>
+<p>This is just like teaching a superhero their powers. Now the computer has the power to see and recognize my toys!</p>
+<figure class="shot one" style="max-width:none"><img src="../media/yolo/yolo-12.jpg" alt="SPARK&#x27;s Eyes at Work: Detecting Toys with YOLO" loading="lazy"><figcaption>SPARK's Eyes at Work: Detecting Toys with YOLO</figcaption></figure>
+  </main>
+</div>
+
+<footer>
+  <div class="wrap">
+    SPARK &middot; STEM Projects with AI and Robotics for Kids<br>
+    made by Saanvi Pagadala in 4th grade &middot; 2026
+  </div>
+</footer>
+
+<script src="../site.js"></script><script>
+/* The menu button, the same one MarsWorm and NitRobe carry. Below 760px the
+   four links do not fit on one row: they wrapped onto a second line and made
+   the bar 130px tall, which on a phone is a third of the screen gone before
+   the page starts. */
+(function () {
+  var bar = document.querySelector('.topbar'),
+      btn = bar && bar.querySelector('.menu');
+  if (!btn) return;
+  function set(open) {
+    bar.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    set(btn.getAttribute('aria-expanded') !== 'true');
+  });
+  /* A tap anywhere else, or Escape, closes it. */
+  document.addEventListener('click', function () { set(false); });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+})();
+</script>
+<!-- saanvi-showcase: shared block, injected by apply_global.py -->
+<!-- The block every page on the site carries, injected by apply_global.py.
+     Edit it here, run the build, and all 800-odd pages change together.
+
+     Three jobs: count the visit, offer fullscreen, and offer the way home.
+     Each project was built separately over four years and none of them knows
+     about the others, so none of this can rely on their markup. It adds its
+     own elements, and takes over from theirs where they had their own.
+
+     ../../index.html is replaced per page with the relative path back to the front
+     page, because these pages sit at every depth from /index.html to
+     /MarsWorm/v1-bioengineered-organism/experiments/index.html. A relative
+     path works on the live site and equally on a page opened off the disk; a
+     link to "/" would mean the root of the hard drive. -->
+
+<style data-sp>
+/* Named with a prefix nothing else here uses, so no project's stylesheet can
+   reach these by accident and nothing here can reach a project's. */
+.sp-home {
+  /* The top left corner. Every one of these sites centres whatever it keeps
+     up there, so the corner is empty on all of them. */
+  position: fixed; top: 14px; left: 14px; z-index: 2147483000;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 16px 9px 13px;
+  border-radius: 999px;
+  background: rgba(253, 252, 251, 0.92);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid #e2ddd9;
+  box-shadow: 0 2px 10px rgba(80, 50, 35, 0.10);
+  /* Her own hand, the one she signs the portrait with on the front page and
+     on every MarsWorm page. A grey sans chip in the corner looked like
+     something the browser had added; this looks like it belongs to her. */
+  font: 700 16px/1 "Bradley Hand", "Noteworthy", "Segoe Script", cursive;
+  color: #8a3317; text-decoration: none;
+  transition: box-shadow .15s, border-color .15s, transform .15s;
+}
+.sp-home:hover {
+  border-color: #b3401f; transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(80, 50, 35, 0.16);
+}
+.sp-home svg {
+  width: 14px; height: 14px; flex: none; margin-top: -1px;
+  fill: none; stroke: currentColor; stroke-width: 2.2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* Tighter on a phone, where 14px of margin is a lot of the screen. */
+/* On a phone these bars stop centring and put their own logo hard left,
+   which is where this was sitting: it covered MarsWorm's wordmark and
+   SPARK's. Down to the bottom corner, where nothing else goes. The
+   fullscreen button is not drawn on a touch device, so that corner is free. */
+@media (max-width: 760px) {
+  .sp-home {
+    top: auto; bottom: 12px; left: 12px;
+    padding: 7px 13px 8px 11px; font-size: 15px;
+  }
+}
+@media print { .sp-home, .sp-fs { display: none; } }
+
+.sp-fs {
+  position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 2147483000;
+  width: 2.4rem; height: 2.4rem; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #fdfcfb; color: #6b6b6b;
+  border: 1px solid #e2ddd9; border-radius: 0.5rem;
+  cursor: pointer; opacity: 0.55;
+  transition: opacity .15s, color .15s, border-color .15s;
+}
+.sp-fs svg {
+  width: 1rem; height: 1rem; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.sp-fs:hover { opacity: 1; color: #b3401f; border-color: #b3401f; }
+.sp-fs:focus-visible { opacity: 1; outline: 2px solid #b3401f; outline-offset: 2px; }
+</style>
+
+<!-- One property for the whole site. apply_global.py strips the per-project
+     tags MarsWorm and NitRobe carried, so nothing is counted twice. -->
+<script data-sp async src="https://www.googletagmanager.com/gtag/js?id=G-FJ4CWSDFEW"></script>
+<script data-sp>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FJ4CWSDFEW');
+</script>
+
+<script data-sp>
+(function () {
+  'use strict';
+
+  /* A swapped-in page brings its own copy of this block. Only the first one
+     wires anything to the window or the document; the rest would stack a
+     second click handler and a second button on every swap. */
+  if (window.__saanviGlobal) return;
+  window.__saanviGlobal = true;
+
+  /* The stylesheet moves to the head, where a body swap cannot take it. */
+  var css = document.querySelector('style[data-sp]');
+  if (css) document.head.appendChild(css);
+
+  /* ---- the way home ----------------------------------------------------
+     Every page gets it, including the front page's own children. The front
+     page itself is skipped at injection time, because a link home from home
+     is furniture with nothing behind it. */
+
+  /* The front page is injected with an empty path, because a link home from
+     home is furniture with nothing behind it. */
+  var where = '../../index.html';
+  /* The front page, as an address: the injected path from here, or, on the
+     front page itself, this page. Worked out once, at load, so that a page
+     swapped in later under fullscreen can be told whether it is home. */
+  var FRONT = new URL(where || 'index.html', location.href);
+  function isFront(url) {
+    return url.pathname === FRONT.pathname ||
+           url.pathname === FRONT.pathname.replace(/index\.html$/, '');
+  }
+  /* The pill is always made, and only shown away from home. It used to be
+     made only on pages that had a path home, so fullscreen entered on the
+     front page carried no pill into any project. */
+  var home = document.createElement('a');
+  home.className = 'sp-home';
+  home.href = FRONT.href;
+  home.innerHTML =
+    '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+    '<path d="M3 10.6 12 3.4l9 7.2"/><path d="M5.6 9.6V20h12.8V9.6"/>' +
+    '<path d="M10 20v-5h4v5"/></svg><span>Saanvi</span>';
+  home.setAttribute('aria-label', "All of Saanvi's projects");
+  home.title = "All of Saanvi's projects";
+  if (!isFront(new URL(location.href))) document.body.appendChild(home);
+
+  /* ---- fullscreen ------------------------------------------------------
+     One button for the whole site. Seven of these projects shipped their own
+     and two shipped none, so this takes any it finds away and puts one back.
+     Theirs are built by their own scripts, which may run after this, so the
+     sweep repeats a moment later rather than only once. */
+
+  /* Seven of these projects shipped a fullscreen button of their own and one
+     shipped two names for it. Every spelling found so far is listed; a
+     button of ours is never matched, because all of ours are .sp-fs. */
+  var THEIRS = '.fs, .fs-label, #fs-label, .fullscreen-btn, #fullscreen-btn,'
+             + ' [aria-label*="fullscreen" i]:not(.sp-fs),'
+             + ' [title*="full screen" i]:not(.sp-fs)';
+
+  function sweep() {
+    var theirs = document.querySelectorAll(THEIRS);
+    for (var i = 0; i < theirs.length; i++) {
+      if (theirs[i].className !== 'sp-fs') theirs[i].remove();
+    }
+  }
+  sweep();
+  setTimeout(sweep, 400);
+  addEventListener('load', sweep);
+
+  var root = document.documentElement;
+  if (!(root.requestFullscreen || root.webkitRequestFullscreen)) return;
+  /* A phone has no fullscreen for a page, and on a tablet the button sits
+     under a thumb. */
+  if ('ontouchstart' in window) return;
+
+  var EXPAND = '<path d="M3 8V3h5M17 3h5v5M22 17v5h-5M8 22H3v-5"/>';
+  var SHRINK = '<path d="M8 3v5H3M22 8h-5V3M17 22v-5h5M3 17h5v5"/>';
+
+  var btn = document.createElement('button');
+  btn.className = 'sp-fs';
+  btn.type = 'button';
+  document.body.appendChild(btn);
+
+  function on() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function paint() {
+    var label = on() ? 'Leave fullscreen' : 'View fullscreen';
+    btn.setAttribute('aria-label', label);
+    btn.title = label + '  (F)';
+    btn.innerHTML = '<svg viewBox="0 0 25 25" aria-hidden="true">' +
+                    (on() ? SHRINK : EXPAND) + '</svg>';
+  }
+  function toggle() {
+    if (on()) {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+    }
+  }
+
+  btn.addEventListener('click', toggle);
+  document.addEventListener('fullscreenchange', paint);
+  document.addEventListener('webkitfullscreenchange', paint);
+
+  /* The shortcut a video player uses, but never while something is being
+     typed into, and never on top of a browser shortcut. */
+  /* In the capture phase, and stopped dead once handled. Several of these
+     projects bind F to their own fullscreen, and two handlers toggling the
+     same thing cancel each other out: the key would do nothing at all. */
+  addEventListener('keydown', function (e) {
+    if (e.key !== 'f' && e.key !== 'F') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.isContentEditable ||
+              /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    toggle();
+  }, true);
+
+  paint();
+
+  /* ---- staying in fullscreen across a link -----------------------------
+     Fullscreen belongs to a document. Follow an ordinary link and it ends,
+     and the new page cannot ask to go back in: a browser only grants
+     fullscreen off a click, and a fresh document has no click behind it. So
+     SPARK's menu dropped you out of fullscreen on every page.
+
+     While fullscreen is on, and only then, a click on a link to another page
+     of this site fetches it and swaps it in rather than navigating. The
+     document never changes, so fullscreen never ends. Outside fullscreen
+     none of this runs and every link is an ordinary link, which is what
+     keeps these plain static pages for anyone reading them normally, and
+     what makes a failure here harmless. */
+
+  /* The scripts already on this document, by address. A swapped-in page
+     that asks for one of them again is not made to download it twice: the
+     gene finder's model is half a megabyte. */
+  var fetched = {};
+  for (var f = 0; f < document.scripts.length; f++) {
+    if (document.scripts[f].src) fetched[document.scripts[f].src] = true;
+  }
+
+  function runScripts(where) {
+    /* A script inserted as parsed markup does not execute. Re-creating each
+       one does, which is what keeps a project's own behaviour alive after a
+       swap: SPARK's play buttons, NitRobe's gene finder.
+
+       In order, and one at a time. A script made here is async by default,
+       so three external files would race each other and the inline script
+       after them would run first, against a model that had not arrived yet:
+       that is how the finder came to say its files did not load. An inline
+       script is wrapped in a function, so walking back onto a page does not
+       redeclare its variables; what a page means to share between its
+       scripts it hangs on window, which still works. */
+    var olds = where.querySelectorAll('script'), list = [];
+    for (var i = 0; i < olds.length; i++) {
+      var o = olds[i];
+      list.push([o.src, o.text]);
+      o.remove();
+    }
+    return list.reduce(function (chain, item) {
+      return chain.then(function () {
+        return new Promise(function (done) {
+          var src = item[0], s = document.createElement('script');
+          if (src) {
+            if (fetched[src]) return done();
+            fetched[src] = true;
+            s.src = src;
+            s.async = false;
+            s.onload = s.onerror = function () { done(); };
+          } else {
+            s.text = '(function(){' + item[1] + '\n})();';
+          }
+          where.appendChild(s);
+          if (!src) done();
+        });
+      });
+    }, Promise.resolve());
+  }
+
+  function swap(url, push) {
+    fetch(url.href).then(function (r) {
+      if (!r.ok) throw 0;
+      return r.text();
+    }).then(function (text) {
+      var doc = new DOMParser().parseFromString(text, 'text/html');
+      if (!doc.body) throw 0;
+      /* The address changes first: every relative href and src in the
+         incoming markup resolves against it, and these pages sit at
+         different depths. */
+      if (push) history.pushState({}, '', url.href);
+
+      /* The incoming page's stylesheets. Within one project these are the
+         same files and nothing happens; crossing from one project to another
+         they are different, and the old ones have to go or two designs fight
+         over the same page. */
+      var head = document.head;
+      var mine = head.querySelectorAll(
+        'link[rel="stylesheet"]:not([data-sp]), style:not([data-sp])');
+      for (var i = 0; i < mine.length; i++) mine[i].remove();
+      var theirs = doc.head.querySelectorAll('link[rel="stylesheet"], style');
+      for (var k = 0; k < theirs.length; k++) head.appendChild(theirs[k]);
+
+      document.title = doc.title;
+
+      /* The incoming page carries its own copy of this block. Out it comes,
+         and the live pill and button are put back afterwards, so there is
+         one of each however far you wander. */
+      var copies = doc.body.querySelectorAll('[data-sp], .sp-home, .sp-fs');
+      for (var c = 0; c < copies.length; c++) copies[c].remove();
+
+      document.body.replaceWith(document.adoptNode(doc.body));
+      if (!isFront(url)) document.body.appendChild(home);
+      if (btn) document.body.appendChild(btn);
+      return runScripts(document.body).then(function () {
+        var el = url.hash && document.getElementById(
+          decodeURIComponent(url.hash.slice(1)));
+        if (el) el.scrollIntoView(true); else scrollTo(0, 0);
+      });
+    }).catch(function () {
+      location.href = url.href;            // give up quietly, navigate
+    });
+  }
+
+  /* In the capture phase, so this runs before any router the page brought
+     with it. MarsWorm and NitRobe ship their own, written for their own
+     pages: fine inside those sites, and fatal leaving them, because their
+     fallback on a page they do not understand is to navigate, which ends
+     fullscreen. When this handles a click it stops the event dead so theirs
+     never sees it. Which means this one does all the work on the live site,
+     and a page swapped in here has to work as well as it does under its own
+     router: the finder's model has to load, in order, before the finder. */
+  addEventListener('click', function (e) {
+    if (!on() || e.defaultPrevented) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
+    var a = e.target.closest && e.target.closest('a');
+    if (!a || a.target || a.hasAttribute('download')) return;
+    var url = new URL(a.href, location.href);
+    if (url.origin !== location.origin) return;
+    /* Only pages. A PDF or a film is a download or a viewer, and neither is
+       something to paste into this one. */
+    if (!/\.html$/.test(url.pathname)) return;
+    if (url.pathname === location.pathname) {
+      /* The page you are already on. With a #section it is an anchor, and
+         the browser just scrolls, which keeps fullscreen. Without one it is
+         a reload, and a reload ends fullscreen: clicking Contact Me twice
+         dropped you out. There is nothing to load, so nothing happens. */
+      if (!url.hash) {
+        e.preventDefault(); e.stopImmediatePropagation(); scrollTo(0, 0);
+      }
+      return;
+    }
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    swap(url, true);
+  }, true);
+
+  addEventListener('popstate', function () {
+    if (on()) swap(new URL(location.href), false);
+  });
+})();
+</script>
+
+<!-- /saanvi-showcase -->
+</body>
+</html>

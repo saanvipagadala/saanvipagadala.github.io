@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dry run: It was the food, not the worms</title>
+<style>
+  /* Light is the base. Every colour is a token so both themes stay a set. */
+  :root{
+    --bg:#FBFAF7; --surface:#FFFFFF; --sunken:#F4F1EA;
+    --ink:#1B1A17; --ink-2:#4A4740; --ink-3:#7C776C;
+    --rule:#E2DDD1; --rule-2:#CFC8B8;
+    --g1:#E5DBCA; --g2:#F3D6A2; --g3:#A9D9C0; --g4:#BBD6EE; --g5:#CAC4EC;
+    --e1:#A8977A; --e2:#C98A1E; --e3:#218A61; --e4:#4E85B8; --e5:#6F63C4;
+    --good:#1C6B4A; --warn:#B5651D; --bad:#A33A2A; --flat:#7C776C;
+    --shadow:0 1px 2px rgba(27,26,23,.06),0 4px 14px rgba(27,26,23,.05);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#14161A; --surface:#1B1E24; --sunken:#22262E;
+      --ink:#F2EFE8; --ink-2:#BFBAAF; --ink-3:#8B867B;
+      --rule:#2E333C; --rule-2:#3D434E;
+      --g1:#6E6555; --g2:#8C6C36; --g3:#3B6E58; --g4:#455F7C; --g5:#585177;
+      --e1:#B3A489; --e2:#E0A448; --e3:#5FBE94; --e4:#7FADD9; --e5:#9A8FE0;
+      --good:#3E9E71; --warn:#E9A23C; --bad:#E0705C; --flat:#8B867B;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#14161A; --surface:#1B1E24; --sunken:#22262E;
+    --ink:#F2EFE8; --ink-2:#BFBAAF; --ink-3:#8B867B;
+    --rule:#2E333C; --rule-2:#3D434E;
+    --g1:#6E6555; --g2:#8C6C36; --g3:#3B6E58; --g4:#455F7C; --g5:#585177;
+    --e1:#B3A489; --e2:#E0A448; --e3:#5FBE94; --e4:#7FADD9; --e5:#9A8FE0;
+    --good:#3E9E71; --warn:#E9A23C; --bad:#E0705C; --flat:#8B867B;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* The page fills the screen and so does the text. Nothing is capped to a
+     column width -- a sentence runs the width of the window and wraps only
+     when it actually reaches the edge. */
+  .wrap{width:100%;margin:0;padding:36px clamp(20px,4vw,64px) 88px}
+  header{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
+  .eyebrow{
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);font-weight:650;margin:0 0 8px
+  }
+  h1{font-size:clamp(30px,4vw,50px);line-height:1.1;margin:0 0 12px;
+     letter-spacing:-.02em}
+  .sub{color:var(--ink-2);margin:0;font-size:17.5px}
+  .stamp{color:var(--ink-3);font-size:13px;margin-top:14px}
+  h2{font-size:25px;margin:52px 0 6px;letter-spacing:-.01em}
+  h2 + .lede{color:var(--ink-2);margin:0 0 20px}
+  h3{font-size:17px;margin:26px 0 8px}
+  p{margin:0 0 12px}
+  a{color:inherit;text-underline-offset:2px}
+  /* ---- verdict cards ---------------------------------------------- */
+  .cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin:18px 0 0}
+  .card{
+    background:var(--surface);border:1px solid var(--rule);border-radius:12px;
+    padding:18px 20px;box-shadow:var(--shadow);border-top:4px solid var(--flat)
+  }
+  .card.yes{border-top-color:var(--good)} .card.no{border-top-color:var(--bad)}
+  .card.partial{border-top-color:var(--warn)}
+  .card.na{border-top-color:var(--rule-2)}
+  .card.na .call{color:var(--ink-3)}
+  .card h3{margin:0 0 4px;font-size:15px;color:var(--ink-3);
+           letter-spacing:.06em;text-transform:uppercase}
+  .card .call{font-size:20px;font-weight:680;margin:2px 0 8px;letter-spacing:-.01em}
+  .card.yes .call{color:var(--good)} .card.no .call{color:var(--bad)}
+  .card.partial .call{color:var(--warn)}
+  .card p{margin:0;font-size:14.5px;color:var(--ink-2)}
+  .card p b{color:var(--ink)}
+  /* the dust -> soil ruler, with this run's mark on it */
+  .ruler{margin:2px 0 12px}
+  .ruler .track{position:relative;height:9px;border-radius:99px;
+                background:var(--g1);border:1px solid var(--rule-2)}
+  .ruler .fill{position:absolute;inset:0 auto 0 0;border-radius:99px;
+               background:var(--g3)}
+  .ruler .pin{position:absolute;top:50%;width:3px;height:19px;border-radius:2px;
+              background:var(--ink);transform:translate(-50%,-50%)}
+  .ruler .ends{display:flex;justify-content:space-between;margin-top:7px;
+               font-size:11.5px;line-height:1.35;color:var(--ink-3)}
+  .ruler .ends span:last-child{text-align:right}
+  /* ---- figures ----------------------------------------------------- */
+  figure{margin:22px 0 0;background:var(--surface);border:1px solid var(--rule);
+         border-radius:12px;padding:20px 20px 14px;box-shadow:var(--shadow)}
+  figure .cap{font-size:14px;color:var(--ink-2);margin:12px 0 0}
+  figure .what{font-size:13.5px;color:var(--ink-3);margin:0 0 10px}
+  .chart-scroll{overflow-x:auto}
+  svg{display:block;max-width:100%;height:auto}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 0 14px;
+          font-size:13.5px;color:var(--ink-2)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .swatch{width:13px;height:13px;border-radius:4px;border:2px solid var(--rule-2);
+          display:inline-block;flex:none}
+  .grid2{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(440px,1fr))}
+  /* ---- tables ------------------------------------------------------ */
+  .tw{overflow-x:auto;margin:16px 0 0;border:1px solid var(--rule);
+      border-radius:12px;background:var(--surface);box-shadow:var(--shadow)}
+  .tw + .cap{margin:16px 0 0;font-size:14px;color:var(--ink-2)}
+  .tw:last-child{margin-bottom:8px}
+  table{border-collapse:collapse;width:100%;font-size:14.5px}
+  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--rule)}
+  thead th{background:var(--sunken);font-size:12px;letter-spacing:.07em;
+           text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+  tbody tr:last-child td{border-bottom:none}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;
+       font-weight:640;letter-spacing:.02em;white-space:nowrap}
+  .tag.yes{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good)}
+  .tag.no{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+  .tag.partial{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+  .tag.flat,.tag.na{background:var(--sunken);color:var(--ink-3)}
+  .dot{width:9px;height:9px;border-radius:3px;display:inline-block;margin-right:7px;
+       border:2px solid var(--rule-2);vertical-align:-1px}
+  /* ---- the full-data grid ------------------------------------------
+     Nine columns will not fit any screen, so: the headers wrap instead of
+     forcing the columns wide, the numbers get tight columns, and the group
+     name stays pinned to the left while the rest scrolls under it. */
+  table.grid{font-size:13.5px}
+  table.grid th,table.grid td{padding:8px 10px}
+  table.grid thead th{white-space:normal;vertical-align:bottom;
+                      max-width:104px;line-height:1.3}
+  table.grid tbody td{white-space:nowrap}
+  table.grid th:first-child,table.grid td:first-child{
+    position:sticky;left:0;z-index:2;white-space:nowrap;
+    box-shadow:1px 0 0 var(--rule-2)}
+  table.grid thead th:first-child{background:var(--sunken);z-index:3}
+  table.grid tbody td:first-child{background:var(--surface)}
+  table.grid tbody td:first-child.best{
+    background:color-mix(in srgb,var(--g3) 42%,var(--surface))}
+  table.grid tr.ref td:first-child{background:var(--sunken)}
+  table.grid td.best{background:color-mix(in srgb,var(--g3) 42%,transparent);
+                     font-weight:680;color:var(--ink)}
+  /* rounded ends, so the band reads as one stripe */
+  table.grid tbody td:first-child.best{border-radius:7px 0 0 7px}
+  table.grid tbody td.best:last-child{border-radius:0 7px 7px 0}
+  table.grid tr.ref td{color:var(--ink-3)}
+  table.grid tr.ref{background:var(--sunken)}
+  /* ---- notes ------------------------------------------------------- */
+  .note{background:var(--sunken);border-left:3px solid var(--rule-2);
+        border-radius:0 8px 8px 0;padding:16px 20px;margin:18px 0 0;
+        font-size:15px;color:var(--ink-2)}
+  .note p:last-child{margin-bottom:0}
+  .note b{color:var(--ink)}
+  .note.warn{border-left-color:var(--warn)}
+  code{font:13.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;
+       background:var(--sunken);padding:1px 6px;border-radius:5px}
+  /* the page just stopped before; this says it meant to */
+  .end{display:flex;align-items:center;gap:16px;margin:64px 0 0;
+       color:var(--ink-3)}
+  .end::before,.end::after{content:"";flex:1;height:1px;background:var(--rule)}
+  .end span{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+            font-weight:600;white-space:nowrap}
+  @media (prefers-reduced-motion:no-preference){
+    .card,figure{transition:box-shadow .18s ease}
+  }
+  /* ---- the two chrome buttons -------------------------------------- */
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+    background:var(--surface);color:var(--ink-2);
+    border:1px solid var(--rule-2);border-radius:99px;
+    padding:9px 14px;font:inherit;font-size:13.5px;font-weight:600;
+    box-shadow:var(--shadow);line-height:1;
+  }
+  .chip:hover{color:var(--ink);border-color:var(--ink-3)}
+  .chip:focus-visible{outline:2px solid var(--ink-3);outline-offset:2px}
+  .chip svg{width:16px;height:16px;fill:currentColor;flex:none}
+  #themeBtn{position:fixed;top:18px;right:18px;z-index:40;padding:10px}
+  #fullscreenBtn{position:fixed;bottom:18px;right:18px;z-index:40}
+  #fullscreenBtn[data-fullscreen] .fs-label{display:none}
+  @media print{.chip{display:none}}
+</style>
+<!-- Google Analytics 4, on every page of the site.
+
+     Injected into the <head> of every built page by add_analytics() in
+     build_site.py, rather than pasted into the three hand-written pages and
+     the pandoc header. The version folders are finished HTML that is copied
+     across untouched, so a component the page has to include would miss
+     them; a pass over the finished site/ is the only place that reaches all
+     of them. The measurement ID is filled in from GA_ID.
+
+     What GA4 counts by itself, once Enhanced measurement is on in the
+     property: page views, outbound clicks, file downloads, site search and
+     one scroll event at ninety per cent. None of that is repeated here. Its
+     video tracking only understands embedded YouTube, and the films on this
+     site are plain <video> elements served from the site itself, so the
+     watching is counted below. -->
+<script>
+(function () {
+  if (typeof gtag !== 'function') return;
+
+  function send(name, params) {
+    params = params || {};
+    params.page_path = location.pathname;
+    gtag('event', name, params);
+  }
+
+  /* This tag sits in the head, so when it runs the page below it does not
+     exist yet. Anything that has to find an element waits for the page; the
+     listeners on the document itself do not. */
+  function whenReady(fn) {
+    if (document.readyState === 'loading')
+      document.addEventListener('DOMContentLoaded', fn);
+    else fn();
+  }
+
+  /* What a report needs to name the thing that was watched or read. The
+     file name rather than the path, because the same film is reachable at
+     more than one URL and a report that splits it across them is no use. */
+  function assetName(el) {
+    var src = el.currentSrc || el.src || '';
+    if (!src) {
+      var s = el.querySelector && el.querySelector('source');
+      src = s ? s.getAttribute('src') : '';
+    }
+    return (src.split('/').pop() || 'unknown').replace(/\?.*$/, '');
+  }
+
+  /* The films and the audio. A play is easy to get and says little on its
+     own, since somebody who starts a film and leaves counts the same as
+     somebody who watches it through. So each player also reports the
+     quarters it passes, once each, and reaching the end. */
+  var MARKS = [25, 50, 75];
+  whenReady(function () {
+    document.querySelectorAll('video, audio').forEach(function (m) {
+      var kind = m.tagName.toLowerCase();
+      var seen = {};
+
+      m.addEventListener('play', function () {
+        send('media_play', {asset: assetName(m), media_type: kind});
+      });
+
+      m.addEventListener('timeupdate', function () {
+        if (!m.duration || !isFinite(m.duration)) return;
+        var pct = (m.currentTime / m.duration) * 100;
+        MARKS.forEach(function (mark) {
+          if (pct >= mark && !seen[mark]) {
+            seen[mark] = true;
+            send('media_progress', {
+              asset: assetName(m), media_type: kind, percent: mark});
+          }
+        });
+      });
+
+      m.addEventListener('ended', function () {
+        send('media_complete', {asset: assetName(m), media_type: kind});
+      });
+    });
+  });
+
+  /* How far down a page anybody got. GA4's own scroll event fires once, at
+     ninety per cent, which cannot tell a page nobody finished from one
+     nobody started. Reported under its own name so the two do not mix. */
+  var depths = [25, 50, 75, 100], reached = {};
+  function scrolled() {
+    var doc = document.documentElement;
+    var height = doc.scrollHeight - window.innerHeight;
+    if (height <= 0) return;
+    var pct = ((window.scrollY || doc.scrollTop) / height) * 100;
+    depths.forEach(function (d) {
+      if (pct >= d && !reached[d]) {
+        reached[d] = true;
+        send('scroll_depth', {percent: d});
+      }
+    });
+  }
+  window.addEventListener('scroll', scrolled, {passive: true});
+  whenReady(scrolled);
+
+  /* The controls the site draws itself: the full-screen button on every
+     page, and the speed and caption buttons under each film. Nothing
+     outside the site knows these were pressed. */
+  document.addEventListener('fullscreenchange', function () {
+    send(document.fullscreenElement ? 'fullscreen_enter' : 'fullscreen_exit');
+  });
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.speed button');
+    if (!b) return;
+    if (b.classList.contains('cc')) send('captions_toggle');
+    else send('playback_speed', {speed: (b.textContent || '').trim()});
+  });
+
+})();
+</script>
+</head>
+<body>
+<button id="themeBtn" class="chip" type="button" aria-label="Switch theme"></button>
+<button id="fullscreenBtn" class="chip" type="button" title="Full screen"></button>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">MarsWorm &middot; V1 The bioengineered organism &middot; Stage 3</p>
+    <h1>Dry run: It was the food, not the worms</h1>
+    <p class="sub">5 recipes × 3 cups, four weeks of soil measurements and three weeks of seedlings. Every figure is computed from raw weights and counts in <code>food-not-worms/</code>.</p>
+    <p class="stamp">Generated 2026-09-05 15:58 · 15 of 15 cups have a final weight</p>
+  </header>
+
+  <h2>What we found out</h2>
+  <p class="lede">Each question below was answered by the same rule, written
+  down <em>before</em> anyone looked at the numbers, so a disappointing
+  answer counts exactly as much as a good one.</p>
+  <div class="cards"><div class="card yes"><h3>Did the regolith turn into something that grows?</h3><p class="call">Yes</p><p>Every treated cup grew more than every bare-regolith cup, 7.0 times heavier on average, with no overlap at all. Which part did it is the next question.</p></div><div class="card no"><h3>Did the worms add anything the food did not?</h3><p class="call">No</p><p>The food explains it. Cups with the same food and no worms did just as well.</p></div><div class="card na"><h3>Were the castings enough on their own?</h3><p class="call">Nothing to compare</p><p>The worms added nothing beyond the food here, so there is nothing for the castings to replace.</p></div><div class="card flat"><h3>How far did we get from bare dust toward real soil?</h3><p class="call">28% of the way</p><div class="ruler"><div class="track"><div class="fill" style="width:28.5%"></div><div class="pin" style="left:28.5%"></div></div><div class="ends"><span>bare dust<br>0.03 g</span><span>real potting soil<br>0.76 g</span></div></div><p>Bare regolith grew 0.03 g of plant and real potting soil grew 0.76 g, and that is the whole ruler. The cups with worms reached <b>0.24 g</b>, which is <b>28%</b> of the way along it.</p></div></div>
+
+  <h2>How much the plants weighed</h2>
+  <p class="lede">The dried plants, weighed on day 21. Everything else on this
+  page describes the <em>soil</em>. This is the one that asks whether anything
+  actually grew in it.</p>
+  <figure><div class="legend"><span><i class="swatch" style="background:var(--g1);border-color:var(--e1)"></i><b>1</b>&nbsp;Regolith only</span><span><i class="swatch" style="background:var(--g2);border-color:var(--e2)"></i><b>2</b>&nbsp;+ organics</span><span><i class="swatch" style="background:var(--g3);border-color:var(--e3)"></i><b>3</b>&nbsp;+ organics + worms</span><span><i class="swatch" style="background:var(--g4);border-color:var(--e4)"></i><b>4</b>&nbsp;+ organics + castings</span><span><i class="swatch" style="background:var(--g5);border-color:var(--e5)"></i><b>5</b>&nbsp;Potting soil</span></div><div class="chart-scroll"><svg viewBox="0 0 1180 460" role="img" aria-label="How much the plants weighed by group"><line x1="70" x2="1160" y1="338.0" y2="338.0" stroke="var(--rule)" stroke-width="1"/><text x="60" y="342.0" text-anchor="end" font-size="11.5" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">0</text><line x1="70" x2="1160" y1="259.0" y2="259.0" stroke="var(--rule)" stroke-width="1"/><text x="60" y="263.0" text-anchor="end" font-size="11.5" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">0.2165</text><line x1="70" x2="1160" y1="180.0" y2="180.0" stroke="var(--rule)" stroke-width="1"/><text x="60" y="184.0" text-anchor="end" font-size="11.5" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">0.433</text><line x1="70" x2="1160" y1="101.0" y2="101.0" stroke="var(--rule)" stroke-width="1"/><text x="60" y="105.0" text-anchor="end" font-size="11.5" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">0.6495</text><line x1="70" x2="1160" y1="22.0" y2="22.0" stroke="var(--rule)" stroke-width="1"/><text x="60" y="26.0" text-anchor="end" font-size="11.5" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">0.866</text><text x="15" y="180" font-size="12.5" fill="var(--ink-3)" text-anchor="middle" transform="rotate(-90 15 180)">How much the plants weighed (g)</text><line x1="70" x2="1160" y1="60.9" y2="60.9" stroke="var(--e5)" stroke-width="2" stroke-dasharray="7 5"/><text x="78" y="51.9" text-anchor="start" font-size="12.5" font-weight="620" fill="var(--e5)">the goal, real soil</text><rect x="107.1" y="325.4" width="143.9" height="12.6" rx="5" fill="var(--g1)" stroke="var(--e1)" stroke-width="2"/><line x1="179.0" x2="179.0" y1="306.3" y2="338.0" stroke="var(--ink)" stroke-width="1.75"/><line x1="171.0" x2="187.0" y1="306.3" y2="306.3" stroke="var(--ink)" stroke-width="1.75"/><line x1="171.0" x2="187.0" y1="338.0" y2="338.0" stroke="var(--ink)" stroke-width="1.75"/><circle cx="179.0" cy="306.3" r="4.2" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><circle cx="179.0" cy="338.0" r="4.2" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><circle cx="179.0" cy="331.8" r="4.2" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><text x="179.0" y="358.0" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--ink-2)">1</text><text x="179.0" y="374.0" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">Regolith only</text><text x="179.0" y="392.0" text-anchor="middle" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">3 cups: 0.00–0.09 g</text><text x="179.0" y="414.0" text-anchor="middle" font-size="14.5" font-weight="640" fill="var(--ink-2)" style="font-variant-numeric:tabular-nums"><tspan font-size="10.5" font-weight="600" fill="var(--ink-3)" letter-spacing=".06em">AVG </tspan>0.03 g</text><rect x="325.1" y="256.8" width="143.9" height="81.2" rx="5" fill="var(--g2)" stroke="var(--e2)" stroke-width="2"/><line x1="397.0" x2="397.0" y1="236.6" y2="267.2" stroke="var(--ink)" stroke-width="1.75"/><line x1="389.0" x2="405.0" y1="236.6" y2="236.6" stroke="var(--ink)" stroke-width="1.75"/><line x1="389.0" x2="405.0" y1="267.2" y2="267.2" stroke="var(--ink)" stroke-width="1.75"/><circle cx="397.0" cy="236.6" r="4.2" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><circle cx="397.0" cy="267.2" r="4.2" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><circle cx="397.0" cy="266.5" r="4.2" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><text x="397.0" y="358.0" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--ink-2)">2</text><text x="397.0" y="374.0" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">+ organics</text><text x="397.0" y="392.0" text-anchor="middle" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">3 cups: 0.19–0.28 g</text><text x="397.0" y="414.0" text-anchor="middle" font-size="14.5" font-weight="640" fill="var(--ink-2)" style="font-variant-numeric:tabular-nums"><tspan font-size="10.5" font-weight="600" fill="var(--ink-3)" letter-spacing=".06em">AVG </tspan>0.22 g</text><rect x="543.1" y="250.1" width="143.9" height="87.9" rx="5" fill="var(--g3)" stroke="var(--e3)" stroke-width="2"/><line x1="615.0" x2="615.0" y1="236.2" y2="269.8" stroke="var(--ink)" stroke-width="1.75"/><line x1="607.0" x2="623.0" y1="236.2" y2="236.2" stroke="var(--ink)" stroke-width="1.75"/><line x1="607.0" x2="623.0" y1="269.8" y2="269.8" stroke="var(--ink)" stroke-width="1.75"/><circle cx="615.0" cy="236.2" r="4.2" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><circle cx="615.0" cy="269.8" r="4.2" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><circle cx="615.0" cy="244.2" r="4.2" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><text x="615.0" y="358.0" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--ink-2)">3</text><text x="615.0" y="374.0" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">+ organics</text><text x="615.0" y="388.0" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">+ worms</text><text x="615.0" y="406.0" text-anchor="middle" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">3 cups: 0.19–0.28 g</text><text x="615.0" y="428.0" text-anchor="middle" font-size="14.5" font-weight="640" fill="var(--ink-2)" style="font-variant-numeric:tabular-nums"><tspan font-size="10.5" font-weight="600" fill="var(--ink-3)" letter-spacing=".06em">AVG </tspan>0.24 g</text><rect x="761.1" y="269.4" width="143.9" height="68.6" rx="5" fill="var(--g4)" stroke="var(--e4)" stroke-width="2"/><line x1="833.0" x2="833.0" y1="253.0" y2="280.3" stroke="var(--ink)" stroke-width="1.75"/><line x1="825.0" x2="841.0" y1="253.0" y2="253.0" stroke="var(--ink)" stroke-width="1.75"/><line x1="825.0" x2="841.0" y1="280.3" y2="280.3" stroke="var(--ink)" stroke-width="1.75"/><circle cx="833.0" cy="253.0" r="4.2" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><circle cx="833.0" cy="280.3" r="4.2" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><circle cx="833.0" cy="274.9" r="4.2" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><text x="833.0" y="358.0" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--ink-2)">4</text><text x="833.0" y="374.0" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">+ organics</text><text x="833.0" y="388.0" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">+ castings</text><text x="833.0" y="406.0" text-anchor="middle" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">3 cups: 0.16–0.23 g</text><text x="833.0" y="428.0" text-anchor="middle" font-size="14.5" font-weight="640" fill="var(--ink-2)" style="font-variant-numeric:tabular-nums"><tspan font-size="10.5" font-weight="600" fill="var(--ink-3)" letter-spacing=".06em">AVG </tspan>0.19 g</text><rect x="979.1" y="60.9" width="143.9" height="277.1" rx="5" fill="var(--g5)" stroke="var(--e5)" stroke-width="2"/><line x1="1051.0" x2="1051.0" y1="39.9" y2="82.9" stroke="var(--ink)" stroke-width="1.75"/><line x1="1043.0" x2="1059.0" y1="39.9" y2="39.9" stroke="var(--ink)" stroke-width="1.75"/><line x1="1043.0" x2="1059.0" y1="82.9" y2="82.9" stroke="var(--ink)" stroke-width="1.75"/><circle cx="1051.0" cy="39.9" r="4.2" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><circle cx="1051.0" cy="82.9" r="4.2" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><circle cx="1051.0" cy="60.0" r="4.2" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.8"/><text x="1051.0" y="358.0" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--ink-2)">5</text><text x="1051.0" y="374.0" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">Potting soil</text><text x="1051.0" y="392.0" text-anchor="middle" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">3 cups: 0.70–0.82 g</text><text x="1051.0" y="414.0" text-anchor="middle" font-size="14.5" font-weight="640" fill="var(--ink-2)" style="font-variant-numeric:tabular-nums"><tspan font-size="10.5" font-weight="600" fill="var(--ink-3)" letter-spacing=".06em">AVG </tspan>0.76 g</text><line x1="70" x2="1160" y1="338" y2="338" stroke="var(--rule-2)" stroke-width="1.5"/></svg></div><p class="cap">Every group has <b>three cups</b>, and all three are drawn: the rings stacked on the line through each bar. The whisker joins the lightest cup to the heaviest, and those same two weights are printed under the group name. <b>AVG</b> below them is the average of the three. The dashed line running across the chart is what ordinary potting soil managed, the height everything else is trying to reach.<br><br><b>Read the rings, not the bar.</b> Three cups is not many, so one odd cup can pull an average a surprising distance. If the rings of two groups reach into each other, those two groups cannot be told apart, and rings sitting on top of each other mean those cups weighed the same. Group 3 closed <b>28%</b> of the distance from bare regolith to potting soil.</p></figure>
+
+  <h2>How the soil changed over four weeks</h2>
+  <p class="lede">Measured once a week, before anything was planted. These are
+  the numbers that explain <em>why</em> the plants did or did not grow.</p>
+  <div class="legend"><span><i class="swatch" style="background:var(--g1);border-color:var(--e1)"></i><b>1</b>&nbsp;Regolith only</span><span><i class="swatch" style="background:var(--g2);border-color:var(--e2)"></i><b>2</b>&nbsp;+ organics</span><span><i class="swatch" style="background:var(--g3);border-color:var(--e3)"></i><b>3</b>&nbsp;+ organics + worms</span><span><i class="swatch" style="background:var(--g4);border-color:var(--e4)"></i><b>4</b>&nbsp;+ organics + castings</span><span><i class="swatch" style="background:var(--g5);border-color:var(--e5)"></i><b>5</b>&nbsp;Potting soil</span></div><div class="grid2"><figure><h3 style="margin-top:0">Soil that held together in crumbs</h3><p class="what">How much of a 10 g scoop stayed on the 2 mm sieve.</p><div class="chart-scroll"><svg viewBox="0 0 560 310" role="img" aria-label="Soil that held together in crumbs for each group, week by week"><line x1="58" x2="494" y1="264.0" y2="264.0" stroke="var(--rule)" stroke-width="1"/><text x="49" y="268.0" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">0.813</text><line x1="58" x2="494" y1="181.3" y2="181.3" stroke="var(--rule)" stroke-width="1"/><text x="49" y="185.3" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">20.2</text><line x1="58" x2="494" y1="98.7" y2="98.7" stroke="var(--rule)" stroke-width="1"/><text x="49" y="102.7" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">39.6</text><line x1="58" x2="494" y1="16.0" y2="16.0" stroke="var(--rule)" stroke-width="1"/><text x="49" y="20.0" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">59.1</text><text x="15" y="140" font-size="11.5" fill="var(--ink-3)" text-anchor="middle" transform="rotate(-90 15 140)">Soil that held together in crumbs (%)</text><text x="58.0" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">1</text><text x="203.3" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">2</text><text x="348.7" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">3</text><text x="494.0" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">4</text><line x1="58" x2="494" y1="264.0" y2="264.0" stroke="var(--rule-2)" stroke-width="1.5"/><text x="276" y="303" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">week of the experiment</text><path d="M58.0,243.3 L203.3,226.1 L348.7,240.6 L494.0,226.6" fill="none" stroke="var(--e1)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="226.6" r="4" fill="var(--e1)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="230.6" font-size="11" font-weight="640" fill="var(--e1)" style="font-variant-numeric:tabular-nums">1 · 10 %</text><path d="M58.0,214.8 L203.3,196.4 L348.7,185.7 L494.0,176.6" fill="none" stroke="var(--e2)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="176.6" r="4" fill="var(--e2)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="198.2" font-size="11" font-weight="640" fill="var(--e2)" style="font-variant-numeric:tabular-nums">2 · 21 %</text><path d="M58.0,223.0 L203.3,203.4 L348.7,178.0 L494.0,173.8" fill="none" stroke="var(--e3)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="173.8" r="4" fill="var(--e3)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="185.2" font-size="11" font-weight="640" fill="var(--e3)" style="font-variant-numeric:tabular-nums">3 · 22 %</text><path d="M58.0,219.0 L203.3,204.5 L348.7,185.3 L494.0,168.2" fill="none" stroke="var(--e4)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="168.2" r="4" fill="var(--e4)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="172.2" font-size="11" font-weight="640" fill="var(--e4)" style="font-variant-numeric:tabular-nums">4 · 23 %</text><path d="M58.0,58.3 L203.3,42.0 L348.7,36.7 L494.0,49.8" fill="none" stroke="var(--e5)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="49.8" r="4" fill="var(--e5)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="53.8" font-size="11" font-weight="640" fill="var(--e5)" style="font-variant-numeric:tabular-nums">5 · 51 %</text></svg></div><p class="cap">Higher is better: soil that clumps into crumbs holds water and lets roots through. Dust falls straight through the sieve.</p></figure><figure><h3 style="margin-top:0">Water the soil held on to</h3><p class="what">How much water the soil held on to after being watered and left to drip.</p><div class="chart-scroll"><svg viewBox="0 0 560 310" role="img" aria-label="Water the soil held on to for each group, week by week"><line x1="58" x2="494" y1="264.0" y2="264.0" stroke="var(--rule)" stroke-width="1"/><text x="49" y="268.0" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">15.3</text><line x1="58" x2="494" y1="181.3" y2="181.3" stroke="var(--rule)" stroke-width="1"/><text x="49" y="185.3" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">31</text><line x1="58" x2="494" y1="98.7" y2="98.7" stroke="var(--rule)" stroke-width="1"/><text x="49" y="102.7" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">46.7</text><line x1="58" x2="494" y1="16.0" y2="16.0" stroke="var(--rule)" stroke-width="1"/><text x="49" y="20.0" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">62.3</text><text x="15" y="140" font-size="11.5" fill="var(--ink-3)" text-anchor="middle" transform="rotate(-90 15 140)">Water the soil held on to (%)</text><text x="58.0" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">1</text><text x="203.3" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">2</text><text x="348.7" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">3</text><text x="494.0" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">4</text><line x1="58" x2="494" y1="264.0" y2="264.0" stroke="var(--rule-2)" stroke-width="1.5"/><text x="276" y="303" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">week of the experiment</text><path d="M58.0,243.3 L203.3,236.7 L348.7,234.7 L494.0,241.8" fill="none" stroke="var(--e1)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="241.8" r="4" fill="var(--e1)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="245.8" font-size="11" font-weight="640" fill="var(--e1)" style="font-variant-numeric:tabular-nums">1 · 20 %</text><path d="M58.0,219.3 L203.3,209.9 L348.7,185.8 L494.0,176.8" fill="none" stroke="var(--e2)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="176.8" r="4" fill="var(--e2)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="180.8" font-size="11" font-weight="640" fill="var(--e2)" style="font-variant-numeric:tabular-nums">2 · 32 %</text><path d="M58.0,209.9 L203.3,216.8 L348.7,183.8 L494.0,181.1" fill="none" stroke="var(--e3)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="181.1" r="4" fill="var(--e3)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="193.8" font-size="11" font-weight="640" fill="var(--e3)" style="font-variant-numeric:tabular-nums">3 · 31 %</text><path d="M58.0,223.1 L203.3,188.2 L348.7,196.7 L494.0,182.2" fill="none" stroke="var(--e4)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="182.2" r="4" fill="var(--e4)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="206.8" font-size="11" font-weight="640" fill="var(--e4)" style="font-variant-numeric:tabular-nums">4 · 31 %</text><path d="M58.0,39.9 L203.3,41.1 L348.7,47.6 L494.0,36.7" fill="none" stroke="var(--e5)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="36.7" r="4" fill="var(--e5)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="40.7" font-size="11" font-weight="640" fill="var(--e5)" style="font-variant-numeric:tabular-nums">5 · 58 %</text></svg></div><p class="cap">Higher is better: a plant can only drink what the soil keeps. Regolith drains almost instantly.</p></figure><figure><h3 style="margin-top:0">Plant food in the soil</h3><p class="what">Nitrate on an aquarium test strip.</p><div class="chart-scroll"><svg viewBox="0 0 560 310" role="img" aria-label="Plant food in the soil for each group, week by week"><line x1="58" x2="494" y1="264.0" y2="264.0" stroke="var(--rule)" stroke-width="1"/><text x="49" y="268.0" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">-5.03</text><line x1="58" x2="494" y1="181.3" y2="181.3" stroke="var(--rule)" stroke-width="1"/><text x="49" y="185.3" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">19.1</text><line x1="58" x2="494" y1="98.7" y2="98.7" stroke="var(--rule)" stroke-width="1"/><text x="49" y="102.7" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">43.2</text><line x1="58" x2="494" y1="16.0" y2="16.0" stroke="var(--rule)" stroke-width="1"/><text x="49" y="20.0" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">67.4</text><text x="15" y="140" font-size="11.5" fill="var(--ink-3)" text-anchor="middle" transform="rotate(-90 15 140)">Plant food in the soil (ppm)</text><text x="58.0" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">1</text><text x="203.3" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">2</text><text x="348.7" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">3</text><text x="494.0" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">4</text><line x1="58" x2="494" y1="264.0" y2="264.0" stroke="var(--rule-2)" stroke-width="1.5"/><text x="276" y="303" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">week of the experiment</text><path d="M58.0,243.3 L203.3,241.0 L348.7,243.3 L494.0,241.0" fill="none" stroke="var(--e1)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="241.0" r="4" fill="var(--e1)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="245.0" font-size="11" font-weight="640" fill="var(--e1)" style="font-variant-numeric:tabular-nums">1 · 2 ppm</text><path d="M58.0,217.1 L203.3,209.1 L348.7,192.0 L494.0,187.4" fill="none" stroke="var(--e2)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="187.4" r="4" fill="var(--e2)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="201.0" font-size="11" font-weight="640" fill="var(--e2)" style="font-variant-numeric:tabular-nums">2 · 17 ppm</text><path d="M58.0,222.8 L203.3,203.4 L348.7,185.1 L494.0,193.1" fill="none" stroke="var(--e3)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="193.1" r="4" fill="var(--e3)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="214.0" font-size="11" font-weight="640" fill="var(--e3)" style="font-variant-numeric:tabular-nums">3 · 16 ppm</text><path d="M58.0,221.6 L203.3,201.1 L348.7,195.4 L494.0,184.0" fill="none" stroke="var(--e4)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="184.0" r="4" fill="var(--e4)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="188.0" font-size="11" font-weight="640" fill="var(--e4)" style="font-variant-numeric:tabular-nums">4 · 18 ppm</text><path d="M58.0,36.7 L203.3,84.6 L348.7,60.6 L494.0,62.9" fill="none" stroke="var(--e5)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="62.9" r="4" fill="var(--e5)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="66.9" font-size="11" font-weight="640" fill="var(--e5)" style="font-variant-numeric:tabular-nums">5 · 54 ppm</text></svg></div><p class="cap">Higher is better: this is the nitrogen plants actually feed on. Bare regolith has essentially none.</p></figure><figure><h3 style="margin-top:0">Buried cloth that rotted away</h3><p class="what">How much of a buried cotton square rotted away.</p><div class="chart-scroll"><svg viewBox="0 0 560 310" role="img" aria-label="Buried cloth that rotted away for each group, week by week"><line x1="58" x2="494" y1="264.0" y2="264.0" stroke="var(--rule)" stroke-width="1"/><text x="49" y="268.0" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">-3.04</text><line x1="58" x2="494" y1="181.3" y2="181.3" stroke="var(--rule)" stroke-width="1"/><text x="49" y="185.3" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">11.1</text><line x1="58" x2="494" y1="98.7" y2="98.7" stroke="var(--rule)" stroke-width="1"/><text x="49" y="102.7" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">25.3</text><line x1="58" x2="494" y1="16.0" y2="16.0" stroke="var(--rule)" stroke-width="1"/><text x="49" y="20.0" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">39.5</text><text x="15" y="140" font-size="11.5" fill="var(--ink-3)" text-anchor="middle" transform="rotate(-90 15 140)">Buried cloth that rotted away (%)</text><text x="58.0" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">2</text><text x="276.0" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">3</text><text x="494.0" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">4</text><line x1="58" x2="494" y1="264.0" y2="264.0" stroke="var(--rule-2)" stroke-width="1.5"/><text x="276" y="303" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">week of the experiment</text><path d="M58.0,243.3 L276.0,241.5 L494.0,232.7" fill="none" stroke="var(--e1)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="232.7" r="4" fill="var(--e1)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="236.7" font-size="11" font-weight="640" fill="var(--e1)" style="font-variant-numeric:tabular-nums">1 · 2 %</text><path d="M58.0,228.8 L276.0,214.7 L494.0,179.0" fill="none" stroke="var(--e2)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="179.0" r="4" fill="var(--e2)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="199.1" font-size="11" font-weight="640" fill="var(--e2)" style="font-variant-numeric:tabular-nums">2 · 12 %</text><path d="M58.0,236.6 L276.0,201.0 L494.0,170.5" fill="none" stroke="var(--e3)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="170.5" r="4" fill="var(--e3)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="186.1" font-size="11" font-weight="640" fill="var(--e3)" style="font-variant-numeric:tabular-nums">3 · 13 %</text><path d="M58.0,217.1 L276.0,208.7 L494.0,169.1" fill="none" stroke="var(--e4)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="169.1" r="4" fill="var(--e4)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="173.1" font-size="11" font-weight="640" fill="var(--e4)" style="font-variant-numeric:tabular-nums">4 · 13 %</text><path d="M58.0,176.3 L276.0,102.1 L494.0,36.7" fill="none" stroke="var(--e5)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="36.7" r="4" fill="var(--e5)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="40.7" font-size="11" font-weight="640" fill="var(--e5)" style="font-variant-numeric:tabular-nums">5 · 36 %</text></svg></div><p class="cap">Higher is better: only living things rot cotton, so this is a rough count of how alive the soil is. Nothing rots in sterile dust.</p></figure><figure><h3 style="margin-top:0">pH</h3><p class="what">How acid or alkaline the soil is.</p><div class="chart-scroll"><svg viewBox="0 0 560 310" role="img" aria-label="pH for each group, week by week"><line x1="58" x2="494" y1="264.0" y2="264.0" stroke="var(--rule)" stroke-width="1"/><text x="49" y="268.0" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">6.28</text><line x1="58" x2="494" y1="181.3" y2="181.3" stroke="var(--rule)" stroke-width="1"/><text x="49" y="185.3" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">7.03</text><line x1="58" x2="494" y1="98.7" y2="98.7" stroke="var(--rule)" stroke-width="1"/><text x="49" y="102.7" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">7.77</text><line x1="58" x2="494" y1="16.0" y2="16.0" stroke="var(--rule)" stroke-width="1"/><text x="49" y="20.0" text-anchor="end" font-size="11" fill="var(--ink-3)" style="font-variant-numeric:tabular-nums">8.52</text><text x="15" y="140" font-size="11.5" fill="var(--ink-3)" text-anchor="middle" transform="rotate(-90 15 140)">pH</text><text x="58.0" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">1</text><text x="203.3" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">2</text><text x="348.7" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">3</text><text x="494.0" y="284" text-anchor="middle" font-size="11" fill="var(--ink-3)">4</text><line x1="58" x2="494" y1="264.0" y2="264.0" stroke="var(--rule-2)" stroke-width="1.5"/><text x="276" y="303" text-anchor="middle" font-size="11.5" fill="var(--ink-3)">week of the experiment</text><path d="M58.0,36.7 L203.3,55.1 L348.7,40.4 L494.0,44.0" fill="none" stroke="var(--e1)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="44.0" r="4" fill="var(--e1)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="48.0" font-size="11" font-weight="640" fill="var(--e1)" style="font-variant-numeric:tabular-nums">1 · 8.3</text><path d="M58.0,55.1 L203.3,81.0 L348.7,81.0 L494.0,110.5" fill="none" stroke="var(--e2)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="110.5" r="4" fill="var(--e2)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="129.4" font-size="11" font-weight="640" fill="var(--e2)" style="font-variant-numeric:tabular-nums">2 · 7.7</text><path d="M58.0,62.5 L203.3,66.2 L348.7,99.4 L494.0,99.4" fill="none" stroke="var(--e3)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="99.4" r="4" fill="var(--e3)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="103.4" font-size="11" font-weight="640" fill="var(--e3)" style="font-variant-numeric:tabular-nums">3 · 7.8</text><path d="M58.0,77.3 L203.3,81.0 L348.7,84.6 L494.0,103.1" fill="none" stroke="var(--e4)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="103.1" r="4" fill="var(--e4)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="116.4" font-size="11" font-weight="640" fill="var(--e4)" style="font-variant-numeric:tabular-nums">4 · 7.7</text><path d="M58.0,221.2 L203.3,224.9 L348.7,243.3 L494.0,232.3" fill="none" stroke="var(--e5)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="494.0" cy="232.3" r="4" fill="var(--e5)" stroke="var(--surface)" stroke-width="2"/><text x="503.0" y="236.3" font-size="11" font-weight="640" fill="var(--e5)" style="font-variant-numeric:tabular-nums">5 · 6.6</text></svg></div><p class="cap">Closer to 7 is better. Mars regolith is alkaline, around 8–9, and most crops want 6–7. Neither high nor low is good here; the middle is.</p></figure></div>
+
+  <h2>How each answer was worked out</h2>
+  <p class="lede">Which two groups each question actually put head to head.
+  Every one of them was decided before the experiment started, not gone
+  looking for afterwards because the answer looked good.</p>
+  <div class="tw"><table><thead><tr><th>The question</th><th>What was compared</th><th class="num">Difference</th><th>Do the cups overlap?</th></tr></thead><tbody><tr><td><b>Did the regolith turn into something that grows?</b><br><span style="color:var(--ink-3);font-size:13px">The headline. Group 3 got food AND worms, so this asks whether the whole treatment worked -- not yet which part of it did.</span></td><td><span class="dot" style="background:var(--g1);border-color:var(--e1)"></span><b>Group 1</b> <span style="color:var(--ink-3)">(regolith, nothing added)</span><br><span style="color:var(--ink-3);font-size:12.5px">against</span><br><span class="dot" style="background:var(--g3);border-color:var(--e3)"></span><b>Group 3</b> <span style="color:var(--ink-3)">(food + live worms)</span></td><td class="num">+0.206</td><td>no overlap</td></tr><tr><td><b>Did the worms add anything the food did not?</b><br><span style="color:var(--ink-3);font-size:13px">The comparison that says what the worms themselves were worth. Group 2 got exactly the same food with no worms in it. Asked this way round so it has a yes/no answer -- &#x27;was it the worms or the food?&#x27; cannot be answered with the word yes.</span></td><td><span class="dot" style="background:var(--g2);border-color:var(--e2)"></span><b>Group 2</b> <span style="color:var(--ink-3)">(food, no worms)</span><br><span style="color:var(--ink-3);font-size:12.5px">against</span><br><span class="dot" style="background:var(--g3);border-color:var(--e3)"></span><b>Group 3</b> <span style="color:var(--ink-3)">(food + live worms)</span></td><td class="num">+0.018</td><td>they overlap</td></tr><tr><td><b>Were the castings enough on their own?</b><br><span style="color:var(--ink-3);font-size:13px">If Group 4 keeps up with Group 3, the living worm is not needed -- and the design should target the microbes, not the animal.</span></td><td><span class="dot" style="background:var(--g3);border-color:var(--e3)"></span><b>Group 3</b> <span style="color:var(--ink-3)">(food + live worms)</span><br><span style="color:var(--ink-3);font-size:12.5px">against</span><br><span class="dot" style="background:var(--g4);border-color:var(--e4)"></span><b>Group 4</b> <span style="color:var(--ink-3)">(food + castings)</span></td><td class="num">n/a</td><td>n/a</td></tr><tr><td><b>How far did we get from bare dust toward real soil?</b><br><span style="color:var(--ink-3);font-size:13px">The ruler every other row is measured against -- bare regolith at one end, real potting soil at the other -- and the mark showing where the worm cups actually landed on it.</span></td><td><span class="dot" style="background:var(--g1);border-color:var(--e1)"></span><b>Group 1</b> <span style="color:var(--ink-3)">(regolith, nothing added)</span><br><span style="color:var(--ink-3);font-size:12.5px">against</span><br><span class="dot" style="background:var(--g5);border-color:var(--e5)"></span><b>Group 5</b> <span style="color:var(--ink-3)">(real potting soil)</span></td><td class="num">+0.725</td><td>no overlap</td></tr></tbody></table></div>
+  <div class="note warn"><b>How sure can we be, with three cups?</b> Every comparison above asks one thing: <b>did the two groups overlap?</b> If the worst cup in one group still beat the best cup in the other, that is as strong as three cups can ever get. If the ranges cross, the honest answer is that we could not tell them apart and not that they are the same.<br><br><b>A difference also has to be big enough to matter.</b> A result here needs a gap of at least <b>10%</b> of the whole scale, bare regolith to real potting soil, which is 0.725 g, so at least 0.072 g. Without that rule, plants could triple in weight, still be dead, and get called a success.</div>
+
+  <h2>Every group, every measurement</h2>
+  <div class="tw"><table class="grid"><thead><tr><th>Group</th><th class="num" title="How much the plants weighed">Plant weight (g)<br><span style="font-weight:500;text-transform:none;letter-spacing:0">↑ higher is better</span></th><th class="num" title="Seeds that came up">Seeds up (%)<br><span style="font-weight:500;text-transform:none;letter-spacing:0">↑ higher is better</span></th><th class="num" title="How tall they grew">Height (mm)<br><span style="font-weight:500;text-transform:none;letter-spacing:0">↑ higher is better</span></th><th class="num" title="Soil that held together in crumbs">Crumbs (%)<br><span style="font-weight:500;text-transform:none;letter-spacing:0">↑ higher is better</span></th><th class="num" title="Water the soil held on to">Water held (%)<br><span style="font-weight:500;text-transform:none;letter-spacing:0">↑ higher is better</span></th><th class="num" title="Plant food in the soil">Plant food (ppm)<br><span style="font-weight:500;text-transform:none;letter-spacing:0">↑ higher is better</span></th><th class="num" title="Buried cloth that rotted away">Cloth rotted (%)<br><span style="font-weight:500;text-transform:none;letter-spacing:0">↑ higher is better</span></th><th class="num" title="pH">pH<br><span style="font-weight:500;text-transform:none;letter-spacing:0">→ closer to 7 is better</span></th></tr></thead><tbody><tr><td><span class="dot" style="background:var(--g1);border-color:var(--e1)"></span><b>1</b> Regolith only</td><td class="num">0.03<br><span style="color:var(--ink-3);font-size:12px">0.00&ndash;0.09</span></td><td class="num">20<br><span style="color:var(--ink-3);font-size:12px">10&ndash;30</span></td><td class="num">13<br><span style="color:var(--ink-3);font-size:12px">7&ndash;20</span></td><td class="num">10<br><span style="color:var(--ink-3);font-size:12px">9&ndash;11</span></td><td class="num">20<br><span style="color:var(--ink-3);font-size:12px">18&ndash;21</span></td><td class="num">2<br><span style="color:var(--ink-3);font-size:12px">1&ndash;2</span></td><td class="num">2<br><span style="color:var(--ink-3);font-size:12px">2&ndash;3</span></td><td class="num">8.3<br><span style="color:var(--ink-3);font-size:12px">8.2&ndash;8.4</span></td></tr><tr><td><span class="dot" style="background:var(--g2);border-color:var(--e2)"></span><b>2</b> + organics</td><td class="num">0.22<br><span style="color:var(--ink-3);font-size:12px">0.19&ndash;0.28</span></td><td class="num best">43<br><span style="color:var(--ink-3);font-size:12px">40&ndash;50</span></td><td class="num">23<br><span style="color:var(--ink-3);font-size:12px">18&ndash;34</span></td><td class="num">21<br><span style="color:var(--ink-3);font-size:12px">19&ndash;24</span></td><td class="num best">32<br><span style="color:var(--ink-3);font-size:12px">29&ndash;33</span></td><td class="num">17<br><span style="color:var(--ink-3);font-size:12px">16&ndash;18</span></td><td class="num">12<br><span style="color:var(--ink-3);font-size:12px">10&ndash;14</span></td><td class="num best">7.7<br><span style="color:var(--ink-3);font-size:12px">7.6&ndash;7.8</span></td></tr><tr><td><span class="dot" style="background:var(--g3);border-color:var(--e3)"></span><b>3</b> + organics + worms</td><td class="num best">0.24<br><span style="color:var(--ink-3);font-size:12px">0.19&ndash;0.28</span></td><td class="num">43<br><span style="color:var(--ink-3);font-size:12px">40&ndash;50</span></td><td class="num best">29<br><span style="color:var(--ink-3);font-size:12px">24&ndash;36</span></td><td class="num">22<br><span style="color:var(--ink-3);font-size:12px">21&ndash;24</span></td><td class="num">31<br><span style="color:var(--ink-3);font-size:12px">30&ndash;33</span></td><td class="num">16<br><span style="color:var(--ink-3);font-size:12px">11&ndash;19</span></td><td class="num">13<br><span style="color:var(--ink-3);font-size:12px">12&ndash;14</span></td><td class="num">7.8<br><span style="color:var(--ink-3);font-size:12px">7.6&ndash;7.9</span></td></tr><tr><td><span class="dot" style="background:var(--g4);border-color:var(--e4)"></span><b>4</b> + organics + castings</td><td class="num">0.19<br><span style="color:var(--ink-3);font-size:12px">0.16&ndash;0.23</span></td><td class="num">40<br><span style="color:var(--ink-3);font-size:12px">30&ndash;50</span></td><td class="num">29<br><span style="color:var(--ink-3);font-size:12px">27&ndash;33</span></td><td class="num best">23<br><span style="color:var(--ink-3);font-size:12px">23&ndash;24</span></td><td class="num">31<br><span style="color:var(--ink-3);font-size:12px">29&ndash;34</span></td><td class="num best">18<br><span style="color:var(--ink-3);font-size:12px">11&ndash;26</span></td><td class="num best">13<br><span style="color:var(--ink-3);font-size:12px">11&ndash;15</span></td><td class="num">7.7<br><span style="color:var(--ink-3);font-size:12px">7.6&ndash;7.8</span></td></tr><tr class="ref"><td><span class="dot" style="background:var(--g5);border-color:var(--e5)"></span><b>5</b> Potting soil <span style="color:var(--ink-3);font-weight:500">· the target</span></td><td class="num">0.76<br><span style="color:var(--ink-3);font-size:12px">0.70&ndash;0.82</span></td><td class="num">87<br><span style="color:var(--ink-3);font-size:12px">80&ndash;100</span></td><td class="num">66<br><span style="color:var(--ink-3);font-size:12px">61&ndash;71</span></td><td class="num">51<br><span style="color:var(--ink-3);font-size:12px">49&ndash;54</span></td><td class="num">58<br><span style="color:var(--ink-3);font-size:12px">56&ndash;61</span></td><td class="num">54<br><span style="color:var(--ink-3);font-size:12px">38&ndash;65</span></td><td class="num">36<br><span style="color:var(--ink-3);font-size:12px">34&ndash;38</span></td><td class="num">6.6<br><span style="color:var(--ink-3);font-size:12px">6.5&ndash;6.6</span></td></tr></tbody></table></div><p class="cap">Big number is the group's average; the smaller pair under it is the lightest and heaviest of its three cups. A <b>highlighted</b> cell is simply the <b>highest</b> of the four regolith groups for that measurement: group 5 is ordinary potting soil, the target rather than a competitor, so it is left out of the running. Highest is not the same as meaningfully better: whether a difference counts is decided at the top of this page, not here.</p>
+
+  <h2>Was the data any good?</h2>
+  <p class="lede">These checks run before any answer is worked out. A report
+  that cannot tell you what is missing should not be trusted about what is
+  there.</p>
+  <div class="note"><b>Every check passed.</b> All 15 cups are described. Every group has 3 final weights. No missing weekly measurements.</div>
+
+  <div class="end"><span>end of report</span></div>
+</div>
+
+<script>
+// ---- light / dark switch ----
+(function () {
+  const btn = document.getElementById("themeBtn");
+  const SUN = '<svg viewBox="0 0 24 24"><path d="M12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-13a1 1 0 0 1-1-1V1a1 1 0 0 1 2 0v2a1 1 0 0 1-1 1zm0 20a1 1 0 0 1-1-1v-2a1 1 0 0 1 2 0v2a1 1 0 0 1-1 1zM4 13H2a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2zm18 0h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2zM5.6 6.99 4.2 5.58A1 1 0 0 1 5.61 4.17L7.02 5.58A1 1 0 1 1 5.6 6.99zm12.8 12.8-1.41-1.41a1 1 0 0 1 1.41-1.41l1.41 1.41a1 1 0 0 1-1.41 1.41zM6.99 18.4 5.58 19.8a1 1 0 0 1-1.41-1.41l1.41-1.41A1 1 0 1 1 6.99 18.4zM19.8 5.58 18.4 6.99a1 1 0 0 1-1.41-1.41L18.4 4.17a1 1 0 0 1 1.41 1.41z"/></svg>';
+  const MOON = '<svg viewBox="0 0 24 24"><path d="M12.3 22C6.6 22 2 17.4 2 11.7 2 6.9 5.3 2.8 9.9 1.7a1 1 0 0 1 1.1 1.5 7.6 7.6 0 0 0 9.7 10.6 1 1 0 0 1 1.3 1.3A10.3 10.3 0 0 1 12.3 22z"/></svg>';
+
+  // The page is light-first, so an unset theme means "whatever the OS says",
+  // and the OS default here is light.
+  const prefersDark = window.matchMedia
+    ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+
+  function current() {
+    const set = document.documentElement.getAttribute("data-theme");
+    if (set) return set;
+    return prefersDark && prefersDark.matches ? "dark" : "light";
+  }
+  function paint() {
+    const dark = current() === "dark";
+    btn.innerHTML = dark ? SUN : MOON;      // show what you will GET
+    btn.title = dark ? "Switch to light" : "Switch to dark";
+    btn.setAttribute("aria-label", btn.title);
+  }
+  btn.addEventListener("click", () => {
+    const next = current() === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("marsworm-theme", next); } catch (e) {}
+    paint();
+  });
+  try {
+    const saved = localStorage.getItem("marsworm-theme");
+    if (saved) document.documentElement.setAttribute("data-theme", saved);
+  } catch (e) {}
+  if (prefersDark) prefersDark.addEventListener("change", paint);
+  paint();
+})();
+
+// ---- fullscreen toggle, YouTube-style ----
+(function () {
+  const btn = document.getElementById("fullscreenBtn");
+  const ENTER = '<svg viewBox="0 0 24 24"><path d="M3 3h6v2H5v4H3V3zm12 0h6v6h-2V5h-4V3zM3 15h2v4h4v2H3v-6zm16 4h-4v2h6v-6h-2v4z"/></svg>';
+  const EXIT  = '<svg viewBox="0 0 24 24"><path d="M5 16H3v5h5v-2H5v-3zm-2-8h2V5h3V3H3v5zm14 11h-3v2h5v-5h-2v3zM14 3v2h3v3h2V3h-5z"/></svg>';
+
+  function isFullscreen() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement ||
+              document.mozFullScreenElement || document.msFullscreenElement);
+  }
+  async function enter() {
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen ||
+                el.mozRequestFullScreen || el.msRequestFullscreen;
+    if (req) await req.call(el);
+    // NOTE: no navigator.keyboard.lock() here, deliberately. The Mission Map
+    // locks Escape because it has popups that need to swallow the first press.
+    // This page has none, so locking Escape would only break the one thing
+    // everybody expects it to do -- leave fullscreen.
+  }
+  function exit() {
+    if (isFullscreen()) {
+      const ex = document.exitFullscreen || document.webkitExitFullscreen ||
+                 document.mozCancelFullScreen || document.msExitFullscreen;
+      if (ex) ex.call(document);
+    }
+  }
+  function paint() {
+    if (isFullscreen()) {
+      btn.innerHTML = EXIT;
+      btn.title = "Exit full screen";
+      btn.setAttribute("data-fullscreen", "true");
+    } else {
+      btn.innerHTML = ENTER + '<span class="fs-label">Full screen</span>';
+      btn.title = "Full screen";
+      btn.removeAttribute("data-fullscreen");
+    }
+  }
+  btn.addEventListener("click", () => {
+    isFullscreen() ? exit() : enter();
+    btn.blur();          // otherwise the ring lingers and reads as "active"
+  });
+  ["fullscreenchange", "webkitfullscreenchange", "mozfullscreenchange",
+   "MSFullscreenChange"].forEach(ev => document.addEventListener(ev, paint));
+  paint();
+})();
+</script>
+<!-- saanvi-showcase: shared block, injected by apply_global.py -->
+<!-- The block every page on the site carries, injected by apply_global.py.
+     Edit it here, run the build, and all 800-odd pages change together.
+
+     Three jobs: count the visit, offer fullscreen, and offer the way home.
+     Each project was built separately over four years and none of them knows
+     about the others, so none of this can rely on their markup. It adds its
+     own elements, and takes over from theirs where they had their own.
+
+     ../../../../../../index.html is replaced per page with the relative path back to the front
+     page, because these pages sit at every depth from /index.html to
+     /MarsWorm/v1-bioengineered-organism/experiments/index.html. A relative
+     path works on the live site and equally on a page opened off the disk; a
+     link to "/" would mean the root of the hard drive. -->
+
+<style data-sp>
+/* Named with a prefix nothing else here uses, so no project's stylesheet can
+   reach these by accident and nothing here can reach a project's. */
+.sp-home {
+  /* The top left corner. Every one of these sites centres whatever it keeps
+     up there, so the corner is empty on all of them. */
+  position: fixed; top: 14px; left: 14px; z-index: 2147483000;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 16px 9px 13px;
+  border-radius: 999px;
+  background: rgba(253, 252, 251, 0.92);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid #e2ddd9;
+  box-shadow: 0 2px 10px rgba(80, 50, 35, 0.10);
+  /* Her own hand, the one she signs the portrait with on the front page and
+     on every MarsWorm page. A grey sans chip in the corner looked like
+     something the browser had added; this looks like it belongs to her. */
+  font: 700 16px/1 "Bradley Hand", "Noteworthy", "Segoe Script", cursive;
+  color: #8a3317; text-decoration: none;
+  transition: box-shadow .15s, border-color .15s, transform .15s;
+}
+.sp-home:hover {
+  border-color: #b3401f; transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(80, 50, 35, 0.16);
+}
+.sp-home svg {
+  width: 14px; height: 14px; flex: none; margin-top: -1px;
+  fill: none; stroke: currentColor; stroke-width: 2.2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* Tighter on a phone, where 14px of margin is a lot of the screen. */
+/* On a phone these bars stop centring and put their own logo hard left,
+   which is where this was sitting: it covered MarsWorm's wordmark and
+   SPARK's. Down to the bottom corner, where nothing else goes. The
+   fullscreen button is not drawn on a touch device, so that corner is free. */
+@media (max-width: 760px) {
+  .sp-home {
+    top: auto; bottom: 12px; left: 12px;
+    padding: 7px 13px 8px 11px; font-size: 15px;
+  }
+}
+@media print { .sp-home, .sp-fs { display: none; } }
+
+.sp-fs {
+  position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 2147483000;
+  width: 2.4rem; height: 2.4rem; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #fdfcfb; color: #6b6b6b;
+  border: 1px solid #e2ddd9; border-radius: 0.5rem;
+  cursor: pointer; opacity: 0.55;
+  transition: opacity .15s, color .15s, border-color .15s;
+}
+.sp-fs svg {
+  width: 1rem; height: 1rem; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.sp-fs:hover { opacity: 1; color: #b3401f; border-color: #b3401f; }
+.sp-fs:focus-visible { opacity: 1; outline: 2px solid #b3401f; outline-offset: 2px; }
+</style>
+
+<!-- One property for the whole site. apply_global.py strips the per-project
+     tags MarsWorm and NitRobe carried, so nothing is counted twice. -->
+<script data-sp async src="https://www.googletagmanager.com/gtag/js?id=G-FJ4CWSDFEW"></script>
+<script data-sp>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FJ4CWSDFEW');
+</script>
+
+<script data-sp>
+(function () {
+  'use strict';
+
+  /* A swapped-in page brings its own copy of this block. Only the first one
+     wires anything to the window or the document; the rest would stack a
+     second click handler and a second button on every swap. */
+  if (window.__saanviGlobal) return;
+  window.__saanviGlobal = true;
+
+  /* The stylesheet moves to the head, where a body swap cannot take it. */
+  var css = document.querySelector('style[data-sp]');
+  if (css) document.head.appendChild(css);
+
+  /* ---- the way home ----------------------------------------------------
+     Every page gets it, including the front page's own children. The front
+     page itself is skipped at injection time, because a link home from home
+     is furniture with nothing behind it. */
+
+  /* The front page is injected with an empty path, because a link home from
+     home is furniture with nothing behind it. */
+  var where = '../../../../../../index.html';
+  /* The front page, as an address: the injected path from here, or, on the
+     front page itself, this page. Worked out once, at load, so that a page
+     swapped in later under fullscreen can be told whether it is home. */
+  var FRONT = new URL(where || 'index.html', location.href);
+  function isFront(url) {
+    return url.pathname === FRONT.pathname ||
+           url.pathname === FRONT.pathname.replace(/index\.html$/, '');
+  }
+  /* The pill is always made, and only shown away from home. It used to be
+     made only on pages that had a path home, so fullscreen entered on the
+     front page carried no pill into any project. */
+  var home = document.createElement('a');
+  home.className = 'sp-home';
+  home.href = FRONT.href;
+  home.innerHTML =
+    '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+    '<path d="M3 10.6 12 3.4l9 7.2"/><path d="M5.6 9.6V20h12.8V9.6"/>' +
+    '<path d="M10 20v-5h4v5"/></svg><span>Saanvi</span>';
+  home.setAttribute('aria-label', "All of Saanvi's projects");
+  home.title = "All of Saanvi's projects";
+  if (!isFront(new URL(location.href))) document.body.appendChild(home);
+
+  /* ---- fullscreen ------------------------------------------------------
+     One button for the whole site. Seven of these projects shipped their own
+     and two shipped none, so this takes any it finds away and puts one back.
+     Theirs are built by their own scripts, which may run after this, so the
+     sweep repeats a moment later rather than only once. */
+
+  /* Seven of these projects shipped a fullscreen button of their own and one
+     shipped two names for it. Every spelling found so far is listed; a
+     button of ours is never matched, because all of ours are .sp-fs. */
+  var THEIRS = '.fs, .fs-label, #fs-label, .fullscreen-btn, #fullscreen-btn,'
+             + ' [aria-label*="fullscreen" i]:not(.sp-fs),'
+             + ' [title*="full screen" i]:not(.sp-fs)';
+
+  function sweep() {
+    var theirs = document.querySelectorAll(THEIRS);
+    for (var i = 0; i < theirs.length; i++) {
+      if (theirs[i].className !== 'sp-fs') theirs[i].remove();
+    }
+  }
+  sweep();
+  setTimeout(sweep, 400);
+  addEventListener('load', sweep);
+
+  var root = document.documentElement;
+  if (!(root.requestFullscreen || root.webkitRequestFullscreen)) return;
+  /* A phone has no fullscreen for a page, and on a tablet the button sits
+     under a thumb. */
+  if ('ontouchstart' in window) return;
+
+  var EXPAND = '<path d="M3 8V3h5M17 3h5v5M22 17v5h-5M8 22H3v-5"/>';
+  var SHRINK = '<path d="M8 3v5H3M22 8h-5V3M17 22v-5h5M3 17h5v5"/>';
+
+  var btn = document.createElement('button');
+  btn.className = 'sp-fs';
+  btn.type = 'button';
+  document.body.appendChild(btn);
+
+  function on() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function paint() {
+    var label = on() ? 'Leave fullscreen' : 'View fullscreen';
+    btn.setAttribute('aria-label', label);
+    btn.title = label + '  (F)';
+    btn.innerHTML = '<svg viewBox="0 0 25 25" aria-hidden="true">' +
+                    (on() ? SHRINK : EXPAND) + '</svg>';
+  }
+  function toggle() {
+    if (on()) {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+    }
+  }
+
+  btn.addEventListener('click', toggle);
+  document.addEventListener('fullscreenchange', paint);
+  document.addEventListener('webkitfullscreenchange', paint);
+
+  /* The shortcut a video player uses, but never while something is being
+     typed into, and never on top of a browser shortcut. */
+  /* In the capture phase, and stopped dead once handled. Several of these
+     projects bind F to their own fullscreen, and two handlers toggling the
+     same thing cancel each other out: the key would do nothing at all. */
+  addEventListener('keydown', function (e) {
+    if (e.key !== 'f' && e.key !== 'F') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.isContentEditable ||
+              /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    toggle();
+  }, true);
+
+  paint();
+
+  /* ---- staying in fullscreen across a link -----------------------------
+     Fullscreen belongs to a document. Follow an ordinary link and it ends,
+     and the new page cannot ask to go back in: a browser only grants
+     fullscreen off a click, and a fresh document has no click behind it. So
+     SPARK's menu dropped you out of fullscreen on every page.
+
+     While fullscreen is on, and only then, a click on a link to another page
+     of this site fetches it and swaps it in rather than navigating. The
+     document never changes, so fullscreen never ends. Outside fullscreen
+     none of this runs and every link is an ordinary link, which is what
+     keeps these plain static pages for anyone reading them normally, and
+     what makes a failure here harmless. */
+
+  /* The scripts already on this document, by address. A swapped-in page
+     that asks for one of them again is not made to download it twice: the
+     gene finder's model is half a megabyte. */
+  var fetched = {};
+  for (var f = 0; f < document.scripts.length; f++) {
+    if (document.scripts[f].src) fetched[document.scripts[f].src] = true;
+  }
+
+  function runScripts(where) {
+    /* A script inserted as parsed markup does not execute. Re-creating each
+       one does, which is what keeps a project's own behaviour alive after a
+       swap: SPARK's play buttons, NitRobe's gene finder.
+
+       In order, and one at a time. A script made here is async by default,
+       so three external files would race each other and the inline script
+       after them would run first, against a model that had not arrived yet:
+       that is how the finder came to say its files did not load. An inline
+       script is wrapped in a function, so walking back onto a page does not
+       redeclare its variables; what a page means to share between its
+       scripts it hangs on window, which still works. */
+    var olds = where.querySelectorAll('script'), list = [];
+    for (var i = 0; i < olds.length; i++) {
+      var o = olds[i];
+      list.push([o.src, o.text]);
+      o.remove();
+    }
+    return list.reduce(function (chain, item) {
+      return chain.then(function () {
+        return new Promise(function (done) {
+          var src = item[0], s = document.createElement('script');
+          if (src) {
+            if (fetched[src]) return done();
+            fetched[src] = true;
+            s.src = src;
+            s.async = false;
+            s.onload = s.onerror = function () { done(); };
+          } else {
+            s.text = '(function(){' + item[1] + '\n})();';
+          }
+          where.appendChild(s);
+          if (!src) done();
+        });
+      });
+    }, Promise.resolve());
+  }
+
+  function swap(url, push) {
+    fetch(url.href).then(function (r) {
+      if (!r.ok) throw 0;
+      return r.text();
+    }).then(function (text) {
+      var doc = new DOMParser().parseFromString(text, 'text/html');
+      if (!doc.body) throw 0;
+      /* The address changes first: every relative href and src in the
+         incoming markup resolves against it, and these pages sit at
+         different depths. */
+      if (push) history.pushState({}, '', url.href);
+
+      /* The incoming page's stylesheets. Within one project these are the
+         same files and nothing happens; crossing from one project to another
+         they are different, and the old ones have to go or two designs fight
+         over the same page. */
+      var head = document.head;
+      var mine = head.querySelectorAll(
+        'link[rel="stylesheet"]:not([data-sp]), style:not([data-sp])');
+      for (var i = 0; i < mine.length; i++) mine[i].remove();
+      var theirs = doc.head.querySelectorAll('link[rel="stylesheet"], style');
+      for (var k = 0; k < theirs.length; k++) head.appendChild(theirs[k]);
+
+      document.title = doc.title;
+
+      /* The incoming page carries its own copy of this block. Out it comes,
+         and the live pill and button are put back afterwards, so there is
+         one of each however far you wander. */
+      var copies = doc.body.querySelectorAll('[data-sp], .sp-home, .sp-fs');
+      for (var c = 0; c < copies.length; c++) copies[c].remove();
+
+      document.body.replaceWith(document.adoptNode(doc.body));
+      if (!isFront(url)) document.body.appendChild(home);
+      if (btn) document.body.appendChild(btn);
+      return runScripts(document.body).then(function () {
+        var el = url.hash && document.getElementById(
+          decodeURIComponent(url.hash.slice(1)));
+        if (el) el.scrollIntoView(true); else scrollTo(0, 0);
+      });
+    }).catch(function () {
+      location.href = url.href;            // give up quietly, navigate
+    });
+  }
+
+  /* In the capture phase, so this runs before any router the page brought
+     with it. MarsWorm and NitRobe ship their own, written for their own
+     pages: fine inside those sites, and fatal leaving them, because their
+     fallback on a page they do not understand is to navigate, which ends
+     fullscreen. When this handles a click it stops the event dead so theirs
+     never sees it. Which means this one does all the work on the live site,
+     and a page swapped in here has to work as well as it does under its own
+     router: the finder's model has to load, in order, before the finder. */
+  addEventListener('click', function (e) {
+    if (!on() || e.defaultPrevented) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
+    var a = e.target.closest && e.target.closest('a');
+    if (!a || a.target || a.hasAttribute('download')) return;
+    var url = new URL(a.href, location.href);
+    if (url.origin !== location.origin) return;
+    /* Only pages. A PDF or a film is a download or a viewer, and neither is
+       something to paste into this one. */
+    if (!/\.html$/.test(url.pathname)) return;
+    if (url.pathname === location.pathname) {
+      /* The page you are already on. With a #section it is an anchor, and
+         the browser just scrolls, which keeps fullscreen. Without one it is
+         a reload, and a reload ends fullscreen: clicking Contact Me twice
+         dropped you out. There is nothing to load, so nothing happens. */
+      if (!url.hash) {
+        e.preventDefault(); e.stopImmediatePropagation(); scrollTo(0, 0);
+      }
+      return;
+    }
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    swap(url, true);
+  }, true);
+
+  addEventListener('popstate', function () {
+    if (on()) swap(new URL(location.href), false);
+  });
+})();
+</script>
+
+<!-- /saanvi-showcase -->
+</body>
+</html>

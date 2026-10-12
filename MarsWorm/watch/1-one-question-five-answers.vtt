@@ -1,0 +1,169 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:08.690
+So imagine trying to pack like a lunchbox for a trip, right? But this single lunchbox has to keep you fed for well over two years.
+
+00:00:08.810 --> 00:00:11.250
+Right, and there is no grocery store anywhere along the way.
+
+00:00:11.450 --> 00:00:19.950
+Yeah, calling for emergency takeout is just physically impossible. Which, you know, perfectly illustrates the massive logistical nightmare of feeding a Martian colony.
+
+00:00:20.297 --> 00:00:32.457
+You know, if you ever pack up and move to Mars, you're going to face a massive catering problem. I mean, a crew needs about half a ton of food per person every single year.
+
+00:00:32.677 --> 00:00:34.497
+Yeah. And you can't exactly just ship it all.
+
+00:00:34.777 --> 00:00:40.277
+Right. And you definitely can't ship Earth soil to grow it either because, well, that's just the exact same weight problem all over again.
+
+00:00:40.337 --> 00:00:45.557
+Exactly. And you can't just throw seeds into the Martian ground. It's essentially just dead, toxic dirt.
+
+00:00:45.777 --> 00:00:47.177
+Right. Because of the perchlorate
+
+00:00:47.177 --> 00:00:52.937
+salts. Yeah. It's just crushed rock loaded with these salts that poison pretty much anything trying to grow.
+
+00:00:53.357 --> 00:01:01.517
+So on Earth, earthworms do the heavy lifting of making soil. But on Mars, an earthworm just, you know, freezes, dries out and dies in minutes.
+
+00:01:01.697 --> 00:01:03.077
+Yeah. Not ideal for farming.
+
+00:01:03.417 --> 00:01:11.697
+Definitely not. So today's deep dive tracks this really fascinating student project by Saanvi for the 3M Young Scientist Challenge 2027.
+
+00:01:11.997 --> 00:01:13.337
+Ah, MarsWorm.
+
+00:01:13.337 --> 00:01:20.797
+Yes, MarsWorm. We are walking through the five evolutionary steps of her design and seeing what rigorous testing actually did to each idea.
+
+00:01:21.237 --> 00:01:30.597
+So the first step, version one, was this massive metabolic engineering swing. The initial idea was to redesign a single microbe.
+
+00:01:30.797 --> 00:01:31.597
+Just
+
+00:01:31.197 --> 00:01:39.257
+one. Just one. They wanted to equip it with 37 borrowed genes so it could survive Mars and do the earthworm's job totally by itself.
+
+00:01:39.257 --> 00:01:47.537
+Wait, 37 extra genes? Isn't that like trying to build a biological Swiss army knife that just gets way too heavy?
+
+00:01:47.857 --> 00:01:49.197
+That is a great way to put it. Yeah.
+
+00:01:49.317 --> 00:01:54.277
+Because if you force a microbe to carry all that, you're introducing a massive metabolic tax,
+
+00:01:54.517 --> 00:02:12.897
+right? Well, it has to burn incredible amounts of energy just to keep those genes functioning. And that is exactly why it completely failed in simulation. It just starved. Pretty much. When they loaded the metabolic models, the host microbe starved. They just couldn't handle the energy burden of those 37 genes using only what the Martian environment provides.
+
+00:02:13.037 --> 00:02:16.937
+Okay, so if a single super microbe fails, you distribute the
+
+00:02:16.937 --> 00:02:24.317
+load. Exactly. So for version two, they pivoted. They used the actual Earth microbes those 37 genes originally came from.
+
+00:02:24.377 --> 00:02:25.177
+Oh, I see.
+
+00:02:25.077 --> 00:02:33.977
+Yeah, and they threw in a box of real earthworms and put all of it inside a pressurized warm Martian dome. Zero genetic changes this time.
+
+00:02:34.257 --> 00:02:35.597
+Okay, so does that actually work?
+
+00:02:35.597 --> 00:02:42.417
+It works beautifully, biologically speaking. But it introduces a really severe engineering bottleneck.
+
+00:02:42.597 --> 00:02:43.697
+Let me guess. The plumbing.
+
+00:02:44.277 --> 00:02:48.537
+Nailed it. To make the dirt safe for the microbes and worms, you have to wash it first.
+
+00:02:49.137 --> 00:02:53.197
+Which means shipping heavy wash tanks and rock bins and plumbing all the way from Earth.
+
+00:02:53.397 --> 00:02:55.937
+Which completely defeats the purpose of travelling light.
+
+00:02:55.997 --> 00:02:58.897
+Right, so we're back to square one. So how do you get rid of the plumbing?
+
+00:02:59.317 --> 00:03:05.517
+That brings us to version three. They drop the microbes straight into the raw dirt in timed stages so they don't fight.
+
+00:03:05.977 --> 00:03:13.437
+But wait, you can't just remove the wash tanks and expect toxic salts to magically vanish. Where does the toxicity actually go?
+
+00:03:13.697 --> 00:03:21.437
+Well, it has to leave as a gas. They figured this out by taking one of those microbes and adding a single gene borrowed from a salt marsh plant. Oh,
+
+00:03:21.477 --> 00:03:22.437
+just one gene this time.
+
+00:03:22.457 --> 00:03:23.657
+Yeah, just one. Yeah.
+
+00:03:23.897 --> 00:03:30.057
+That gene allows the microbe to metabolize the toxic salt and vent the chlorine off into the atmosphere.
+
+00:03:30.437 --> 00:03:35.117
+Okay, so now we figured out how to make soil. But you know, making soil is really just a middleman. Right.
+
+00:03:35.117 --> 00:03:36.477
+The real goal is growing the plant.
+
+00:03:36.717 --> 00:03:40.257
+Precisely. Which leads to version four, the plant pivot.
+
+00:03:40.547 --> 00:03:44.067
+Oh wow. So instead of spending all this effort fixing the soil, you fix the
+
+00:03:44.067 --> 00:03:46.887
+plant. That's the breakthrough. Stop trying to make soil.
+
+00:03:47.447 --> 00:03:54.107
+That is wild. So suddenly the plant stops poisoning itself and grows straight in the raw Martian dirt inside the dome.
+
+00:03:54.387 --> 00:03:55.187
+Right, in the dirt.
+
+00:03:55.207 --> 00:04:05.787
+Okay, but if the dirt is no longer poisonous, why even need the dome? For version 5, if you take it outside onto the open surface, doesn't biology finally win here?
+
+00:04:05.927 --> 00:04:19.147
+You would think so. But out in the open, physics takes over. The atmospheric pressure on Mars is incredibly low. Right. Because of that, the water vapor pressure inside a warm leaf is actually higher than the entire atmosphere outside.
+
+00:04:19.667 --> 00:04:22.187
+Wait, so a warm leaf on Mars would instantly boil?
+
+00:04:22.527 --> 00:04:29.567
+Instantly. To survive without boiling, the plant must operate completely in the extreme cold, entirely below
+
+00:04:29.567 --> 00:04:46.987
+freezing. Wow, which is a completely different biological hurdle. Absolutely. But this has just been the overview. Each of these five versions gets its own dedicated deep dive. And for every single one, Saanvi is asking for a rigorous design review from people who know this territory and a lab with just a shelf to spare for testing.
+
+00:04:47.207 --> 00:04:52.727
+And it's worth noting many of those tests are straightforward bench experiments that don't even require genetic modifications.
+
+00:04:52.987 --> 00:04:55.417
+Exactly. Go straight to the MarsWorm website.
+
+00:04:55.897 --> 00:05:00.657
+Yeah, that is where all the specific numbers, metabolic models and details live.
+
+00:05:00.897 --> 00:05:07.657
+Go check it out rather than us just reading numbers at you. But, you know, stopping early leaves you with this really provocative question.
+
+00:05:07.797 --> 00:05:08.597
+It really does.
+
+00:05:08.377 --> 00:05:18.977
+If a student can figure out how to make dead toxic Martian rock bloom by tweaking a single enzyme, what dead terrestrial deserts could we be transforming right now here on Earth?

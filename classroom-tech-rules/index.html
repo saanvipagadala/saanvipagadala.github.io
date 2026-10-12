@@ -1,0 +1,858 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5 Rules for Using Technology in Class &middot; Saanvi Pagadala</title>
+<meta name="description" content="A poster of classroom technology rules and the reasoning behind each one. Winner, ORISE Technology in the Classroom Student Challenge, February 2026.">
+<link rel="canonical" href="https://saanvipagadala.github.io/classroom-tech-rules/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="5 Rules for Using Technology in Class">
+<meta property="og:description" content="Winner, ORISE Technology in the Classroom Student Challenge, February 2026.">
+<meta property="og:url" content="https://saanvipagadala.github.io/classroom-tech-rules/">
+<link rel="icon" href="../images/saanvi.jpg">
+<link rel="apple-touch-icon" href="../images/saanvi.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<!-- The site's stylesheet first, then the poster's own, so the page around
+     the poster belongs to the site and the poster keeps every colour it had. -->
+<link rel="stylesheet" href="../site.css">
+<style>
+/* The poster is now a thing on the page rather than the page itself: it sits
+   in the column like a figure, at its own width and no wider. */
+.poster {
+  width: 850px; max-width: 100%; margin: 2.6rem auto 0;
+  font-family: 'Nunito', sans-serif;
+}
+.poster, .poster * { box-sizing: border-box; }
+
+
+  .poster {
+    width: 850px;
+    min-height: 1100px;
+    background: #fff;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    position: relative;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+    padding: 32px 50px 28px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 30%;
+    width: 260px; height: 260px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+  }
+  .header h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 36px;
+    line-height: 1.15;
+    letter-spacing: 0.3px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  /* "5 Rules for Using" — yellow, grabs attention */
+  .header h1 .h1-intro {
+    color: #ffd54f;
+  }
+  /* "Technology in Class" — clean white, the topic */
+  .header h1 .h1-main {
+    color: #ffffff;
+  }
+  .header-sub {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.75);
+    margin-top: 8px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .byline {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 18px;
+    border-radius: 20px;
+    margin-top: 14px;
+    letter-spacing: 0.4px;
+  }
+
+  /* ── RULES GRID ── */
+  .rules {
+    padding: 28px 40px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .rule-card {
+    border-radius: 18px;
+    padding: 18px 22px;
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    gap: 18px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    border: 2.5px solid transparent;
+  }
+
+  .rule-card:nth-child(1) { background: #fff8e1; border-color: #ffd54f; }
+  .rule-card:nth-child(2) { background: #e8f5e9; border-color: #66bb6a; }
+  .rule-card:nth-child(3) { background: #e3f2fd; border-color: #42a5f5; }
+  .rule-card:nth-child(4) { background: #fce4ec; border-color: #f06292; }
+  .rule-card:nth-child(5) { background: #ede7f6; border-color: #9575cd; }
+
+  .rule-icon-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .rule-icon-wrap svg {
+    width: 72px;
+    height: 72px;
+    display: block;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.13));
+  }
+  .rule-icon-wrap img {
+    width: 72px;
+    height: 72px;
+    display: block;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.13));
+  }
+  /* composite: real image hands + SVG iPad layered */
+  .icon-composite {
+    position: relative;
+    width: 72px;
+    height: 72px;
+  }
+  .icon-composite img {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 72px; height: 72px;
+    filter: none;
+  }
+  .icon-composite svg {
+    position: absolute;
+    top: 0; left: 8px;
+    width: 56px; height: 56px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.18));
+  }
+  .rule-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #fff;
+    background: #1a73e8;
+    border-radius: 20px;
+    padding: 2px 10px;
+    white-space: nowrap;
+  }
+  .rule-card:nth-child(1) .rule-num { background: #f9a825; }
+  .rule-card:nth-child(2) .rule-num { background: #388e3c; }
+  .rule-card:nth-child(3) .rule-num { background: #1565c0; }
+  .rule-card:nth-child(4) .rule-num { background: #c2185b; }
+  .rule-card:nth-child(5) .rule-num { background: #6a1b9a; }
+
+  .rule-content {}
+  .rule-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .rule-card:nth-child(1) .rule-title { color: #e65100; }
+  .rule-card:nth-child(2) .rule-title { color: #1b5e20; }
+  .rule-card:nth-child(3) .rule-title { color: #0d47a1; }
+  .rule-card:nth-child(4) .rule-title { color: #880e4f; }
+  .rule-card:nth-child(5) .rule-title { color: #4a148c; }
+
+  .rule-explain {
+    font-size: 14.5px;
+    color: #37474f;
+    line-height: 1.6;
+    font-weight: 600;
+  }
+  .rule-explain strong {
+    color: inherit;
+    font-weight: 800;
+  }
+
+
+
+  /* ── FOOTER ── */
+  .footer {
+    background: linear-gradient(135deg, #0d47a1, #1a73e8);
+    padding: 14px 40px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .footer-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    white-space: nowrap;
+  }
+  .footer-rocket {
+    font-size: 24px;
+    line-height: 1;
+  }
+  .footer-message {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.3px;
+  }
+  .footer-message span {
+    color: #ffd54f;
+  }
+  .footer-stars-flags {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 24px;
+  }
+  .footer-credit {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    font-family: 'Nunito', sans-serif;
+    letter-spacing: 0.3px;
+    margin-top: 2px;
+  }
+
+  /* ── DECORATIVE STRIP ── */
+  .strip {
+    height: 10px;
+    background: repeating-linear-gradient(
+      90deg,
+      #ffd54f 0px, #ffd54f 40px,
+      #66bb6a 40px, #66bb6a 80px,
+      #42a5f5 80px, #42a5f5 120px,
+      #f06292 120px, #f06292 160px,
+      #9575cd 160px, #9575cd 200px
+    );
+  }
+
+  @media print {
+    
+    .poster { box-shadow: none; border-radius: 0; width: 100%; }
+  }
+  /* The poster was a fixed 850px, which on a phone put the whole page off
+     the right edge. It keeps its proportions and simply narrows. */
+  @media (max-width: 900px) {
+    body { padding: 16px 12px; }
+    .poster { width: 100%; min-height: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <article class="note">
+    <h1>5 Rules for Using Technology in Class</h1>
+    <span class="when">February 2026 &middot; 4th grade</span>
+    <p class="ribbon"><svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M8 2 L10.5 8 M16 2 L13.5 8"/>
+      <circle cx="12" cy="15" r="6.2"/>
+      <path d="M12 11.6 l1.1 2.2 2.4 .35 -1.75 1.7 .42 2.4 -2.17 -1.14
+               -2.17 1.14 .42 -2.4 -1.75 -1.7 2.4 -.35z"/>
+    </svg>Winner, ORISE Technology in the Classroom Student Challenge</p>
+
+    <div class="body">
+      <p><strong>ORISE</strong>, the Oak Ridge Institute for Science and
+      Education, runs <a href="https://orise.orau.gov/k12/students/competitions.html">national
+      challenges for K&ndash;12 students</a> through the year. Each one asks
+      for a piece of real work rather than a quiz: a poster, a design, a piece
+      of writing about the future.</p>
+
+      <p>The <strong>Technology in the Classroom Student Challenge</strong>, in
+      February 2026, asked a question every classroom is arguing about: what
+      are the rules for using technology at school? Students in grades
+      K&ndash;5 were asked to make a poster of those rules, and to explain the
+      thinking behind each one.</p>
+
+      <p>Eight winners were chosen nationally, two per grade band. This poster
+      took one of the K&ndash;5 prizes.</p>
+
+<div class="poster">
+
+  <div class="strip"></div>
+
+  <div class="header">
+    <h1><span class="h1-intro">5 Rules for Using</span> <span class="h1-main">Technology in Class</span></h1>
+    <div class="header-sub">Together we can use tech the right way!</div>
+    <div class="byline">Created by Saanvi &nbsp;|&nbsp; 4th Grade &nbsp;|&nbsp; California</div>
+  </div>
+
+  <div class="rules">
+
+    <!-- RULE 1 -->
+    <div class="rule-card">
+      <div class="rule-icon-wrap">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- laptop body -->
+          <rect x="10" y="18" width="80" height="52" rx="6" fill="#4A90D9" stroke="#2563AC" stroke-width="3"/>
+          <!-- screen bezel -->
+          <rect x="16" y="24" width="68" height="40" rx="4" fill="#87CEEB"/>
+          <!-- screen -->
+          <rect x="20" y="27" width="60" height="34" rx="3" fill="#E8F5FF"/>
+          <!-- screen content lines -->
+          <rect x="26" y="33" width="32" height="3.5" rx="2" fill="#4A90D9" opacity="0.6"/>
+          <rect x="26" y="40" width="44" height="3.5" rx="2" fill="#4A90D9" opacity="0.6"/>
+          <rect x="26" y="47" width="26" height="3.5" rx="2" fill="#4A90D9" opacity="0.6"/>
+          <!-- star on screen -->
+          <polygon points="70,30 72,36 78,36 73,40 75,46 70,42 65,46 67,40 62,36 68,36" fill="#FFD54F" stroke="#F9A825" stroke-width="1"/>
+          <!-- base / keyboard -->
+          <rect x="6" y="70" width="88" height="9" rx="4.5" fill="#2563AC" stroke="#1A4A8A" stroke-width="2"/>
+          <!-- keyboard keys -->
+          <rect x="20" y="73" width="8" height="2.5" rx="1.2" fill="#87CEEB" opacity="0.8"/>
+          <rect x="31" y="73" width="8" height="2.5" rx="1.2" fill="#87CEEB" opacity="0.8"/>
+          <rect x="42" y="73" width="8" height="2.5" rx="1.2" fill="#87CEEB" opacity="0.8"/>
+          <rect x="53" y="73" width="8" height="2.5" rx="1.2" fill="#87CEEB" opacity="0.8"/>
+          <rect x="64" y="73" width="12" height="2.5" rx="1.2" fill="#87CEEB" opacity="0.8"/>
+          <!-- trackpad -->
+          <rect x="38" y="77" width="24" height="0" rx="1" fill="none"/>
+        </svg>
+        <div class="rule-num">RULE 1</div>
+      </div>
+      <div class="rule-content">
+        <div class="rule-title">Use Technology for Learning</div>
+        <div class="rule-explain">
+          Classroom devices like tablets and laptops are tools for <strong>schoolwork, research, and learning</strong>, not for playing games or scrolling social media. When everyone stays focused on learning, the whole class moves forward together and gets more done during school time.
+        </div>
+      </div>
+    </div>
+
+    <!-- RULE 2 -->
+    <div class="rule-card">
+      <div class="rule-icon-wrap">
+        <div class="icon-composite">
+          <img src="data:image/png;base64,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" alt="hands holding device" />
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <rect x="18" y="4" width="64" height="80" rx="8" fill="#43A047" stroke="#2E7D32" stroke-width="3"/>
+            <rect x="25" y="12" width="50" height="62" rx="5" fill="#E8F5E9"/>
+            <rect x="36" y="77" width="28" height="4" rx="2" fill="#2E7D32" opacity="0.5"/>
+            <circle cx="50" cy="8" r="2" fill="#2E7D32" opacity="0.5"/>
+            <polyline points="32,42 44,55 68,28" fill="none" stroke="#43A047" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="rule-num">RULE 2</div>
+      </div>
+      <div class="rule-content">
+        <div class="rule-title">Handle Devices with Care</div>
+        <div class="rule-explain">
+          Always use technology with <strong>clean hands, carry devices with two hands</strong>, and never eat or drink near them. School devices are shared by many students, so taking good care of them means everyone can keep using them and the school does not have to spend money on repairs.
+        </div>
+      </div>
+    </div>
+
+    <!-- RULE 3 -->
+    <div class="rule-card">
+      <div class="rule-icon-wrap">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- shield -->
+          <path d="M50 6 L84 20 L84 50 Q84 74 50 92 Q16 74 16 50 L16 20 Z" fill="#1976D2" stroke="#0D47A1" stroke-width="2.5"/>
+          <path d="M50 14 L78 26 L78 50 Q78 70 50 85 Q22 70 22 50 L22 26 Z" fill="#42A5F5" opacity="0.25"/>
+          <!-- lock body - moved higher -->
+          <rect x="37" y="45" width="26" height="21" rx="5" fill="white" stroke="#0D47A1" stroke-width="2"/>
+          <!-- lock shackle - moved higher -->
+          <path d="M42 45 L42 38 Q42 30 50 30 Q58 30 58 38 L58 45" fill="none" stroke="white" stroke-width="4.5" stroke-linecap="round"/>
+          <!-- keyhole circle -->
+          <circle cx="50" cy="54" r="4" fill="#1976D2"/>
+          <!-- keyhole stem -->
+          <rect x="48" y="54" width="4" height="6" rx="1" fill="#1976D2"/>
+          <!-- green check badge bottom right -->
+          <circle cx="74" cy="78" r="13" fill="#43A047" stroke="white" stroke-width="2.5"/>
+          <polyline points="68,78 72,83 81,71" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="rule-num">RULE 3</div>
+      </div>
+      <div class="rule-content">
+        <div class="rule-title">Ask Before You Click</div>
+        <div class="rule-explain">
+          Always <strong>check with your teacher</strong> before visiting an unfamiliar website, downloading a file, or clicking on a pop-up. Not every website is safe or trustworthy, so asking first keeps your personal information protected and helps you avoid scams or harmful content online.
+        </div>
+      </div>
+    </div>
+
+    <!-- RULE 4 -->
+    <div class="rule-card">
+      <div class="rule-icon-wrap">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- big heart -->
+          <path d="M50 82 C50 82 12 58 12 34 C12 20 24 12 36 18 C43 22 50 32 50 32 C50 32 57 22 64 18 C76 12 88 20 88 34 C88 58 50 82 50 82 Z" fill="#E91E63" stroke="#880E4F" stroke-width="2.5"/>
+          <!-- inner heart shine -->
+          <path d="M50 70 C50 70 20 52 20 36 C20 28 27 24 34 28 C40 31 50 42 50 42 C50 42 60 31 66 28 C73 24 80 28 80 36 C80 52 50 70 50 70 Z" fill="#F48FB1" opacity="0.45"/>
+          <!-- left chat bubble -->
+          <rect x="4" y="12" width="30" height="22" rx="8" fill="#FFD54F" stroke="#F9A825" stroke-width="2"/>
+          <polygon points="16,34 12,44 22,34" fill="#FFD54F" stroke="#F9A825" stroke-width="1.5" stroke-linejoin="round"/>
+          <!-- smiley in left bubble -->
+          <circle cx="12" cy="23" r="3" fill="#F9A825"/>
+          <circle cx="19" cy="23" r="3" fill="#F9A825"/>
+          <circle cx="26" cy="23" r="3" fill="#F9A825"/>
+          <!-- right chat bubble -->
+          <rect x="66" y="12" width="30" height="22" rx="8" fill="#80DEEA" stroke="#00838F" stroke-width="2"/>
+          <polygon points="84,34 78,44 88,34" fill="#80DEEA" stroke="#00838F" stroke-width="1.5" stroke-linejoin="round"/>
+          <!-- dots in right bubble -->
+          <circle cx="74" cy="23" r="3" fill="#00838F"/>
+          <circle cx="81" cy="23" r="3" fill="#00838F"/>
+          <circle cx="88" cy="23" r="3" fill="#00838F"/>
+        </svg>
+        <div class="rule-num">RULE 4</div>
+      </div>
+      <div class="rule-content">
+        <div class="rule-title">Be Kind Online</div>
+        <div class="rule-explain">
+          Treat every person with <strong>kindness and respect</strong> in messages, comments, and shared documents, just like you would face-to-face. Words on a screen can still hurt real feelings. Being a good digital citizen means thinking before you type and making the internet a friendlier place.
+        </div>
+      </div>
+    </div>
+
+    <!-- RULE 5 -->
+    <div class="rule-card">
+      <div class="rule-icon-wrap">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- alarm clock body -->
+          <circle cx="50" cy="55" r="34" fill="#FFD54F" stroke="#F9A825" stroke-width="3"/>
+          <!-- clock face -->
+          <circle cx="50" cy="55" r="27" fill="#FFFDE7" stroke="#F9A825" stroke-width="1.5"/>
+          <!-- hour markers -->
+          <line x1="50" y1="30" x2="50" y2="35" stroke="#F9A825" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="50" y1="75" x2="50" y2="80" stroke="#F9A825" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="25" y1="55" x2="30" y2="55" stroke="#F9A825" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="70" y1="55" x2="75" y2="55" stroke="#F9A825" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- clock hands showing ~10:10 (happy face position) -->
+          <line x1="50" y1="55" x2="38" y2="40" stroke="#E65100" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="50" y1="55" x2="62" y2="40" stroke="#E65100" stroke-width="3" stroke-linecap="round"/>
+          <!-- center dot -->
+          <circle cx="50" cy="55" r="3.5" fill="#E65100"/>
+          <!-- bell ears -->
+          <circle cx="22" cy="26" r="8" fill="#FFD54F" stroke="#F9A825" stroke-width="2.5"/>
+          <circle cx="78" cy="26" r="8" fill="#FFD54F" stroke="#F9A825" stroke-width="2.5"/>
+          <!-- bell knobs -->
+          <circle cx="22" cy="22" r="3" fill="#F9A825"/>
+          <circle cx="78" cy="22" r="3" fill="#F9A825"/>
+          <!-- ZZZ sleep letters - very big and prominent -->
+          <text x="62" y="56" font-size="22" font-weight="bold" fill="#7B1FA2" font-family="Arial" opacity="1">Z</text>
+          <text x="72" y="38" font-size="17" font-weight="bold" fill="#7B1FA2" font-family="Arial" opacity="0.9">Z</text>
+          <text x="80" y="24" font-size="13" font-weight="bold" fill="#7B1FA2" font-family="Arial" opacity="0.75">Z</text>
+          <!-- smiley face on clock -->
+          <circle cx="43" cy="58" r="2.5" fill="#F9A825"/>
+          <circle cx="57" cy="58" r="2.5" fill="#F9A825"/>
+          <path d="M42 64 Q50 70 58 64" fill="none" stroke="#F9A825" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <div class="rule-num">RULE 5</div>
+      </div>
+      <div class="rule-content">
+        <div class="rule-title">Take Screen Breaks</div>
+        <div class="rule-explain">
+          Every <strong>20 minutes, look away from your screen</strong> for at least 20 seconds and focus on something far away. Too much screen time without breaks can cause eye strain, headaches, and tiredness. Protecting your health helps you stay alert, focused, and ready to learn all day long.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="footer-main">
+      🇺🇸 ⭐ &nbsp;
+      <div class="footer-rocket">🚀</div>
+      <div class="footer-message"><span>Technology</span> is a Superpower — Use It Wisely!</div>
+      <div class="footer-rocket">🚀</div>
+      &nbsp; ⭐ 🇺🇸
+    </div>
+    <div class="footer-credit">ORISE Technology in the Classroom Challenge</div>
+  </div>
+
+  <div class="strip"></div>
+
+</div>
+    </div>
+  </article>
+</div>
+
+<footer>
+  <div class="wrap">
+    Saanvi Pagadala &middot; California
+  </div>
+</footer>
+<!-- saanvi-showcase: shared block, injected by apply_global.py -->
+<!-- The block every page on the site carries, injected by apply_global.py.
+     Edit it here, run the build, and all 800-odd pages change together.
+
+     Three jobs: count the visit, offer fullscreen, and offer the way home.
+     Each project was built separately over four years and none of them knows
+     about the others, so none of this can rely on their markup. It adds its
+     own elements, and takes over from theirs where they had their own.
+
+     ../index.html is replaced per page with the relative path back to the front
+     page, because these pages sit at every depth from /index.html to
+     /MarsWorm/v1-bioengineered-organism/experiments/index.html. A relative
+     path works on the live site and equally on a page opened off the disk; a
+     link to "/" would mean the root of the hard drive. -->
+
+<style data-sp>
+/* Named with a prefix nothing else here uses, so no project's stylesheet can
+   reach these by accident and nothing here can reach a project's. */
+.sp-home {
+  /* The top left corner. Every one of these sites centres whatever it keeps
+     up there, so the corner is empty on all of them. */
+  position: fixed; top: 14px; left: 14px; z-index: 2147483000;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 16px 9px 13px;
+  border-radius: 999px;
+  background: rgba(253, 252, 251, 0.92);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid #e2ddd9;
+  box-shadow: 0 2px 10px rgba(80, 50, 35, 0.10);
+  /* Her own hand, the one she signs the portrait with on the front page and
+     on every MarsWorm page. A grey sans chip in the corner looked like
+     something the browser had added; this looks like it belongs to her. */
+  font: 700 16px/1 "Bradley Hand", "Noteworthy", "Segoe Script", cursive;
+  color: #8a3317; text-decoration: none;
+  transition: box-shadow .15s, border-color .15s, transform .15s;
+}
+.sp-home:hover {
+  border-color: #b3401f; transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(80, 50, 35, 0.16);
+}
+.sp-home svg {
+  width: 14px; height: 14px; flex: none; margin-top: -1px;
+  fill: none; stroke: currentColor; stroke-width: 2.2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* Tighter on a phone, where 14px of margin is a lot of the screen. */
+/* On a phone these bars stop centring and put their own logo hard left,
+   which is where this was sitting: it covered MarsWorm's wordmark and
+   SPARK's. Down to the bottom corner, where nothing else goes. The
+   fullscreen button is not drawn on a touch device, so that corner is free. */
+@media (max-width: 760px) {
+  .sp-home {
+    top: auto; bottom: 12px; left: 12px;
+    padding: 7px 13px 8px 11px; font-size: 15px;
+  }
+}
+@media print { .sp-home, .sp-fs { display: none; } }
+
+.sp-fs {
+  position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 2147483000;
+  width: 2.4rem; height: 2.4rem; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #fdfcfb; color: #6b6b6b;
+  border: 1px solid #e2ddd9; border-radius: 0.5rem;
+  cursor: pointer; opacity: 0.55;
+  transition: opacity .15s, color .15s, border-color .15s;
+}
+.sp-fs svg {
+  width: 1rem; height: 1rem; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.sp-fs:hover { opacity: 1; color: #b3401f; border-color: #b3401f; }
+.sp-fs:focus-visible { opacity: 1; outline: 2px solid #b3401f; outline-offset: 2px; }
+</style>
+
+<!-- One property for the whole site. apply_global.py strips the per-project
+     tags MarsWorm and NitRobe carried, so nothing is counted twice. -->
+<script data-sp async src="https://www.googletagmanager.com/gtag/js?id=G-FJ4CWSDFEW"></script>
+<script data-sp>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FJ4CWSDFEW');
+</script>
+
+<script data-sp>
+(function () {
+  'use strict';
+
+  /* A swapped-in page brings its own copy of this block. Only the first one
+     wires anything to the window or the document; the rest would stack a
+     second click handler and a second button on every swap. */
+  if (window.__saanviGlobal) return;
+  window.__saanviGlobal = true;
+
+  /* The stylesheet moves to the head, where a body swap cannot take it. */
+  var css = document.querySelector('style[data-sp]');
+  if (css) document.head.appendChild(css);
+
+  /* ---- the way home ----------------------------------------------------
+     Every page gets it, including the front page's own children. The front
+     page itself is skipped at injection time, because a link home from home
+     is furniture with nothing behind it. */
+
+  /* The front page is injected with an empty path, because a link home from
+     home is furniture with nothing behind it. */
+  var where = '../index.html';
+  /* The front page, as an address: the injected path from here, or, on the
+     front page itself, this page. Worked out once, at load, so that a page
+     swapped in later under fullscreen can be told whether it is home. */
+  var FRONT = new URL(where || 'index.html', location.href);
+  function isFront(url) {
+    return url.pathname === FRONT.pathname ||
+           url.pathname === FRONT.pathname.replace(/index\.html$/, '');
+  }
+  /* The pill is always made, and only shown away from home. It used to be
+     made only on pages that had a path home, so fullscreen entered on the
+     front page carried no pill into any project. */
+  var home = document.createElement('a');
+  home.className = 'sp-home';
+  home.href = FRONT.href;
+  home.innerHTML =
+    '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+    '<path d="M3 10.6 12 3.4l9 7.2"/><path d="M5.6 9.6V20h12.8V9.6"/>' +
+    '<path d="M10 20v-5h4v5"/></svg><span>Saanvi</span>';
+  home.setAttribute('aria-label', "All of Saanvi's projects");
+  home.title = "All of Saanvi's projects";
+  if (!isFront(new URL(location.href))) document.body.appendChild(home);
+
+  /* ---- fullscreen ------------------------------------------------------
+     One button for the whole site. Seven of these projects shipped their own
+     and two shipped none, so this takes any it finds away and puts one back.
+     Theirs are built by their own scripts, which may run after this, so the
+     sweep repeats a moment later rather than only once. */
+
+  /* Seven of these projects shipped a fullscreen button of their own and one
+     shipped two names for it. Every spelling found so far is listed; a
+     button of ours is never matched, because all of ours are .sp-fs. */
+  var THEIRS = '.fs, .fs-label, #fs-label, .fullscreen-btn, #fullscreen-btn,'
+             + ' [aria-label*="fullscreen" i]:not(.sp-fs),'
+             + ' [title*="full screen" i]:not(.sp-fs)';
+
+  function sweep() {
+    var theirs = document.querySelectorAll(THEIRS);
+    for (var i = 0; i < theirs.length; i++) {
+      if (theirs[i].className !== 'sp-fs') theirs[i].remove();
+    }
+  }
+  sweep();
+  setTimeout(sweep, 400);
+  addEventListener('load', sweep);
+
+  var root = document.documentElement;
+  if (!(root.requestFullscreen || root.webkitRequestFullscreen)) return;
+  /* A phone has no fullscreen for a page, and on a tablet the button sits
+     under a thumb. */
+  if ('ontouchstart' in window) return;
+
+  var EXPAND = '<path d="M3 8V3h5M17 3h5v5M22 17v5h-5M8 22H3v-5"/>';
+  var SHRINK = '<path d="M8 3v5H3M22 8h-5V3M17 22v-5h5M3 17h5v5"/>';
+
+  var btn = document.createElement('button');
+  btn.className = 'sp-fs';
+  btn.type = 'button';
+  document.body.appendChild(btn);
+
+  function on() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function paint() {
+    var label = on() ? 'Leave fullscreen' : 'View fullscreen';
+    btn.setAttribute('aria-label', label);
+    btn.title = label + '  (F)';
+    btn.innerHTML = '<svg viewBox="0 0 25 25" aria-hidden="true">' +
+                    (on() ? SHRINK : EXPAND) + '</svg>';
+  }
+  function toggle() {
+    if (on()) {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+    }
+  }
+
+  btn.addEventListener('click', toggle);
+  document.addEventListener('fullscreenchange', paint);
+  document.addEventListener('webkitfullscreenchange', paint);
+
+  /* The shortcut a video player uses, but never while something is being
+     typed into, and never on top of a browser shortcut. */
+  /* In the capture phase, and stopped dead once handled. Several of these
+     projects bind F to their own fullscreen, and two handlers toggling the
+     same thing cancel each other out: the key would do nothing at all. */
+  addEventListener('keydown', function (e) {
+    if (e.key !== 'f' && e.key !== 'F') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.isContentEditable ||
+              /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    toggle();
+  }, true);
+
+  paint();
+
+  /* ---- staying in fullscreen across a link -----------------------------
+     Fullscreen belongs to a document. Follow an ordinary link and it ends,
+     and the new page cannot ask to go back in: a browser only grants
+     fullscreen off a click, and a fresh document has no click behind it. So
+     SPARK's menu dropped you out of fullscreen on every page.
+
+     While fullscreen is on, and only then, a click on a link to another page
+     of this site fetches it and swaps it in rather than navigating. The
+     document never changes, so fullscreen never ends. Outside fullscreen
+     none of this runs and every link is an ordinary link, which is what
+     keeps these plain static pages for anyone reading them normally, and
+     what makes a failure here harmless. */
+
+  /* The scripts already on this document, by address. A swapped-in page
+     that asks for one of them again is not made to download it twice: the
+     gene finder's model is half a megabyte. */
+  var fetched = {};
+  for (var f = 0; f < document.scripts.length; f++) {
+    if (document.scripts[f].src) fetched[document.scripts[f].src] = true;
+  }
+
+  function runScripts(where) {
+    /* A script inserted as parsed markup does not execute. Re-creating each
+       one does, which is what keeps a project's own behaviour alive after a
+       swap: SPARK's play buttons, NitRobe's gene finder.
+
+       In order, and one at a time. A script made here is async by default,
+       so three external files would race each other and the inline script
+       after them would run first, against a model that had not arrived yet:
+       that is how the finder came to say its files did not load. An inline
+       script is wrapped in a function, so walking back onto a page does not
+       redeclare its variables; what a page means to share between its
+       scripts it hangs on window, which still works. */
+    var olds = where.querySelectorAll('script'), list = [];
+    for (var i = 0; i < olds.length; i++) {
+      var o = olds[i];
+      list.push([o.src, o.text]);
+      o.remove();
+    }
+    return list.reduce(function (chain, item) {
+      return chain.then(function () {
+        return new Promise(function (done) {
+          var src = item[0], s = document.createElement('script');
+          if (src) {
+            if (fetched[src]) return done();
+            fetched[src] = true;
+            s.src = src;
+            s.async = false;
+            s.onload = s.onerror = function () { done(); };
+          } else {
+            s.text = '(function(){' + item[1] + '\n})();';
+          }
+          where.appendChild(s);
+          if (!src) done();
+        });
+      });
+    }, Promise.resolve());
+  }
+
+  function swap(url, push) {
+    fetch(url.href).then(function (r) {
+      if (!r.ok) throw 0;
+      return r.text();
+    }).then(function (text) {
+      var doc = new DOMParser().parseFromString(text, 'text/html');
+      if (!doc.body) throw 0;
+      /* The address changes first: every relative href and src in the
+         incoming markup resolves against it, and these pages sit at
+         different depths. */
+      if (push) history.pushState({}, '', url.href);
+
+      /* The incoming page's stylesheets. Within one project these are the
+         same files and nothing happens; crossing from one project to another
+         they are different, and the old ones have to go or two designs fight
+         over the same page. */
+      var head = document.head;
+      var mine = head.querySelectorAll(
+        'link[rel="stylesheet"]:not([data-sp]), style:not([data-sp])');
+      for (var i = 0; i < mine.length; i++) mine[i].remove();
+      var theirs = doc.head.querySelectorAll('link[rel="stylesheet"], style');
+      for (var k = 0; k < theirs.length; k++) head.appendChild(theirs[k]);
+
+      document.title = doc.title;
+
+      /* The incoming page carries its own copy of this block. Out it comes,
+         and the live pill and button are put back afterwards, so there is
+         one of each however far you wander. */
+      var copies = doc.body.querySelectorAll('[data-sp], .sp-home, .sp-fs');
+      for (var c = 0; c < copies.length; c++) copies[c].remove();
+
+      document.body.replaceWith(document.adoptNode(doc.body));
+      if (!isFront(url)) document.body.appendChild(home);
+      if (btn) document.body.appendChild(btn);
+      return runScripts(document.body).then(function () {
+        var el = url.hash && document.getElementById(
+          decodeURIComponent(url.hash.slice(1)));
+        if (el) el.scrollIntoView(true); else scrollTo(0, 0);
+      });
+    }).catch(function () {
+      location.href = url.href;            // give up quietly, navigate
+    });
+  }
+
+  /* In the capture phase, so this runs before any router the page brought
+     with it. MarsWorm and NitRobe ship their own, written for their own
+     pages: fine inside those sites, and fatal leaving them, because their
+     fallback on a page they do not understand is to navigate, which ends
+     fullscreen. When this handles a click it stops the event dead so theirs
+     never sees it. Which means this one does all the work on the live site,
+     and a page swapped in here has to work as well as it does under its own
+     router: the finder's model has to load, in order, before the finder. */
+  addEventListener('click', function (e) {
+    if (!on() || e.defaultPrevented) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
+    var a = e.target.closest && e.target.closest('a');
+    if (!a || a.target || a.hasAttribute('download')) return;
+    var url = new URL(a.href, location.href);
+    if (url.origin !== location.origin) return;
+    /* Only pages. A PDF or a film is a download or a viewer, and neither is
+       something to paste into this one. */
+    if (!/\.html$/.test(url.pathname)) return;
+    if (url.pathname === location.pathname) {
+      /* The page you are already on. With a #section it is an anchor, and
+         the browser just scrolls, which keeps fullscreen. Without one it is
+         a reload, and a reload ends fullscreen: clicking Contact Me twice
+         dropped you out. There is nothing to load, so nothing happens. */
+      if (!url.hash) {
+        e.preventDefault(); e.stopImmediatePropagation(); scrollTo(0, 0);
+      }
+      return;
+    }
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    swap(url, true);
+  }, true);
+
+  addEventListener('popstate', function () {
+    if (on()) swap(new URL(location.href), false);
+  });
+})();
+</script>
+
+<!-- /saanvi-showcase -->
+</body>
+</html>

@@ -1,0 +1,15 @@
+# MarsWorm | V3 Earth microbes, no plumbing | Exp 3 | Does Xanthobacter grow in Martian dirt?
+# Sheet: jars.csv | invented numbers, a dry run and not a result | scenario: grows-in-regolith | every column is defined in the codebook for this experiment
+jar_id,level,medium,fertiliser,microbe,bench_position,simulant_g,liquid_ml,date_started
+X01,A,simulant,no,yes,11,50,40,2027-04-01
+X02,A,simulant,no,yes,3,50,40,2027-04-01
+X03,A,simulant,no,yes,12,50,40,2027-04-01
+X04,B,medium,no,yes,8,0,40,2027-04-01
+X05,B,medium,no,yes,2,0,40,2027-04-01
+X06,B,medium,no,yes,4,0,40,2027-04-01
+X07,C,simulant,yes,yes,7,50,40,2027-04-01
+X08,C,simulant,yes,yes,1,50,40,2027-04-01
+X09,C,simulant,yes,yes,9,50,40,2027-04-01
+X10,D,simulant,no,no,6,50,40,2027-04-01
+X11,D,simulant,no,no,5,50,40,2027-04-01
+X12,D,simulant,no,no,10,50,40,2027-04-01

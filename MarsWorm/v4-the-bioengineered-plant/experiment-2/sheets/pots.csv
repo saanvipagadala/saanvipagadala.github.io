@@ -1,0 +1,19 @@
+# MarsWorm | V4 The bioengineered plant | Exp 2 | Does cleaning the pot rescue the plant?
+# Sheet: pots.csv | blank, to be filled in by hand at the bench | every column is defined in the codebook for this experiment
+pot_id,level,chlorate,microbe,bench_position,simulant_g,water_ml,chlorate_mg,seeds_sown,date_sown
+Q01,A,yes,yes,12,,,,,
+Q02,A,yes,yes,6,,,,,
+Q03,A,yes,yes,4,,,,,
+Q04,A,yes,yes,8,,,,,
+Q05,B,yes,no,13,,,,,
+Q06,B,yes,no,3,,,,,
+Q07,B,yes,no,11,,,,,
+Q08,B,yes,no,9,,,,,
+Q09,C,no,yes,7,,,,,
+Q10,C,no,yes,5,,,,,
+Q11,C,no,yes,16,,,,,
+Q12,C,no,yes,1,,,,,
+Q13,D,no,no,2,,,,,
+Q14,D,no,no,14,,,,,
+Q15,D,no,no,15,,,,,
+Q16,D,no,no,10,,,,,

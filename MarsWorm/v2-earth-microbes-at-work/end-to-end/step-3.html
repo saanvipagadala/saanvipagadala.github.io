@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover" />
+  <title>MarsWorm · V2. Earth microbes at work</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../site.css?v=fb9d21a217" />
+  <meta name="color-scheme" content="light">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script>
+  /* Before anything else on the page: a reopened tab is otherwise restored to
+     wherever it was left, which opens the page below its own nav bar with the
+     heading cut in half. Set from the head, because by the end of the body the
+     browser has already done it. */
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+  </script>
+  <meta name="description" content="A purple bacterium grows on Mars air, hydrogen and light. The food it makes feeds the bacterium that destroys the perchlorate, and the soil bed.">
+  <link rel="canonical" href="https://saanvipagadala.github.io/MarsWorm/v2-earth-microbes-at-work/end-to-end/step-3.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MarsWorm">
+  <meta property="og:title" content="Step 3: turn Mars air into microbe and plant food">
+  <meta property="og:description" content="A purple bacterium grows on Mars air, hydrogen and light. The food it makes feeds the bacterium that destroys the perchlorate, and the soil bed.">
+  <meta property="og:url" content="https://saanvipagadala.github.io/MarsWorm/v2-earth-microbes-at-work/end-to-end/step-3.html">
+  <meta property="og:image" content="https://saanvipagadala.github.io/MarsWorm/v2-earth-microbes-at-work/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="MarsWorm · designing an organism to make soil from Martian dirt">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Step 3: turn Mars air into microbe and plant food">
+  <meta name="twitter:description" content="A purple bacterium grows on Mars air, hydrogen and light. The food it makes feeds the bacterium that destroys the perchlorate, and the soil bed.">
+  <meta name="twitter:image" content="https://saanvipagadala.github.io/MarsWorm/v2-earth-microbes-at-work/og-image.png">
+  <meta name="theme-color" content="#b3401f">
+  <link rel="icon" type="image/svg+xml" href="../marsworm.svg">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<!-- Google Analytics 4, on every page of the site.
+
+     Injected into the <head> of every built page by add_analytics() in
+     build_site.py, rather than pasted into the three hand-written pages and
+     the pandoc header. The version folders are finished HTML that is copied
+     across untouched, so a component the page has to include would miss
+     them; a pass over the finished site/ is the only place that reaches all
+     of them. The measurement ID is filled in from GA_ID.
+
+     What GA4 counts by itself, once Enhanced measurement is on in the
+     property: page views, outbound clicks, file downloads, site search and
+     one scroll event at ninety per cent. None of that is repeated here. Its
+     video tracking only understands embedded YouTube, and the films on this
+     site are plain <video> elements served from the site itself, so the
+     watching is counted below. -->
+<script>
+(function () {
+  if (typeof gtag !== 'function') return;
+
+  function send(name, params) {
+    params = params || {};
+    params.page_path = location.pathname;
+    gtag('event', name, params);
+  }
+
+  /* This tag sits in the head, so when it runs the page below it does not
+     exist yet. Anything that has to find an element waits for the page; the
+     listeners on the document itself do not. */
+  function whenReady(fn) {
+    if (document.readyState === 'loading')
+      document.addEventListener('DOMContentLoaded', fn);
+    else fn();
+  }
+
+  /* What a report needs to name the thing that was watched or read. The
+     file name rather than the path, because the same film is reachable at
+     more than one URL and a report that splits it across them is no use. */
+  function assetName(el) {
+    var src = el.currentSrc || el.src || '';
+    if (!src) {
+      var s = el.querySelector && el.querySelector('source');
+      src = s ? s.getAttribute('src') : '';
+    }
+    return (src.split('/').pop() || 'unknown').replace(/\?.*$/, '');
+  }
+
+  /* The films and the audio. A play is easy to get and says little on its
+     own, since somebody who starts a film and leaves counts the same as
+     somebody who watches it through. So each player also reports the
+     quarters it passes, once each, and reaching the end. */
+  var MARKS = [25, 50, 75];
+  whenReady(function () {
+    document.querySelectorAll('video, audio').forEach(function (m) {
+      var kind = m.tagName.toLowerCase();
+      var seen = {};
+
+      m.addEventListener('play', function () {
+        send('media_play', {asset: assetName(m), media_type: kind});
+      });
+
+      m.addEventListener('timeupdate', function () {
+        if (!m.duration || !isFinite(m.duration)) return;
+        var pct = (m.currentTime / m.duration) * 100;
+        MARKS.forEach(function (mark) {
+          if (pct >= mark && !seen[mark]) {
+            seen[mark] = true;
+            send('media_progress', {
+              asset: assetName(m), media_type: kind, percent: mark});
+          }
+        });
+      });
+
+      m.addEventListener('ended', function () {
+        send('media_complete', {asset: assetName(m), media_type: kind});
+      });
+    });
+  });
+
+  /* How far down a page anybody got. GA4's own scroll event fires once, at
+     ninety per cent, which cannot tell a page nobody finished from one
+     nobody started. Reported under its own name so the two do not mix. */
+  var depths = [25, 50, 75, 100], reached = {};
+  function scrolled() {
+    var doc = document.documentElement;
+    var height = doc.scrollHeight - window.innerHeight;
+    if (height <= 0) return;
+    var pct = ((window.scrollY || doc.scrollTop) / height) * 100;
+    depths.forEach(function (d) {
+      if (pct >= d && !reached[d]) {
+        reached[d] = true;
+        send('scroll_depth', {percent: d});
+      }
+    });
+  }
+  window.addEventListener('scroll', scrolled, {passive: true});
+  whenReady(scrolled);
+
+  /* The controls the site draws itself: the full-screen button on every
+     page, and the speed and caption buttons under each film. Nothing
+     outside the site knows these were pressed. */
+  document.addEventListener('fullscreenchange', function () {
+    send(document.fullscreenElement ? 'fullscreen_enter' : 'fullscreen_exit');
+  });
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.speed button');
+    if (!b) return;
+    if (b.classList.contains('cc')) send('captions_toggle');
+    else send('playback_speed', {speed: (b.textContent || '').trim()});
+  });
+
+})();
+</script>
+</head>
+<body>
+<nav class="nav"><div class="inner"><a class="brand" href="../../index.html"><img src="../marsworm.svg" alt=""><span class="wordmark"><b>MarsWorm</b><span class="vpill"><b>V2</b> Earth microbes at work</span></span></a><button class="menu" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span><span></span><span></span></button><div class="links" id="nav-links"><a href="../index.html">Overview</a><a href="../review.html">Design review</a><a href="../organisms.html">The organisms</a><a href="../lab.html">Lab request</a><a href="../end-to-end.html">End to end</a></div></div></nav><main class="page">
+<span id="step-3-turn-mars-air-into-microbe-and-plant-food" class="alias"></span><h1 id="step-3.-turn-mars-air-into-microbe-and-plant-food">Step 3. Turn
+Mars air into microbe and plant food</h1>
+<p><em>A purple bacterium grows on Mars air, hydrogen and light. The
+food it makes feeds the bacterium that destroys the perchlorate in <a
+href="../end-to-end/step-4.html">step 4</a>, and the soil bed in <a
+href="../end-to-end/step-5.html">step 5</a>.</em></p>
+<p><small><a href="../end-to-end.html">End to end</a> · ← <a
+href="../end-to-end/step-2.html">Step 2</a> · <a
+href="../end-to-end/step-4.html">Step 4</a> →</small></p>
+<hr />
+<h2 id="at-a-glance">At a glance</h2>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 78%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Part of the stage</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>In</strong></td>
+<td>Lamps. Hydrogen. Mars air, which is mostly carbon dioxide with some
+nitrogen. Clean water from <a href="../end-to-end/step-4.html">step
+4</a>, carrying the minerals that washed out of the regolith</td>
+</tr>
+<tr>
+<td><strong>Who does the work</strong></td>
+<td><strong><em>Rhodobacter</em></strong>, a purple bacterium. Nothing
+is fed to it. Like a plant, it grows on light and air, except that it
+uses hydrogen where a plant uses water</td>
+</tr>
+<tr>
+<td><strong>What happens</strong></td>
+<td>Rhodobacter takes carbon and nitrogen out of the Mars air and grows.
+As it grows it makes two things that are useful to us</td>
+</tr>
+<tr>
+<td><strong>Food 1: sour acids</strong></td>
+<td>Rhodobacter turns more carbon into sugars and acids than it can use.
+The extra leaks out of the cells into the water as <strong>sour
+acids</strong>, small carbon molecules a bit like the sharpness in lemon
+juice. Those acids are the food that <em>Azospira</em>, the bacterium
+that destroys the perchlorate in <a
+href="../end-to-end/step-4.html">step 4</a>, lives on</td>
+</tr>
+<tr>
+<td><strong>Food 2: the cells themselves</strong></td>
+<td>The nitrogen Rhodobacter took from the air is now protein inside its
+cells. There are more cells than went in. Those cells become the organic
+matter and, once they die, the plant food in the growing bed</td>
+</tr>
+<tr>
+<td><strong>Out</strong></td>
+<td>The water with the sour acids in it, piped to the dark tank in <a
+href="../end-to-end/step-4.html">step 4</a> as food for
+<em>Azospira</em></td>
+</tr>
+<tr>
+<td></td>
+<td>The Rhodobacter cells, to the growing bed in <a
+href="../end-to-end/step-5.html">step 5</a></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="why-hydrogen">Why hydrogen</h2>
+<ul>
+<li><strong>Mars air is carbon dioxide, and carbon dioxide is carbon
+that has already been burnt.</strong> You cannot build anything living
+out of ash. To turn it back into food you have to un-burn it, and
+un-burning means putting hydrogen back on. The hydrogen is not fuel
+here. It is the raw material.</li>
+<li><strong>Light does the other half.</strong> It gives
+<em>Rhodobacter</em> the energy to do that un-burning. Light supplies
+energy only, and no hydrogen of its own.</li>
+<li><strong>Plants get their hydrogen by splitting water, and breathe
+out the oxygen.</strong> This bacterium cannot split water, so we hand
+it the hydrogen instead.</li>
+</ul>
+<h2 id="where-the-hydrogen-comes-from">Where the hydrogen comes
+from</h2>
+<ul>
+<li><strong>From splitting water with electricity</strong>, and Mars has
+a great deal of water as buried ice.</li>
+<li><strong>Every serious Mars plan already does this</strong>, for
+rocket fuel and for breathing air. The machine is already there. We ask
+it for a slice.</li>
+<li><strong>A small slice.</strong> Cleaning a tonne of regolith needs
+about a kilogram of hydrogen, which a propellant plant makes in minutes.
+Splitting that water also releases oxygen the crew breathes, and the
+hydrogen turns back into water in the dark tank. What is really spent is
+a little electricity.</li>
+</ul>
+<h2 id="why-this-tank-must-have-no-oxygen-in-it">Why this tank must have
+no oxygen in it</h2>
+<ul>
+<li><strong>Rhodobacter pulls nitrogen out of the air with an enzyme
+called nitrogenase, and oxygen destroys that enzyme.</strong> Any
+microbe that makes oxygen and fixes nitrogen at the same time is
+fighting itself.</li>
+<li><strong>Rhodobacter makes no oxygen.</strong> A plant makes oxygen
+because it splits water. Rhodobacter cannot split water, so it never
+makes any. That is why its nitrogenase keeps working, and it is the main
+reason we chose it.</li>
+<li><strong>Rhodobacter also shuts down if oxygen appears.</strong> It
+senses oxygen and stops using the light. On Earth that protects it. In
+our tank it would stop the food supply.</li>
+<li><strong>Destroying perchlorate gives off oxygen.</strong> So the
+perchlorate cannot be dealt with in this tank. That job goes to a second
+tank in <a href="../end-to-end/step-4.html">step 4</a>, kept dark and
+kept separate, with a different bacterium in it.</li>
+</ul>
+<h2 id="how-the-acids-and-the-bacteria-are-separated">How the acids and
+the bacteria are separated</h2>
+<p>The lit tank ends up holding one murky liquid with both products in
+it: the sour acids dissolved in the water, and the Rhodobacter cells
+floating in it. They are wanted in two different places, so they have to
+be parted.</p>
+<ul>
+<li><strong>The lit tank itself is stirred all the time.</strong> Any
+Rhodobacter that sinks to the bottom is sitting in the dark. In the dark
+it stops making acids and starts eating the acids around it. So the
+working tank never stands still.</li>
+<li><strong>A second, smaller vessel with no lamp stands beside the lit
+tank.</strong> A slow trickle of the murky liquid is drawn from the lit
+tank into this one, and this one is left still.</li>
+<li><strong>In the still vessel the bacteria sink,</strong> the way mud
+settles in a jar of pond water. The clear liquid on top is the water
+with the acids in it. The sludge on the bottom is the bacteria.</li>
+<li><strong>Draw off the top and pipe it to the dark tank in <a
+href="../end-to-end/step-4.html">step 4</a>.</strong> Scrape off the
+bottom and take it to the growing bed in <a
+href="../end-to-end/step-5.html">step 5</a>. No power, no moving
+parts.</li>
+</ul>
+<h2 id="why-it-matters">Why it matters</h2>
+<ul>
+<li><strong>This is the only step that puts something new into the
+regolith.</strong> <a href="../end-to-end/step-1.html">Step 1</a> and <a
+href="../end-to-end/step-4.html">step 4</a> take the perchlorate away.
+<a href="../end-to-end/step-2.html">Step 2</a> unlocks phosphorus and
+iron that were already in the rock. Step 3 is the one that adds what
+Mars does not have: nitrogen, which becomes plant food, and living
+cells, which become the organic matter.</li>
+<li><strong>The nitrogen does not come out as a fertiliser you could
+pour on.</strong> It is locked inside the Rhodobacter cells as protein.
+It stays there until the cells are mixed into the bed and die, and only
+then can a plant root take it up. That is what the earthworms in <a
+href="../end-to-end/step-5.html">step 5</a> are for.</li>
+<li><strong>Why not skip the tank and mix Rhodobacter straight into the
+regolith?</strong> Because regolith is dark, and in the dark Rhodobacter
+cannot use light to make food. In the tank it is a factory. In the
+regolith it would be one more mouth eating what the factory made.</li>
+</ul>
+<hr />
+<p><small><a href="../end-to-end.html">End to end</a> · ← <a
+href="../end-to-end/step-2.html">Step 2</a> · <a
+href="../end-to-end/step-4.html">Step 4</a> →</small></p>
+</main>
+
+<!-- Printed at the foot of every page of the site. Mirrors the footer line
+     stamped on the PDFs, and carries the byline that the PDFs put inline. -->
+<footer class="foot">
+  <p class="line">MarsWorm &nbsp;·&nbsp; Making Arid Regolith into Soil, With
+    Organisms Redesigned for Mars &nbsp;·&nbsp; v2</p>
+  <p class="who"><b>Saanvi Pagadala</b> · Granite Bay, CA</p>
+</footer>
+
+<!-- The sticky nav covers whatever a #section link scrolls to, so every
+     heading carries a scroll margin the height of that bar. The bar is not
+     one height: it wraps as the window narrows, and no CSS breakpoint
+     predicts that reliably, so the page measures it and writes the real
+     number into --nav-h. -->
+<script>
+(function () {
+  var nav = document.querySelector('.nav');
+  if (!nav) return;
+  function measure() {
+    document.documentElement.style.setProperty(
+      '--nav-h', nav.getBoundingClientRect().height + 'px');
+  }
+  measure();
+  addEventListener('load', measure);
+  addEventListener('resize', measure);
+
+  // Reopening a tab, iOS lays the page out at the full height of the screen
+  // and draws its own address bar and toolbar on top of it, so the first
+  // hundred points or so of the page sit behind the browser's furniture. The
+  // page is not scrolled: scrollY, scrollingElement.scrollTop and the sticky
+  // bar's own position all read 0. Nothing in script can give those points
+  // back -- a one-pixel scroll to make Safari settle its bars leaves the
+  // viewport at 932 of 932 -- so the page steps its content down instead.
+  //
+  // The tell is the viewport height. Opened normally it is well short of the
+  // screen, because the bars take their share; behind the bars it is the
+  // whole screen exactly.
+  var touch = 'ontouchstart' in window;
+  function bars() {
+    var hidden = touch && window.innerHeight >= screen.height - 1;
+    document.documentElement.classList.toggle('bars-over', hidden);
+  }
+  bars();
+  addEventListener('resize', bars);
+  addEventListener('orientationchange', bars);
+  addEventListener('pageshow', bars);
+})();
+</script>
+
+
+<!-- The organism thumbnails in the gene tables. Hovering one shows the
+     picture at a size worth looking at. The preview is attached to the page
+     rather than to the cell, because a table scrolls inside its own box and
+     that box clips anything that grows out of it. Delegated, so it survives
+     the page changing underneath it. -->
+<script>
+(function () {
+  var box, img, cap;
+
+  function build() {
+    box = document.createElement('div');
+    box.id = 'orgpreview';
+    box.hidden = true;
+    img = document.createElement('img');
+    cap = document.createElement('b');
+    box.appendChild(img);
+    box.appendChild(cap);
+    document.body.appendChild(box);
+  }
+
+  function show(thumb) {
+    if (!box) build();
+    img.src = thumb.src;
+    cap.textContent = thumb.title || '';
+    box.hidden = false;
+    // Above the thumbnail by preference, below it when there is no room, and
+    // never off the right edge.
+    var r = thumb.getBoundingClientRect(), w = box.offsetWidth, h = box.offsetHeight;
+    var left = Math.min(Math.max(8, r.left - 8), innerWidth - w - 8);
+    var top = r.top - h - 8;
+    if (top < 8) top = Math.min(r.bottom + 8, innerHeight - h - 8);
+    box.style.left = left + 'px';
+    box.style.top = top + 'px';
+  }
+
+  function hide() { if (box) box.hidden = true; }
+
+  document.addEventListener('mouseover', function (e) {
+    var t = e.target;
+    if (t && t.classList && t.classList.contains('orgpic')) show(t);
+    else if (box && !box.hidden) hide();
+  });
+  addEventListener('scroll', hide, true);
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
+})();
+</script>
+<!-- The tab menu button, on small screens. A component of its own: the build
+     appends it to every page it makes, and the two hand-written pages at the
+     root include it too, so the nav behaves the same everywhere. Do not paste
+     this into a page by hand; include it. -->
+<!-- The menu button, on small screens. Every listener is on the document
+     rather than on the button, because the markup around it can be replaced
+     the whole nav when it swaps a page in, and a listener bound to the old
+     button would go with it. -->
+<script>
+(function () {
+  function nav() { return document.querySelector('.nav'); }
+
+  function set(open) {
+    var n = nav();
+    if (!n) return;
+    n.classList.toggle('open', open);
+    var b = n.querySelector('.menu');
+    if (b) b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  // Capture, not bubble. A bubbling listener on the document never hears
+  // some taps on iOS; the capture phase runs from the window down to the
+  // target and always does.
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (!t || !t.closest) return;
+    if (t.closest('.menu')) { set(!nav().classList.contains('open')); return; }
+    // A tab was chosen, or the reader tapped the page behind the panel.
+    // Either way the menu has done its job.
+    set(false);
+  }, true);
+
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  // Turning the phone sideways can put the tabs back in the bar, and an open
+  // panel would then be a second copy of them.
+  addEventListener('resize', function () { set(false); });
+})();
+</script>
+<!-- The fullscreen button and the router that keeps fullscreen across links.
+     A component of its own: the build appends it to every page it makes, and
+     the landing page includes it too, so every page on the site offers the
+     same button. Do not paste this into a page by hand; include it. -->
+
+<!-- Fullscreen, the way a video player offers it: a quiet corner button that
+     gets the browser's own furniture out of the way for reading. Written by
+     script rather than sitting in the markup, because a browser that cannot
+     do it should not be offered it. Desktop only: an iPhone has no fullscreen
+     for a page, and on a tablet the button would sit under a thumb. -->
+<script>
+(function () {
+  var root = document.documentElement;
+  if (!(root.requestFullscreen || root.webkitRequestFullscreen)) return;
+  if ('ontouchstart' in window) return;
+
+  var EXPAND = '<path d="M3 8V3h5M17 3h5v5M22 17v5h-5M8 22H3v-5"/>';
+  var SHRINK = '<path d="M8 3v5H3M22 8h-5V3M17 22v-5h5M3 17h5v5"/>';
+
+  var btn = document.createElement('button');
+  btn.className = 'fs';
+  btn.type = 'button';
+  document.body.appendChild(btn);
+
+  function on() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function paint() {
+    var label = on() ? 'Leave fullscreen' : 'Read fullscreen';
+    btn.setAttribute('aria-label', label);
+    btn.title = label + '  (F)';
+    btn.innerHTML = '<svg viewBox="0 0 25 25" aria-hidden="true">' +
+                    (on() ? SHRINK : EXPAND) + '</svg>';
+  }
+  function toggle() {
+    if (on()) {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+    }
+  }
+
+  btn.addEventListener('click', toggle);
+  document.addEventListener('fullscreenchange', paint);
+  document.addEventListener('webkitfullscreenchange', paint);
+  // The same shortcut a video player uses, but never while something is being
+  // typed into, and never on top of a browser shortcut.
+  addEventListener('keydown', function (e) {
+    if (e.key !== 'f' && e.key !== 'F') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.isContentEditable ||
+              /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    e.preventDefault();
+    toggle();
+  });
+  paint();
+})();
+</script>
+
+<!-- Fullscreen belongs to a document, so following an ordinary link drops out
+     of it, and the new page cannot ask to go back in: a browser only grants
+     fullscreen on a click, and a fresh document has no click behind it.
+
+     So while fullscreen is on, and only then, a click on a link to another
+     page of this site fetches that page and swaps it in rather than
+     navigating. The document never changes, so fullscreen never ends. Outside
+     fullscreen nothing here runs at all and every link is an ordinary link,
+     which is what keeps this plain static HTML for anyone reading it normally,
+     and what makes the failure of any of it harmless. -->
+<script>
+(function () {
+  var PARTS = ['.nav', '.page', '.foot'];
+
+  function full() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+
+  function settle(hash) {
+    // The nav's height and the landing on a #section are both worked out on
+    // load; a swapped-in page has to have them worked out again.
+    var nav = document.querySelector('.nav');
+    if (nav) {
+      document.documentElement.style.setProperty(
+        '--nav-h', nav.getBoundingClientRect().height + 'px');
+    }
+    var el = hash && document.getElementById(decodeURIComponent(hash.slice(1)));
+    // Nothing animates: the stylesheet asks for no smooth scrolling, so these
+    // arrive at once rather than gliding and being interrupted.
+    if (el) el.scrollIntoView(true);
+    else scrollTo(0, 0);
+  }
+
+  function swap(url, push) {
+    fetch(url.href).then(function (r) {
+      if (!r.ok) throw 0;
+      return r.text();
+    }).then(function (text) {
+      var doc = new DOMParser().parseFromString(text, 'text/html');
+      var next = PARTS.map(function (sel) { return doc.querySelector(sel); });
+      if (next.some(function (n) { return !n; })) throw 0;
+      // The URL is changed first: every relative href and src in the incoming
+      // markup is resolved against it, and the pages sit at different depths.
+      if (push) history.pushState({}, '', url.href);
+      PARTS.forEach(function (sel, i) {
+        document.querySelector(sel).replaceWith(next[i]);
+      });
+      document.title = doc.title;
+      if (window.wireFolds) wireFolds();
+      settle(url.hash);
+    }).catch(function () {
+      location.href = url.href;              // give up quietly, navigate
+    });
+  }
+
+  addEventListener('click', function (e) {
+    if (!full() || e.defaultPrevented) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
+    var a = e.target.closest && e.target.closest('a');
+    if (!a || a.target || a.hasAttribute('download')) return;
+    var url = new URL(a.href, location.href);
+    if (url.origin !== location.origin) return;
+    // Only pages. A .csv or an image is a download or a viewer, and neither
+    // is something to paste into this one.
+    if (!/\.html$/.test(url.pathname)) return;
+    if (url.pathname === location.pathname) return;   // an anchor on this page
+    e.preventDefault();
+    swap(url, true);
+  });
+
+  addEventListener('popstate', function () {
+    if (full()) swap(new URL(location.href), false);
+  });
+})();
+</script>
+
+<script>
+// Foldable groups inside a long table. The heading rows are made by
+// span_category_rows() in the build; everything between one of them and the
+// next (or the totals row) belongs to that group.
+(function () {
+  function body(row) {
+    var out = [], r = row.nextElementSibling;
+    while (r && !r.querySelector('td.catrow') && !r.querySelector('.tot')) {
+      out.push(r); r = r.nextElementSibling;
+    }
+    return out;
+  }
+  window.wireFolds = function () {
+  document.querySelectorAll('td.catrow').forEach(function (cell) {
+    if (cell.dataset.folds) return;            // already wired
+    cell.dataset.folds = '1';
+    var row = cell.parentNode, open = true;
+    cell.setAttribute('role', 'button');
+    cell.setAttribute('tabindex', '0');
+    function toggle() {
+      open = !open;
+      row.classList.toggle('closed', !open);
+      body(row).forEach(function (r) { r.hidden = !open; });
+    }
+    toggle();                                  // start folded
+    cell.addEventListener('click', toggle);
+    cell.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  });
+  };
+  wireFolds();
+})();
+</script>
+<!-- saanvi-showcase: shared block, injected by apply_global.py -->
+<!-- The block every page on the site carries, injected by apply_global.py.
+     Edit it here, run the build, and all 800-odd pages change together.
+
+     Three jobs: count the visit, offer fullscreen, and offer the way home.
+     Each project was built separately over four years and none of them knows
+     about the others, so none of this can rely on their markup. It adds its
+     own elements, and takes over from theirs where they had their own.
+
+     ../../../index.html is replaced per page with the relative path back to the front
+     page, because these pages sit at every depth from /index.html to
+     /MarsWorm/v1-bioengineered-organism/experiments/index.html. A relative
+     path works on the live site and equally on a page opened off the disk; a
+     link to "/" would mean the root of the hard drive. -->
+
+<style data-sp>
+/* Named with a prefix nothing else here uses, so no project's stylesheet can
+   reach these by accident and nothing here can reach a project's. */
+.sp-home {
+  /* The top left corner. Every one of these sites centres whatever it keeps
+     up there, so the corner is empty on all of them. */
+  position: fixed; top: 14px; left: 14px; z-index: 2147483000;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 16px 9px 13px;
+  border-radius: 999px;
+  background: rgba(253, 252, 251, 0.92);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid #e2ddd9;
+  box-shadow: 0 2px 10px rgba(80, 50, 35, 0.10);
+  /* Her own hand, the one she signs the portrait with on the front page and
+     on every MarsWorm page. A grey sans chip in the corner looked like
+     something the browser had added; this looks like it belongs to her. */
+  font: 700 16px/1 "Bradley Hand", "Noteworthy", "Segoe Script", cursive;
+  color: #8a3317; text-decoration: none;
+  transition: box-shadow .15s, border-color .15s, transform .15s;
+}
+.sp-home:hover {
+  border-color: #b3401f; transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(80, 50, 35, 0.16);
+}
+.sp-home svg {
+  width: 14px; height: 14px; flex: none; margin-top: -1px;
+  fill: none; stroke: currentColor; stroke-width: 2.2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* Tighter on a phone, where 14px of margin is a lot of the screen. */
+/* On a phone these bars stop centring and put their own logo hard left,
+   which is where this was sitting: it covered MarsWorm's wordmark and
+   SPARK's. Down to the bottom corner, where nothing else goes. The
+   fullscreen button is not drawn on a touch device, so that corner is free. */
+@media (max-width: 760px) {
+  .sp-home {
+    top: auto; bottom: 12px; left: 12px;
+    padding: 7px 13px 8px 11px; font-size: 15px;
+  }
+}
+@media print { .sp-home, .sp-fs { display: none; } }
+
+.sp-fs {
+  position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 2147483000;
+  width: 2.4rem; height: 2.4rem; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #fdfcfb; color: #6b6b6b;
+  border: 1px solid #e2ddd9; border-radius: 0.5rem;
+  cursor: pointer; opacity: 0.55;
+  transition: opacity .15s, color .15s, border-color .15s;
+}
+.sp-fs svg {
+  width: 1rem; height: 1rem; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.sp-fs:hover { opacity: 1; color: #b3401f; border-color: #b3401f; }
+.sp-fs:focus-visible { opacity: 1; outline: 2px solid #b3401f; outline-offset: 2px; }
+</style>
+
+<!-- One property for the whole site. apply_global.py strips the per-project
+     tags MarsWorm and NitRobe carried, so nothing is counted twice. -->
+<script data-sp async src="https://www.googletagmanager.com/gtag/js?id=G-FJ4CWSDFEW"></script>
+<script data-sp>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FJ4CWSDFEW');
+</script>
+
+<script data-sp>
+(function () {
+  'use strict';
+
+  /* A swapped-in page brings its own copy of this block. Only the first one
+     wires anything to the window or the document; the rest would stack a
+     second click handler and a second button on every swap. */
+  if (window.__saanviGlobal) return;
+  window.__saanviGlobal = true;
+
+  /* The stylesheet moves to the head, where a body swap cannot take it. */
+  var css = document.querySelector('style[data-sp]');
+  if (css) document.head.appendChild(css);
+
+  /* ---- the way home ----------------------------------------------------
+     Every page gets it, including the front page's own children. The front
+     page itself is skipped at injection time, because a link home from home
+     is furniture with nothing behind it. */
+
+  /* The front page is injected with an empty path, because a link home from
+     home is furniture with nothing behind it. */
+  var where = '../../../index.html';
+  /* The front page, as an address: the injected path from here, or, on the
+     front page itself, this page. Worked out once, at load, so that a page
+     swapped in later under fullscreen can be told whether it is home. */
+  var FRONT = new URL(where || 'index.html', location.href);
+  function isFront(url) {
+    return url.pathname === FRONT.pathname ||
+           url.pathname === FRONT.pathname.replace(/index\.html$/, '');
+  }
+  /* The pill is always made, and only shown away from home. It used to be
+     made only on pages that had a path home, so fullscreen entered on the
+     front page carried no pill into any project. */
+  var home = document.createElement('a');
+  home.className = 'sp-home';
+  home.href = FRONT.href;
+  home.innerHTML =
+    '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+    '<path d="M3 10.6 12 3.4l9 7.2"/><path d="M5.6 9.6V20h12.8V9.6"/>' +
+    '<path d="M10 20v-5h4v5"/></svg><span>Saanvi</span>';
+  home.setAttribute('aria-label', "All of Saanvi's projects");
+  home.title = "All of Saanvi's projects";
+  if (!isFront(new URL(location.href))) document.body.appendChild(home);
+
+  /* ---- fullscreen ------------------------------------------------------
+     One button for the whole site. Seven of these projects shipped their own
+     and two shipped none, so this takes any it finds away and puts one back.
+     Theirs are built by their own scripts, which may run after this, so the
+     sweep repeats a moment later rather than only once. */
+
+  /* Seven of these projects shipped a fullscreen button of their own and one
+     shipped two names for it. Every spelling found so far is listed; a
+     button of ours is never matched, because all of ours are .sp-fs. */
+  var THEIRS = '.fs, .fs-label, #fs-label, .fullscreen-btn, #fullscreen-btn,'
+             + ' [aria-label*="fullscreen" i]:not(.sp-fs),'
+             + ' [title*="full screen" i]:not(.sp-fs)';
+
+  function sweep() {
+    var theirs = document.querySelectorAll(THEIRS);
+    for (var i = 0; i < theirs.length; i++) {
+      if (theirs[i].className !== 'sp-fs') theirs[i].remove();
+    }
+  }
+  sweep();
+  setTimeout(sweep, 400);
+  addEventListener('load', sweep);
+
+  var root = document.documentElement;
+  if (!(root.requestFullscreen || root.webkitRequestFullscreen)) return;
+  /* A phone has no fullscreen for a page, and on a tablet the button sits
+     under a thumb. */
+  if ('ontouchstart' in window) return;
+
+  var EXPAND = '<path d="M3 8V3h5M17 3h5v5M22 17v5h-5M8 22H3v-5"/>';
+  var SHRINK = '<path d="M8 3v5H3M22 8h-5V3M17 22v-5h5M3 17h5v5"/>';
+
+  var btn = document.createElement('button');
+  btn.className = 'sp-fs';
+  btn.type = 'button';
+  document.body.appendChild(btn);
+
+  function on() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function paint() {
+    var label = on() ? 'Leave fullscreen' : 'View fullscreen';
+    btn.setAttribute('aria-label', label);
+    btn.title = label + '  (F)';
+    btn.innerHTML = '<svg viewBox="0 0 25 25" aria-hidden="true">' +
+                    (on() ? SHRINK : EXPAND) + '</svg>';
+  }
+  function toggle() {
+    if (on()) {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+    }
+  }
+
+  btn.addEventListener('click', toggle);
+  document.addEventListener('fullscreenchange', paint);
+  document.addEventListener('webkitfullscreenchange', paint);
+
+  /* The shortcut a video player uses, but never while something is being
+     typed into, and never on top of a browser shortcut. */
+  /* In the capture phase, and stopped dead once handled. Several of these
+     projects bind F to their own fullscreen, and two handlers toggling the
+     same thing cancel each other out: the key would do nothing at all. */
+  addEventListener('keydown', function (e) {
+    if (e.key !== 'f' && e.key !== 'F') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.isContentEditable ||
+              /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    toggle();
+  }, true);
+
+  paint();
+
+  /* ---- staying in fullscreen across a link -----------------------------
+     Fullscreen belongs to a document. Follow an ordinary link and it ends,
+     and the new page cannot ask to go back in: a browser only grants
+     fullscreen off a click, and a fresh document has no click behind it. So
+     SPARK's menu dropped you out of fullscreen on every page.
+
+     While fullscreen is on, and only then, a click on a link to another page
+     of this site fetches it and swaps it in rather than navigating. The
+     document never changes, so fullscreen never ends. Outside fullscreen
+     none of this runs and every link is an ordinary link, which is what
+     keeps these plain static pages for anyone reading them normally, and
+     what makes a failure here harmless. */
+
+  /* The scripts already on this document, by address. A swapped-in page
+     that asks for one of them again is not made to download it twice: the
+     gene finder's model is half a megabyte. */
+  var fetched = {};
+  for (var f = 0; f < document.scripts.length; f++) {
+    if (document.scripts[f].src) fetched[document.scripts[f].src] = true;
+  }
+
+  function runScripts(where) {
+    /* A script inserted as parsed markup does not execute. Re-creating each
+       one does, which is what keeps a project's own behaviour alive after a
+       swap: SPARK's play buttons, NitRobe's gene finder.
+
+       In order, and one at a time. A script made here is async by default,
+       so three external files would race each other and the inline script
+       after them would run first, against a model that had not arrived yet:
+       that is how the finder came to say its files did not load. An inline
+       script is wrapped in a function, so walking back onto a page does not
+       redeclare its variables; what a page means to share between its
+       scripts it hangs on window, which still works. */
+    var olds = where.querySelectorAll('script'), list = [];
+    for (var i = 0; i < olds.length; i++) {
+      var o = olds[i];
+      list.push([o.src, o.text]);
+      o.remove();
+    }
+    return list.reduce(function (chain, item) {
+      return chain.then(function () {
+        return new Promise(function (done) {
+          var src = item[0], s = document.createElement('script');
+          if (src) {
+            if (fetched[src]) return done();
+            fetched[src] = true;
+            s.src = src;
+            s.async = false;
+            s.onload = s.onerror = function () { done(); };
+          } else {
+            s.text = '(function(){' + item[1] + '\n})();';
+          }
+          where.appendChild(s);
+          if (!src) done();
+        });
+      });
+    }, Promise.resolve());
+  }
+
+  function swap(url, push) {
+    fetch(url.href).then(function (r) {
+      if (!r.ok) throw 0;
+      return r.text();
+    }).then(function (text) {
+      var doc = new DOMParser().parseFromString(text, 'text/html');
+      if (!doc.body) throw 0;
+      /* The address changes first: every relative href and src in the
+         incoming markup resolves against it, and these pages sit at
+         different depths. */
+      if (push) history.pushState({}, '', url.href);
+
+      /* The incoming page's stylesheets. Within one project these are the
+         same files and nothing happens; crossing from one project to another
+         they are different, and the old ones have to go or two designs fight
+         over the same page. */
+      var head = document.head;
+      var mine = head.querySelectorAll(
+        'link[rel="stylesheet"]:not([data-sp]), style:not([data-sp])');
+      for (var i = 0; i < mine.length; i++) mine[i].remove();
+      var theirs = doc.head.querySelectorAll('link[rel="stylesheet"], style');
+      for (var k = 0; k < theirs.length; k++) head.appendChild(theirs[k]);
+
+      document.title = doc.title;
+
+      /* The incoming page carries its own copy of this block. Out it comes,
+         and the live pill and button are put back afterwards, so there is
+         one of each however far you wander. */
+      var copies = doc.body.querySelectorAll('[data-sp], .sp-home, .sp-fs');
+      for (var c = 0; c < copies.length; c++) copies[c].remove();
+
+      document.body.replaceWith(document.adoptNode(doc.body));
+      if (!isFront(url)) document.body.appendChild(home);
+      if (btn) document.body.appendChild(btn);
+      return runScripts(document.body).then(function () {
+        var el = url.hash && document.getElementById(
+          decodeURIComponent(url.hash.slice(1)));
+        if (el) el.scrollIntoView(true); else scrollTo(0, 0);
+      });
+    }).catch(function () {
+      location.href = url.href;            // give up quietly, navigate
+    });
+  }
+
+  /* In the capture phase, so this runs before any router the page brought
+     with it. MarsWorm and NitRobe ship their own, written for their own
+     pages: fine inside those sites, and fatal leaving them, because their
+     fallback on a page they do not understand is to navigate, which ends
+     fullscreen. When this handles a click it stops the event dead so theirs
+     never sees it. Which means this one does all the work on the live site,
+     and a page swapped in here has to work as well as it does under its own
+     router: the finder's model has to load, in order, before the finder. */
+  addEventListener('click', function (e) {
+    if (!on() || e.defaultPrevented) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
+    var a = e.target.closest && e.target.closest('a');
+    if (!a || a.target || a.hasAttribute('download')) return;
+    var url = new URL(a.href, location.href);
+    if (url.origin !== location.origin) return;
+    /* Only pages. A PDF or a film is a download or a viewer, and neither is
+       something to paste into this one. */
+    if (!/\.html$/.test(url.pathname)) return;
+    if (url.pathname === location.pathname) {
+      /* The page you are already on. With a #section it is an anchor, and
+         the browser just scrolls, which keeps fullscreen. Without one it is
+         a reload, and a reload ends fullscreen: clicking Contact Me twice
+         dropped you out. There is nothing to load, so nothing happens. */
+      if (!url.hash) {
+        e.preventDefault(); e.stopImmediatePropagation(); scrollTo(0, 0);
+      }
+      return;
+    }
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    swap(url, true);
+  }, true);
+
+  addEventListener('popstate', function () {
+    if (on()) swap(new URL(location.href), false);
+  });
+})();
+</script>
+
+<!-- /saanvi-showcase -->
+</body>
+</html>
